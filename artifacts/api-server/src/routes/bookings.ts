@@ -17,45 +17,57 @@ async function sendTelegramNotification(booking: {
   notes?: string | null;
 }) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatIdsRaw = process.env.TELEGRAM_CHAT_IDS;
+  // Support both TELEGRAM_CHAT_IDS (multi) and TELEGRAM_CHAT_ID (single) env var names
+  const chatIdsRaw =
+    process.env.TELEGRAM_CHAT_IDS || process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatIdsRaw) {
     return;
   }
 
-  const chatIds = chatIdsRaw.split(",").map((id) => id.trim()).filter(Boolean);
+  const chatIds = chatIdsRaw
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
 
-  const message = `🚖 NEW BOOKING
+  const message =
+`🚖 NEW BOOKING — TAJIK ELITE
 
 👤 Name: ${booking.fullName}
 📞 Phone: ${booking.phone}
 📍 Pickup: ${booking.pickup}
-📍 Destination: ${booking.destination}
+🏁 Destination: ${booking.destination}
 📅 Date: ${booking.date}
 ⏰ Time: ${booking.time}
-🚘 Car: ${booking.carType}
+🚘 Vehicle: ${booking.carType}
 👥 Passengers: ${booking.passengers}
 📝 Notes: ${booking.notes || "—"}`;
 
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-  await Promise.all(
+  const results = await Promise.allSettled(
     chatIds.map(async (chatId) => {
-      try {
-        await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: "HTML",
-          }),
-        });
-      } catch (err) {
-        console.error(`Failed to send Telegram notification to chat ${chatId}:`, err);
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+        }),
+      });
+      const body = await resp.json() as { ok: boolean; description?: string };
+      if (!body.ok) {
+        throw new Error(`Telegram API error for ${chatId}: ${body.description}`);
       }
+      return chatId;
     })
   );
+
+  results.forEach((r) => {
+    if (r.status === "rejected") {
+      console.error("Telegram notification failed:", r.reason);
+    }
+  });
 }
 
 router.post("/bookings", async (req, res) => {

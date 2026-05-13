@@ -192,12 +192,12 @@ export function Booking() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-black border-white/10 text-white">
-                          <SelectItem value="Mercedes S-Class">Mercedes S-Class</SelectItem>
-                          <SelectItem value="Toyota Land Cruiser">Toyota Land Cruiser</SelectItem>
-                          <SelectItem value="Lexus LX570">Lexus LX570</SelectItem>
-                          <SelectItem value="BMW 7 Series">BMW 7 Series</SelectItem>
-                          <SelectItem value="Hyundai Staria">Hyundai Staria</SelectItem>
-                          <SelectItem value="Chevrolet Tahoe">Chevrolet Tahoe</SelectItem>
+                          <SelectItem value="LC300-01">LC300-01 — Land Cruiser 300</SelectItem>
+                          <SelectItem value="LC300-02">LC300-02 — Land Cruiser 300</SelectItem>
+                          <SelectItem value="LC300-03">LC300-03 — Land Cruiser 300</SelectItem>
+                          <SelectItem value="LC200-01">LC200-01 — Land Cruiser 200</SelectItem>
+                          <SelectItem value="LC200-02">LC200-02 — Land Cruiser 200</SelectItem>
+                          <SelectItem value="LC200-03">LC200-03 — Land Cruiser 200</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage className="text-destructive/80" />
