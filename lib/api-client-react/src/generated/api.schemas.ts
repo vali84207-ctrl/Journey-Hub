@@ -69,3 +69,16 @@ export interface Vehicle {
 export interface VehicleStatusUpdate {
   status: VehicleStatus;
 }
+
+export interface AdminLoginInput {
+  username: string;
+  password: string;
+}
+
+export interface AdminLoginResponse {
+  token: string;
+}
+
+export interface AdminVerifyResponse {
+  valid: boolean;
+}

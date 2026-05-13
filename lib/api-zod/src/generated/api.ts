@@ -90,3 +90,22 @@ export const UpdateVehicleStatusResponse = zod.object({
   status: zod.enum(["available", "reserved", "busy"]),
   updatedAt: zod.string(),
 });
+
+/**
+ * @summary Admin login
+ */
+export const AdminLoginBody = zod.object({
+  username: zod.string(),
+  password: zod.string(),
+});
+
+export const AdminLoginResponse = zod.object({
+  token: zod.string(),
+});
+
+/**
+ * @summary Verify admin token
+ */
+export const AdminVerifyResponse = zod.object({
+  valid: zod.boolean(),
+});
