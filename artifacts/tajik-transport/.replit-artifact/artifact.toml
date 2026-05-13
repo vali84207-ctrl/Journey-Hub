@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Tajikistan Premium Transportation"
+version = "1.0.0"
+id = "artifacts/tajik-transport"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18455
+
+[services.development]
+run = "pnpm --filter @workspace/tajik-transport run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/tajik-transport", "run", "build" ]
+publicDir = "artifacts/tajik-transport/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18455"
+BASE_PATH = "/"

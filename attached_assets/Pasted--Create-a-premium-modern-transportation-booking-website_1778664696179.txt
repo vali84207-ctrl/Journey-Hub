@@ -1,0 +1,95 @@
+
+Create a premium modern transportation booking website for Tajikistan using. The company provides:
+•	Private transfers
+•	VIP transportation
+•	Airport pickup/dropoff
+•	Intercity rides across all Tajikistan
+•	Chauffeur services
+•	Luxury car rentals with driver The website style must look luxury, modern, minimalistic, and expensive like Blacklane, Uber Black, and premium Dubai transport companies. MAIN COLORS:
+•	Black
+•	Dark gray
+•	Gold accents
+•	White text WEBSITE REQUIREMENTS:
+1.	HERO SECTION
+•	Fullscreen luxury background video/image with premium cars
+•	Big title: “Premium Transportation Across Tajikistan”
+•	Subtitle: “Comfort. Safety. Luxury.”
+•	Buttons: “Book Now” “WhatsApp”
+2.	SERVICES SECTION Include cards for:
+•	Airport Transfers
+•	VIP Cars
+•	Business Trips
+•	Tourism Transportation
+•	Wedding Cars
+•	Chauffeur Services Each card should have:
+•	Icon
+•	Short description
+•	Hover animation
+3.	CAR FLEET SECTION Show luxury vehicles with:
+•	Large photos
+•	Car name
+•	Passenger count
+•	Price per trip/day
+•	“Book Now” button Cars examples:
+•	Mercedes S-Class
+•	Toyota Land Cruiser
+•	Lexus LX570
+•	BMW 7 Series
+•	Hyundai Staria
+•	Chevrolet Tahoe
+4.	BOOKING SYSTEM Create a modern booking form with:
+•	Full Name
+•	Phone Number
+•	Pickup Location
+•	Destination
+•	Date
+•	Time
+•	Car Type
+•	Number of Passengers
+•	Extra Notes After form submission:
+•	Show success popup
+•	Save booking data
+•	Send booking notification directly to Telegram Bot
+5.	TELEGRAM BOT INTEGRATION Connect Telegram Bot API. When a customer books: Send formatted message to Telegram. Message format example: 🚖 NEW BOOKING 👤 Name: {name} 📞 Phone: {phone} 📍 Pickup: {pickup} 📍 Destination: {destination} 📅 Date: {date} ⏰ Time: {time} 🚘 Car: {car} 👥 Passengers: {passengers} 📝 Notes: {notes} Use environment variables:
+TELEGRAM_BOT_TOKEN 8724284394:AAFvWBGaFGdMWTgpkmINaToEj5WEYVUVw4Q
+TELEGRAM_CHAT_ID 8546783642
+6.	CONTACT SECTION Include:
+•	WhatsApp button
+•	Telegram button
+•	Instagram
+•	Phone number
+•	Email
+•	Google Maps location
+7.	FEATURES
+•	Fully responsive
+•	Mobile optimized
+•	Smooth animations
+•	Fast loading
+•	SEO optimized
+•	Sticky navbar
+•	Dark luxury UI
+•	Glassmorphism effects
+•	Premium fonts
+8.	TECH STACK Use:
+•	React
+•	Tailwind CSS
+•	Framer Motion
+•	Node.js backend
+•	Express API
+9.	ADMIN/SECURITY
+•	Validate forms
+•	Prevent spam submissions
+•	Error handling
+•	Clean backend structure
+10.	EXTRA Add:
+•	Customer reviews section
+•	FAQ section
+•	Footer
+•	Social media links
+•	Loading animations IMPORTANT:
+•	Keep code clean and modular
+•	Make UI look premium and expensive
+•	Use reusable components
+•	Optimize for production
+•	Use modern luxury design similar to premium transport companies in Dubai and Europe
+

@@ -1,0 +1,44 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "6DIYf7JtZOte8Fr9sCo9f"
+uri = "file://artifacts/tajik-transport/src/assets/images/hero.jpg"
+type = "image"
+title = "luxury black sedan night city"
+
+[[outputs]]
+id = "jC2NhFmiQ8OJ8bey8TiGy"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-mercedes.jpg"
+type = "image"
+title = "Mercedes S-Class luxury black"
+
+[[outputs]]
+id = "-DeNtnG3u-wyJIcDiEo23"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-land-cruiser.jpg"
+type = "image"
+title = "Toyota Land Cruiser black"
+
+[[outputs]]
+id = "IzxcbsPC1qHu8hXHV5RLT"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-lexus.jpg"
+type = "image"
+title = "Lexus LX570 black"
+
+[[outputs]]
+id = "qgbMPEO2Qss7V_wM7oy11"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-bmw.jpg"
+type = "image"
+title = "BMW 7 Series black"
+
+[[outputs]]
+id = "1ubP-Ix2jmpvuq8w8B9-K"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-staria.jpg"
+type = "image"
+title = "Hyundai Staria black"
+
+[[outputs]]
+id = "FO5D07-M20dkYBsUiBgW2"
+uri = "file://artifacts/tajik-transport/src/assets/images/car-tahoe.jpg"
+type = "image"
+title = "Chevrolet Tahoe black SUV"

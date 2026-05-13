@@ -1,10 +1,11 @@
-# [Project name]
+# Tajik Elite — Premium Transportation Website
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A luxury ground transportation booking website for Tajikistan, styled after Blacklane and premium Dubai transport companies.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
+- `pnpm --filter @workspace/tajik-transport run dev` — run the frontend (port 18455)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
@@ -14,6 +15,7 @@ _Replace the heading above with the project's name, and this line with one sente
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React + Vite + Tailwind CSS + Framer Motion
 - API: Express 5
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
@@ -22,23 +24,39 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — API contract (source of truth)
+- `lib/db/src/schema/bookings.ts` — Bookings table schema
+- `artifacts/api-server/src/routes/bookings.ts` — Booking API + Telegram notification
+- `artifacts/tajik-transport/src/` — Frontend (single-page, all sections in App.tsx)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Single-page layout (no multi-page routing) — all sections in one scrollable page
+- Telegram notification is fire-and-forget (non-blocking) — booking saves even if Telegram fails
+- Dark mode only — no light/dark toggle; the luxury brand demands a fixed dark palette
+- Booking form uses react-hook-form + zod with Orval-generated mutation hook
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Hero section with cinematic luxury car background
+- Services grid (Airport, VIP, Business, Tourism, Wedding, Chauffeur)
+- Car fleet showcase (6 vehicles with photos, pax count, pricing)
+- Booking form that saves to PostgreSQL and sends Telegram notification
+- Customer reviews section
+- FAQ accordion
+- Contact section with WhatsApp, Telegram, Instagram, Maps
+- Footer with nav links
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Brand name: TAJIK ELITE
+- Colors: deep black, charcoal, gold (#C9A84C / #D4AF37), white text
+- Fonts: Playfair Display (headings) + Inter (body)
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After any OpenAPI spec change, run codegen then `pnpm run typecheck:libs` before typechecking the API server
+- TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are stored as shared env vars
 
 ## Pointers
 
