@@ -24,11 +24,11 @@ export function Contact() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto overflow-hidden">
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="space-y-10"
@@ -102,11 +102,11 @@ export function Contact() {
 
           {/* Map */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="h-[500px] w-full bg-white/5 border border-white/10 rounded-sm overflow-hidden"
+            className="h-[400px] md:h-[500px] w-full bg-white/5 border border-white/10 rounded-sm overflow-hidden"
           >
             {/* Using a styled map iframe centered on Dushanbe */}
             <iframe 

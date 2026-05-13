@@ -54,7 +54,7 @@ export function Hero() {
           >
             <Button 
               size="lg" 
-              className="bg-primary hover:bg-primary/90 text-black px-10 py-6 text-lg tracking-wider rounded-none min-w-[200px]"
+              className="bg-primary hover:bg-primary/90 text-black px-10 py-6 text-lg tracking-wider rounded-none w-full sm:w-auto sm:min-w-[200px]"
               onClick={scrollToBooking}
             >
               BOOK NOW
@@ -62,7 +62,7 @@ export function Hero() {
             <Button 
               size="lg" 
               variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-black px-10 py-6 text-lg tracking-wider rounded-none min-w-[200px]"
+              className="border-primary text-primary hover:bg-primary hover:text-black px-10 py-6 text-lg tracking-wider rounded-none w-full sm:w-auto sm:min-w-[200px]"
               onClick={() => window.open("https://wa.me/992000000000", "_blank")}
             >
               <Phone className="w-5 h-5 mr-3" />

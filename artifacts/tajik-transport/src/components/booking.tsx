@@ -241,7 +241,7 @@ export function Booking() {
                 <Button 
                   type="submit" 
                   disabled={createBooking.isPending}
-                  className="bg-primary hover:bg-primary/90 text-black px-12 py-6 text-lg tracking-widest rounded-none min-w-[250px]"
+                  className="bg-primary hover:bg-primary/90 text-black px-12 py-6 text-lg tracking-widest rounded-none w-full sm:w-auto sm:min-w-[250px]"
                 >
                   {createBooking.isPending ? (
                     <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> PROCESSING</>
