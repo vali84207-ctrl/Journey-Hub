@@ -1,6 +1,6 @@
-# Tajik Elite — Premium Transportation Website
+# Pamir Luxe Drive — VIP Transportation Website
 
-A luxury ground transportation booking website for Tajikistan, styled after Blacklane and premium Dubai transport companies.
+A luxury ground transportation booking website for Tajikistan, styled after Blacklane and premium Dubai transport companies. Brand: Pamir Luxe Drive (previously Tajik Elite).
 
 ## Run & Operate
 

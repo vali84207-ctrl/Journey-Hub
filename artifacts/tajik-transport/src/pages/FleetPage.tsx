@@ -12,6 +12,7 @@ type VehicleConfig = {
   price: number;
   features: string[];
   cardImage: string;
+  cardImagePosition?: string;
   description: string;
 };
 
@@ -23,7 +24,8 @@ const VEHICLE_CONFIG: Record<string, VehicleConfig> = {
     luggage: 3,
     price: 100,
     features: ["AC", "WiFi", "Professional Driver", "Luggage Space", "VIP Interior"],
-    cardImage: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80",
+    cardImage: "/lc-hero.png",
+    cardImagePosition: "object-left",
     description: "The iconic Land Cruiser 200 series — legendary off-road capability combined with executive-class comfort for journeys across Tajikistan.",
   },
   LC300: {
@@ -33,7 +35,8 @@ const VEHICLE_CONFIG: Record<string, VehicleConfig> = {
     luggage: 3,
     price: 120,
     features: ["AC", "WiFi", "Professional Driver", "Luggage Space", "VIP Interior"],
-    cardImage: "https://images.unsplash.com/photo-1619767886558-efdc259b6e09?w=800&q=80",
+    cardImage: "/lc-hero.png",
+    cardImagePosition: "object-right",
     description: "The Land Cruiser 300 series delivers modern luxury with an imposing presence — ideal for VIP airport transfers and high-end executive travel.",
   },
 };
@@ -143,7 +146,7 @@ export function FleetPage() {
                               <img
                                 src={cfg.cardImage}
                                 alt={cfg.name}
-                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                className={`w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ${cfg.cardImagePosition ?? "object-center"}`}
                                 loading="lazy"
                               />
                               {/* Badges */}

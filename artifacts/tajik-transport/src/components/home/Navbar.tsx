@@ -34,17 +34,22 @@ export function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-white/5 py-4"
-          : "bg-transparent py-6"
+          ? "bg-background/90 backdrop-blur-md border-b border-white/5 py-3"
+          : "bg-transparent py-5"
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <a 
-          href="#" 
+        {/* Logo */}
+        <a
+          href="#"
           onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-          className="font-serif text-2xl font-bold tracking-widest text-primary"
+          className="flex items-center"
         >
-          TAJIK ELITE
+          <img
+            src="/pamir-luxe-logo.png"
+            alt="Pamir Luxe Drive"
+            className="h-12 md:h-14 w-auto"
+          />
         </a>
 
         {/* Desktop Nav */}
@@ -62,8 +67,8 @@ export function Navbar() {
               {link.name}
             </a>
           ))}
-          <Button 
-            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold tracking-wide"
+          <Button
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold tracking-wide rounded-none"
             onClick={() => window.open("https://wa.me/992000000000", "_blank")}
           >
             WhatsApp
@@ -88,6 +93,10 @@ export function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/10 shadow-2xl py-6 px-6 flex flex-col gap-6 md:hidden"
           >
+            {/* Logo in mobile menu */}
+            <div className="flex justify-center pb-2 border-b border-white/5">
+              <img src="/pamir-luxe-logo.png" alt="Pamir Luxe Drive" className="h-16 w-auto" />
+            </div>
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -101,8 +110,8 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            <Button 
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold tracking-wide py-6"
+            <Button
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold tracking-wide py-6 rounded-none"
               onClick={() => window.open("https://wa.me/992000000000", "_blank")}
             >
               WhatsApp

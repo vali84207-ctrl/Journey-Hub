@@ -4,10 +4,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
-import { Navbar } from "./components/navbar";
-import { Hero } from "./components/hero";
+import { Navbar } from "./components/home/Navbar";
+import { Hero } from "./components/home/Hero";
 import { Services } from "./components/services";
-import { FleetTeaser } from "./components/fleet";
+import { Fleet } from "./components/home/Fleet";
 import { Booking } from "./components/booking";
 import { Reviews } from "./components/reviews";
 import { FAQ } from "./components/faq";
@@ -28,7 +28,7 @@ function Home() {
       <Navbar />
       <Hero />
       <Services />
-      <FleetTeaser />
+      <Fleet />
       <Booking />
       <Reviews />
       <FAQ />

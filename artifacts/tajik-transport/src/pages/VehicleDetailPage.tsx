@@ -39,7 +39,7 @@ const VEHICLE_CONFIG: Record<string, VehicleConfig> = {
     description: "The iconic Land Cruiser 200 series combines legendary off-road capability with executive-class comfort, making it the definitive choice for Tajikistan's diverse terrain.",
     longDescription: "Engineered for both the polished streets of Dushanbe and the dramatic mountain passes of the Pamir Highway, the Toyota Land Cruiser 200 is an enduring symbol of reliability and refinement. Its powerful V8 engine and advanced four-wheel-drive system ensure you reach your destination in complete safety — while the plush leather cabin, dual-zone climate control, and whisper-quiet ride quality guarantee an experience befitting the most discerning traveller.",
     gallery: [
-      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&q=85",
+      "/lc-hero.png",
       "https://images.unsplash.com/photo-1549399542-7d3b4e5f8e26?w=1200&q=85",
       "https://images.unsplash.com/photo-1617469165786-8007eda3caa7?w=1200&q=85",
     ],
@@ -63,7 +63,7 @@ const VEHICLE_CONFIG: Record<string, VehicleConfig> = {
     description: "The Land Cruiser 300 series delivers a commanding presence and modern luxury — the premier choice for VIP airport transfers and high-profile executive travel.",
     longDescription: "An evolution of Toyota's most celebrated nameplate, the Land Cruiser 300 brings a new dimension of sophistication to premium ground transportation. Its lighter TNGA-F platform enhances agility without compromising the legendary durability for which Land Cruisers are world-renowned. Inside, quilted leather seats, a panoramic sunroof, and the latest infotainment suite create a sanctuary of calm — wherever the road takes you across the breathtaking landscapes of Tajikistan.",
     gallery: [
-      "https://images.unsplash.com/photo-1619767886558-efdc259b6e09?w=1200&q=85",
+      "/lc-hero.png",
       "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&q=85",
       "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=1200&q=85",
     ],
