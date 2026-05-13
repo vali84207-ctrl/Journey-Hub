@@ -1,63 +1,28 @@
 import { motion } from "framer-motion";
-import { Users, Tag } from "lucide-react";
+import { Link } from "wouter";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import carMercedes from "@/assets/images/car-mercedes.jpg";
 import carLandCruiser from "@/assets/images/car-land-cruiser.jpg";
 import carLexus from "@/assets/images/car-lexus.jpg";
-import carBmw from "@/assets/images/car-bmw.jpg";
-import carStaria from "@/assets/images/car-staria.jpg";
-import carTahoe from "@/assets/images/car-tahoe.jpg";
 
-const fleet = [
+const teaserFleet = [
   {
     name: "Mercedes S-Class",
     image: carMercedes,
-    pax: 3,
-    price: 80,
   },
   {
     name: "Toyota Land Cruiser",
     image: carLandCruiser,
-    pax: 6,
-    price: 90,
   },
   {
     name: "Lexus LX570",
     image: carLexus,
-    pax: 6,
-    price: 95,
-  },
-  {
-    name: "BMW 7 Series",
-    image: carBmw,
-    pax: 3,
-    price: 85,
-  },
-  {
-    name: "Hyundai Staria",
-    image: carStaria,
-    pax: 7,
-    price: 70,
-  },
-  {
-    name: "Chevrolet Tahoe",
-    image: carTahoe,
-    pax: 6,
-    price: 75,
   }
 ];
 
-export function Fleet() {
-  const scrollToBooking = (carName: string) => {
-    const el = document.getElementById("booking");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      // We could use context or URL params to pre-select the car, 
-      // but for simplicity we just scroll down
-    }
-  };
-
+export function FleetTeaser() {
   return (
     <section id="fleet" className="py-24 bg-[#050505] relative">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -79,8 +44,8 @@ export function Fleet() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {fleet.map((car, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {teaserFleet.map((car, index) => (
             <motion.div 
               key={index}
               initial={{ opacity: 0, y: 30 }}
@@ -97,32 +62,19 @@ export function Fleet() {
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              
-              <div className="p-6 flex-1 flex flex-col">
-                <h3 className="text-2xl font-serif text-primary mb-4">{car.name}</h3>
-                
-                <div className="flex items-center gap-6 mb-6 text-sm text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-primary" />
-                    <span>{car.pax} Passengers</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Tag className="w-4 h-4 text-primary" />
-                    <span>From ${car.price}/trip</span>
-                  </div>
-                </div>
-                
-                <div className="mt-auto">
-                  <Button 
-                    className="w-full bg-white/5 border border-white/10 hover:border-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-none text-white tracking-widest uppercase text-xs py-5"
-                    onClick={() => scrollToBooking(car.name)}
-                  >
-                    Book Now
-                  </Button>
-                </div>
+              <div className="p-6">
+                <h3 className="text-2xl font-serif text-primary">{car.name}</h3>
               </div>
             </motion.div>
           ))}
+        </div>
+        
+        <div className="text-center">
+          <Link href="/fleet">
+            <Button className="bg-transparent border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-none px-8 py-6 text-sm tracking-widest uppercase cursor-pointer">
+              View Full Fleet <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

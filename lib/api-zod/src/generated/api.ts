@@ -8,7 +8,6 @@
 import * as zod from "zod";
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -58,3 +57,36 @@ export const ListBookingsResponseItem = zod.object({
   createdAt: zod.string(),
 });
 export const ListBookingsResponse = zod.array(ListBookingsResponseItem);
+
+/**
+ * @summary List all vehicles with status
+ */
+export const ListVehiclesResponseItem = zod.object({
+  id: zod.number(),
+  code: zod.string(),
+  model: zod.string(),
+  type: zod.string(),
+  status: zod.enum(["available", "reserved", "busy"]),
+  updatedAt: zod.string(),
+});
+export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem);
+
+/**
+ * @summary Update vehicle status (admin)
+ */
+export const UpdateVehicleStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateVehicleStatusBody = zod.object({
+  status: zod.enum(["available", "reserved", "busy"]),
+});
+
+export const UpdateVehicleStatusResponse = zod.object({
+  id: zod.number(),
+  code: zod.string(),
+  model: zod.string(),
+  type: zod.string(),
+  status: zod.enum(["available", "reserved", "busy"]),
+  updatedAt: zod.string(),
+});

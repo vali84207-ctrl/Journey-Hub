@@ -48,3 +48,24 @@ export interface Booking {
   notes?: string | null;
   createdAt: string;
 }
+
+export type VehicleStatus = (typeof VehicleStatus)[keyof typeof VehicleStatus];
+
+export const VehicleStatus = {
+  available: "available",
+  reserved: "reserved",
+  busy: "busy",
+} as const;
+
+export interface Vehicle {
+  id: number;
+  code: string;
+  model: string;
+  type: string;
+  status: VehicleStatus;
+  updatedAt: string;
+}
+
+export interface VehicleStatusUpdate {
+  status: VehicleStatus;
+}

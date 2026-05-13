@@ -12,13 +12,14 @@ tags:
     description: Health operations
   - name: bookings
     description: Booking operations
+  - name: vehicles
+    description: Vehicle operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -65,6 +66,52 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Booking"
+
+  /vehicles:
+    get:
+      operationId: listVehicles
+      tags: [vehicles]
+      summary: List all vehicles with status
+      responses:
+        "200":
+          description: List of vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vehicle"
+
+  /vehicles/{id}/status:
+    patch:
+      operationId: updateVehicleStatus
+      tags: [vehicles]
+      summary: Update vehicle status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleStatusUpdate"
+      responses:
+        "200":
+          description: Updated vehicle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "404":
+          description: Vehicle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
@@ -157,3 +204,41 @@ components:
           type: ["string", "null"]
         createdAt:
           type: string
+
+    VehicleStatus:
+      type: string
+      enum:
+        - available
+        - reserved
+        - busy
+
+    Vehicle:
+      type: object
+      required:
+        - id
+        - code
+        - model
+        - type
+        - status
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        model:
+          type: string
+        type:
+          type: string
+        status:
+          $ref: "#/components/schemas/VehicleStatus"
+        updatedAt:
+          type: string
+
+    VehicleStatusUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: "#/components/schemas/VehicleStatus"

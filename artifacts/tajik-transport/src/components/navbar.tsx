@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [location] = useLocation();
+  const isHome = location === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +19,10 @@ export function Navbar() {
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
+    if (!isHome) {
+      window.location.href = `/#${id}`;
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -33,19 +39,18 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <div 
-            className="flex items-center cursor-pointer" 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            <span className="font-serif text-2xl tracking-widest text-primary font-bold">
-              TAJIK ELITE
-            </span>
-          </div>
+          <Link href="/">
+            <div className="flex items-center cursor-pointer">
+              <span className="font-serif text-2xl tracking-widest text-primary font-bold">
+                TAJIK ELITE
+              </span>
+            </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <button onClick={() => scrollToSection("services")} className="text-sm uppercase tracking-wider hover:text-primary transition-colors">Services</button>
-            <button onClick={() => scrollToSection("fleet")} className="text-sm uppercase tracking-wider hover:text-primary transition-colors">Fleet</button>
+            <Link href="/fleet" className="text-sm uppercase tracking-wider hover:text-primary transition-colors cursor-pointer">Fleet</Link>
             <button onClick={() => scrollToSection("booking")} className="text-sm uppercase tracking-wider hover:text-primary transition-colors">Book</button>
             <button onClick={() => scrollToSection("contact")} className="text-sm uppercase tracking-wider hover:text-primary transition-colors">Contact</button>
             
@@ -56,6 +61,7 @@ export function Navbar() {
               <Phone className="w-4 h-4 mr-2" />
               WhatsApp
             </Button>
+            <Link href="/admin" className="text-xs uppercase tracking-wider text-gray-500 hover:text-white transition-colors cursor-pointer">Admin</Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -72,7 +78,7 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-lg border-b border-white/10 p-6 flex flex-col space-y-6 shadow-2xl">
           <button onClick={() => scrollToSection("services")} className="text-left text-lg uppercase tracking-wider hover:text-primary transition-colors">Services</button>
-          <button onClick={() => scrollToSection("fleet")} className="text-left text-lg uppercase tracking-wider hover:text-primary transition-colors">Fleet</button>
+          <Link href="/fleet" onClick={() => setIsMobileMenuOpen(false)} className="text-left text-lg uppercase tracking-wider hover:text-primary transition-colors">Fleet</Link>
           <button onClick={() => scrollToSection("booking")} className="text-left text-lg uppercase tracking-wider hover:text-primary transition-colors">Book</button>
           <button onClick={() => scrollToSection("contact")} className="text-left text-lg uppercase tracking-wider hover:text-primary transition-colors">Contact</button>
           
@@ -83,6 +89,7 @@ export function Navbar() {
             <Phone className="w-4 h-4 mr-2" />
             WhatsApp
           </Button>
+          <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-center text-sm uppercase tracking-wider text-gray-500 hover:text-white transition-colors">Admin Access</Link>
         </div>
       )}
     </nav>

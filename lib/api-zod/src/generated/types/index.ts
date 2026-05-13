@@ -10,3 +10,6 @@ export * from "./booking";
 export * from "./bookingInput";
 export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./vehicle";
+export * from "./vehicleStatus";
+export * from "./vehicleStatusUpdate";
