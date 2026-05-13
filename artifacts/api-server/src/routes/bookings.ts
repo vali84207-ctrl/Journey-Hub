@@ -17,11 +17,13 @@ async function sendTelegramNotification(booking: {
   notes?: string | null;
 }) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const chatIdsRaw = process.env.TELEGRAM_CHAT_IDS;
 
-  if (!token || !chatId) {
+  if (!token || !chatIdsRaw) {
     return;
   }
+
+  const chatIds = chatIdsRaw.split(",").map((id) => id.trim()).filter(Boolean);
 
   const message = `🚖 NEW BOOKING
 
@@ -37,19 +39,23 @@ async function sendTelegramNotification(booking: {
 
   const url = `https://api.telegram.org/bot${token}/sendMessage`;
 
-  try {
-    await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: "HTML",
-      }),
-    });
-  } catch {
-    // Non-critical — log silently
-  }
+  await Promise.all(
+    chatIds.map(async (chatId) => {
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: "HTML",
+          }),
+        });
+      } catch (err) {
+        console.error(`Failed to send Telegram notification to chat ${chatId}:`, err);
+      }
+    })
+  );
 }
 
 router.post("/bookings", async (req, res) => {
