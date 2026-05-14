@@ -106,7 +106,7 @@ export function Hero() {
                   </button>
                 </Link>
                 <button
-                  onClick={() => document.querySelector("#book")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() => document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" })}
                   className="flex items-center gap-3 bg-primary text-black hover:bg-primary/90 hover:scale-[1.03] transition-all duration-300 text-xs tracking-[0.22em] uppercase font-semibold px-8 py-4 gold-pulse"
                 >
                   Book Now <ArrowRight size={14} />

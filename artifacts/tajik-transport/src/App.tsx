@@ -16,6 +16,8 @@ import { Footer } from "./components/footer";
 
 import { FleetPage } from "./pages/FleetPage";
 import { VehicleDetailPage } from "./pages/VehicleDetailPage";
+import { BlogPage } from "./pages/BlogPage";
+import { BlogDetailPage } from "./pages/BlogDetailPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -44,6 +46,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/fleet" component={FleetPage} />
       <Route path="/fleet/:id" component={VehicleDetailPage} />
+      <Route path="/blog" component={BlogPage} />
+      <Route path="/blog/:slug" component={BlogDetailPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       <Route path="/admin">
         {() => <ProtectedRoute component={AdminPage} />}

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Calendar } from "lucide-react";
+import { Link, useLocation } from "wouter";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -13,16 +15,37 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Fleet", href: "#fleet" },
-    { name: "Services", href: "#services" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/", type: "route" as const },
+    { name: "Fleet", href: "/fleet", type: "route" as const },
+    { name: "Services", href: "#services", type: "anchor" as const },
+    { name: "Journal", href: "/blog", type: "route" as const },
+    { name: "Contact", href: "#contact", type: "anchor" as const },
   ];
 
-  const scrollToSection = (href: string) => {
+  const handleClick = (link: typeof navLinks[number]) => {
     setMobileMenuOpen(false);
-    if (href === "#") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    if (link.type === "route") {
+      setLocation(link.href);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    // anchor — only works on home page; otherwise navigate home then scroll
+    if (location !== "/") {
+      setLocation("/");
+      setTimeout(() => document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" }), 100);
+    } else {
+      document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleReserveClick = () => {
+    setMobileMenuOpen(false);
+    if (location !== "/") {
+      setLocation("/");
+      setTimeout(() => document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" }), 100);
+    } else {
+      document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -39,9 +62,9 @@ export function Navbar() {
       <div className="mx-auto px-6 lg:px-10 flex items-center justify-between h-[70px]">
 
         {/* Logo + brand */}
-        <a
-          href="#"
-          onClick={(e) => { e.preventDefault(); scrollToSection("#"); }}
+        <Link
+          href="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-3 flex-shrink-0"
         >
           <img
@@ -57,28 +80,32 @@ export function Navbar() {
               VIP Transportation
             </p>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, i) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-              className={`text-xs tracking-[0.15em] uppercase font-medium transition-colors duration-200 ${
-                i === 0 ? "text-primary" : "text-white/70 hover:text-primary"
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
+        <nav className="hidden md:flex items-center gap-7">
+          {navLinks.map((link) => {
+            const isActive =
+              (link.href === "/" && location === "/") ||
+              (link.href !== "/" && link.type === "route" && location.startsWith(link.href));
+            return (
+              <button
+                key={link.name}
+                onClick={() => handleClick(link)}
+                className={`text-xs tracking-[0.15em] uppercase font-medium transition-colors duration-200 ${
+                  isActive ? "text-primary" : "text-white/70 hover:text-primary"
+                }`}
+              >
+                {link.name}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Reserve Now CTA */}
         <div className="hidden md:flex items-center">
           <button
-            onClick={() => document.querySelector("#book")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={handleReserveClick}
             className="flex items-center gap-2 border border-primary/70 text-primary hover:bg-primary hover:text-black transition-all duration-300 text-xs tracking-[0.2em] uppercase font-medium px-5 py-2.5"
           >
             <Calendar size={13} />
@@ -88,6 +115,7 @@ export function Navbar() {
 
         {/* Mobile Toggle */}
         <button
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           className="md:hidden text-white/80 p-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
@@ -109,17 +137,16 @@ export function Navbar() {
               <img src="/pamir-luxe-logo.png" alt="Pamir Luxe Drive" className="h-14 w-auto" />
             </div>
             {navLinks.map((link) => (
-              <a
+              <button
                 key={link.name}
-                href={link.href}
-                onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
-                className="text-white/80 hover:text-primary transition-colors text-sm tracking-[0.15em] uppercase border-b border-white/5 pb-4"
+                onClick={() => handleClick(link)}
+                className="text-left text-white/80 hover:text-primary transition-colors text-sm tracking-[0.15em] uppercase border-b border-white/5 pb-4"
               >
                 {link.name}
-              </a>
+              </button>
             ))}
             <button
-              onClick={() => { setMobileMenuOpen(false); document.querySelector("#book")?.scrollIntoView({ behavior: "smooth" }); }}
+              onClick={handleReserveClick}
               className="w-full border border-primary/70 text-primary text-sm tracking-widest uppercase py-4 flex items-center justify-center gap-2 hover:bg-primary hover:text-black transition-all"
             >
               <Calendar size={14} /> Reserve Now
