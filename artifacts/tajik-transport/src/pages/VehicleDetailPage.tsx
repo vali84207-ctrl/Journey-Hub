@@ -394,7 +394,7 @@ export function VehicleDetailPage() {
                         <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
                       </Button>
                       <Button
-                        onClick={() => window.open("https://t.me/PamirLuxeDrive", "_blank")}
+                        onClick={() => window.open("https://t.me/PamirLuveDrive", "_blank")}
                         className="bg-[#229ED9] hover:bg-[#1a8cc2] text-white rounded-none px-6 py-3 text-sm tracking-wider uppercase"
                       >
                         <Phone className="w-4 h-4 mr-2" /> Telegram

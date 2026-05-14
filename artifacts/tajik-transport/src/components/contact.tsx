@@ -85,7 +85,7 @@ export function Contact() {
                 <Button
                   variant="outline"
                   className="rounded-none border-[#0088cc]/40 text-[#0088cc] hover:bg-[#0088cc] hover:text-white bg-transparent h-11 px-5 text-sm transition-all duration-300"
-                  onClick={() => window.open("https://t.me/PamirLuxeDrive", "_blank")}
+                  onClick={() => window.open("https://t.me/PamirLuveDrive", "_blank")}
                 >
                   <Send className="w-4 h-4 mr-2" /> Telegram
                 </Button>
