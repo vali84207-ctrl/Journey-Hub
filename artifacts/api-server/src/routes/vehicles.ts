@@ -1,63 +1,125 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { vehiclesTable, vehicleStatusEnum } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
+import { CreateVehicleBody, UpdateVehicleBody, UpdateVehicleStatusBody } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
+
 const router = Router();
 
-const SEED_VEHICLES = [
-  { code: "LC300-01", model: "Toyota Land Cruiser 300", type: "LC300" },
-  { code: "LC300-02", model: "Toyota Land Cruiser 300", type: "LC300" },
-  { code: "LC300-03", model: "Toyota Land Cruiser 300", type: "LC300" },
-  { code: "LC-PRADO-01", model: "Toyota Land Cruiser Prado", type: "LC-PRADO" },
-  { code: "LC-PRADO-02", model: "Toyota Land Cruiser Prado", type: "LC-PRADO" },
-  { code: "LC-PRADO-03", model: "Toyota Land Cruiser Prado", type: "LC-PRADO" },
-];
-
-export async function seedVehicles() {
-  for (const v of SEED_VEHICLES) {
-    await db
-      .insert(vehiclesTable)
-      .values({ code: v.code, model: v.model, type: v.type, status: "available" })
-      .onConflictDoNothing();
-  }
-}
-
-function serializeVehicle(v: typeof vehiclesTable.$inferSelect) {
-  return { ...v, updatedAt: v.updatedAt.toISOString() };
+function serialize(v: typeof vehiclesTable.$inferSelect) {
+  return {
+    ...v,
+    createdAt: v.createdAt.toISOString(),
+    updatedAt: v.updatedAt.toISOString(),
+  };
 }
 
 router.get("/vehicles", async (_req, res) => {
-  const vehicles = await db.select().from(vehiclesTable).orderBy(vehiclesTable.id);
-  res.json(vehicles.map(serializeVehicle));
+  const rows = await db
+    .select()
+    .from(vehiclesTable)
+    .orderBy(asc(vehiclesTable.sortOrder), asc(vehiclesTable.id));
+  res.json(rows.map(serialize));
 });
 
-router.patch("/vehicles/:id/status", async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+router.get("/vehicles/:id", async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid vehicle ID" });
     return;
   }
-
-  const { status } = req.body as { status?: string };
-  if (!status || !vehicleStatusEnum.includes(status as (typeof vehicleStatusEnum)[number])) {
-    res.status(400).json({ error: "Invalid status value" });
-    return;
-  }
-
-  const validStatus = status as (typeof vehicleStatusEnum)[number];
-
-  const [updated] = await db
-    .update(vehiclesTable)
-    .set({ status: validStatus, updatedAt: new Date() })
-    .where(eq(vehiclesTable.id, id))
-    .returning();
-
-  if (!updated) {
+  const [row] = await db.select().from(vehiclesTable).where(eq(vehiclesTable.id, id));
+  if (!row) {
     res.status(404).json({ error: "Vehicle not found" });
     return;
   }
+  res.json(serialize(row));
+});
 
-  res.json(serializeVehicle(updated));
+router.post("/vehicles", requireAdmin, async (req, res) => {
+  const parsed = CreateVehicleBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues.map((i) => i.message).join("; ") });
+    return;
+  }
+  try {
+    const [row] = await db
+      .insert(vehiclesTable)
+      .values({
+        ...parsed.data,
+        updatedAt: new Date(),
+      })
+      .returning();
+    res.status(201).json(serialize(row));
+  } catch (err) {
+    req.log.error({ err }, "Failed to create vehicle");
+    res.status(400).json({ error: "Failed to create vehicle (code may already exist)" });
+  }
+});
+
+router.put("/vehicles/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid vehicle ID" });
+    return;
+  }
+  const parsed = UpdateVehicleBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues.map((i) => i.message).join("; ") });
+    return;
+  }
+  const [row] = await db
+    .update(vehiclesTable)
+    .set({ ...parsed.data, updatedAt: new Date() })
+    .where(eq(vehiclesTable.id, id))
+    .returning();
+  if (!row) {
+    res.status(404).json({ error: "Vehicle not found" });
+    return;
+  }
+  res.json(serialize(row));
+});
+
+router.delete("/vehicles/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid vehicle ID" });
+    return;
+  }
+  const [row] = await db
+    .delete(vehiclesTable)
+    .where(eq(vehiclesTable.id, id))
+    .returning();
+  if (!row) {
+    res.status(404).json({ error: "Vehicle not found" });
+    return;
+  }
+  res.status(204).end();
+});
+
+router.patch("/vehicles/:id/status", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id), 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid vehicle ID" });
+    return;
+  }
+  const parsed = UpdateVehicleStatusBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Invalid status value" });
+    return;
+  }
+  const status = parsed.data.status as (typeof vehicleStatusEnum)[number];
+  const [row] = await db
+    .update(vehiclesTable)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(vehiclesTable.id, id))
+    .returning();
+  if (!row) {
+    res.status(404).json({ error: "Vehicle not found" });
+    return;
+  }
+  res.json(serialize(row));
 });
 
 export default router;

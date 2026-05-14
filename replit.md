@@ -1,63 +1,77 @@
 # Pamir Luxe Drive — VIP Transportation Website
 
-A luxury ground transportation booking website for Tajikistan, styled after Blacklane and premium Dubai transport companies. Brand: Pamir Luxe Drive (previously Tajik Elite).
+A luxury ground transportation booking website for Tajikistan, styled after Blacklane and premium Dubai transport companies. Brand: Pamir Luxe Drive.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
-- `pnpm --filter @workspace/tajik-transport run dev` — run the frontend (port 18455)
+- `pnpm --filter @workspace/api-server run dev` — API server (port 8080)
+- `pnpm --filter @workspace/tajik-transport run dev` — frontend (port 18455)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
+- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks/Zod from OpenAPI
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Required env: `DATABASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `SESSION_SECRET`
+- Optional env: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- Frontend: React + Vite + Tailwind CSS + Framer Motion
-- API: Express 5
+- Frontend: React + Vite + Tailwind + Framer Motion + Wouter + react-hook-form + Zod
+- API: Express 5, JWT-style admin tokens (issued by `/api/admin/login`)
 - DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- API codegen: Orval → React Query hooks + Zod schemas
 
 ## Where things live
 
 - `lib/api-spec/openapi.yaml` — API contract (source of truth)
-- `lib/db/src/schema/bookings.ts` — Bookings table schema
-- `artifacts/api-server/src/routes/bookings.ts` — Booking API + Telegram notification
-- `artifacts/tajik-transport/src/` — Frontend (single-page, all sections in App.tsx)
+- `lib/db/src/schema/` — `bookings`, `vehicles`, `blogPosts` schemas
+- `artifacts/api-server/src/routes/{bookings,vehicles,blog,admin,seed}.ts`
+- `artifacts/api-server/src/middlewares/requireAdmin.ts` — Bearer-token guard
+- `artifacts/tajik-transport/src/pages/` — public + `admin/` sub-pages
+- `artifacts/tajik-transport/src/components/admin/AdminLayout.tsx` — sidebar shell + ConfirmDialog + ModalShell
 
 ## Architecture decisions
 
-- Single-page layout (no multi-page routing) — all sections in one scrollable page
-- Telegram notification is fire-and-forget (non-blocking) — booking saves even if Telegram fails
-- Dark mode only — no light/dark toggle; the luxury brand demands a fixed dark palette
-- Booking form uses react-hook-form + zod with Orval-generated mutation hook
+- Single public landing page with `/fleet`, `/fleet/:id`, `/blog`, `/blog/:slug` sub-pages
+- Telegram notification on booking is fire-and-forget (non-blocking)
+- Dark mode only — fixed luxury black/gold palette
+- Admin uses bearer token in localStorage via `lib/adminAuth.ts` and `setAuthTokenGetter`
+- All admin write endpoints (vehicles/blog CRUD) and `GET /bookings` require admin token
+- Public `GET /vehicles` and `GET /blog` return everything; the frontend hides
+  `status === "hidden"` vehicles and `published === false` posts
+- Seed data: `seed.ts` runs at boot — only inserts new rows; existing rows are not overwritten
+
+## Admin Panel
+
+Routes (all behind `ProtectedRoute` → `/admin/login` if no valid token):
+- `/admin` — dashboard with fleet/blog/booking counts
+- `/admin/fleet` — Land Cruiser CRUD: code, model, year, pax, price, description, features, main image URL, gallery URLs (one per line), bookingVisible toggle, status (Available / Reserved / Busy / Hidden), sortOrder
+- `/admin/blog` — blog CRUD with a content-block editor (paragraph / heading / quote / image), gallery URLs, published toggle
+- `/admin/bookings` — read-only booking requests table
+
+All image inputs are URL-only (no file upload). Use Unsplash / CDN / `/lc-hero.png`.
 
 ## Product
 
 - Hero section with cinematic luxury car background
 - Services grid (Airport, VIP, Business, Tourism, Wedding, Chauffeur)
-- Car fleet showcase (6 vehicles with photos, pax count, pricing)
-- Booking form that saves to PostgreSQL and sends Telegram notification
-- Customer reviews section
-- FAQ accordion
-- Contact section with WhatsApp, Telegram, Instagram, Maps
-- Footer with nav links
+- Fleet showcase reading from `/api/vehicles` (status badges, click-through to detail)
+- Booking form → PostgreSQL + Telegram notification
+- Reviews, FAQ, Contact (WhatsApp / Telegram / Maps), Footer
+- Blog journal driven by `/api/blog`
 
 ## User preferences
 
-- Brand name: TAJIK ELITE
+- Brand name: Pamir Luxe Drive
 - Colors: deep black, charcoal, gold (#C9A84C / #D4AF37), white text
 - Fonts: Playfair Display (headings) + Inter (body)
 
 ## Gotchas
 
-- After any OpenAPI spec change, run codegen then `pnpm run typecheck:libs` before typechecking the API server
-- TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are stored as shared env vars
+- After any OpenAPI spec change, run codegen then `pnpm run typecheck:libs` before typechecking the api-server
+- Vehicle/blog seed only inserts missing rows (idempotent). To force-update, delete the row first
+- `wouter` base is `import.meta.env.BASE_URL.replace(/\/$/, "")` so the site works under any path prefix
 
 ## Pointers
 
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- See the `pnpm-workspace` skill for workspace structure & TS setup

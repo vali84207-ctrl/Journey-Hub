@@ -59,17 +59,149 @@ export const ListBookingsResponseItem = zod.object({
 export const ListBookingsResponse = zod.array(ListBookingsResponseItem);
 
 /**
- * @summary List all vehicles with status
+ * @summary List all vehicles
  */
 export const ListVehiclesResponseItem = zod.object({
   id: zod.number(),
   code: zod.string(),
+  name: zod.string(),
   model: zod.string(),
+  year: zod.number(),
   type: zod.string(),
-  status: zod.enum(["available", "reserved", "busy"]),
+  pax: zod.number(),
+  pricePerDay: zod.number(),
+  description: zod.string(),
+  features: zod.array(zod.string()),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  bookingVisible: zod.boolean(),
+  sortOrder: zod.number(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  createdAt: zod.string(),
   updatedAt: zod.string(),
 });
 export const ListVehiclesResponse = zod.array(ListVehiclesResponseItem);
+
+/**
+ * @summary Create a vehicle (admin)
+ */
+
+export const createVehicleBodyYearMin = 1990;
+export const createVehicleBodyYearMax = 2099;
+
+export const createVehicleBodyPaxMax = 50;
+
+export const createVehicleBodyPricePerDayMin = 0;
+
+export const CreateVehicleBody = zod.object({
+  code: zod.string().min(1),
+  name: zod.string().optional(),
+  model: zod.string().min(1),
+  year: zod
+    .number()
+    .min(createVehicleBodyYearMin)
+    .max(createVehicleBodyYearMax)
+    .optional(),
+  type: zod.string().min(1),
+  pax: zod.number().min(1).max(createVehicleBodyPaxMax).optional(),
+  pricePerDay: zod.number().min(createVehicleBodyPricePerDayMin).optional(),
+  description: zod.string().optional(),
+  features: zod.array(zod.string()).optional(),
+  mainImage: zod.string().optional(),
+  gallery: zod.array(zod.string()).optional(),
+  bookingVisible: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]).optional(),
+});
+
+/**
+ * @summary Get a vehicle by id
+ */
+export const GetVehicleParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetVehicleResponse = zod.object({
+  id: zod.number(),
+  code: zod.string(),
+  name: zod.string(),
+  model: zod.string(),
+  year: zod.number(),
+  type: zod.string(),
+  pax: zod.number(),
+  pricePerDay: zod.number(),
+  description: zod.string(),
+  features: zod.array(zod.string()),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  bookingVisible: zod.boolean(),
+  sortOrder: zod.number(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update a vehicle (admin)
+ */
+export const UpdateVehicleParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const updateVehicleBodyYearMin = 1990;
+export const updateVehicleBodyYearMax = 2099;
+
+export const updateVehicleBodyPaxMax = 50;
+
+export const updateVehicleBodyPricePerDayMin = 0;
+
+export const UpdateVehicleBody = zod.object({
+  code: zod.string().min(1),
+  name: zod.string().optional(),
+  model: zod.string().min(1),
+  year: zod
+    .number()
+    .min(updateVehicleBodyYearMin)
+    .max(updateVehicleBodyYearMax)
+    .optional(),
+  type: zod.string().min(1),
+  pax: zod.number().min(1).max(updateVehicleBodyPaxMax).optional(),
+  pricePerDay: zod.number().min(updateVehicleBodyPricePerDayMin).optional(),
+  description: zod.string().optional(),
+  features: zod.array(zod.string()).optional(),
+  mainImage: zod.string().optional(),
+  gallery: zod.array(zod.string()).optional(),
+  bookingVisible: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]).optional(),
+});
+
+export const UpdateVehicleResponse = zod.object({
+  id: zod.number(),
+  code: zod.string(),
+  name: zod.string(),
+  model: zod.string(),
+  year: zod.number(),
+  type: zod.string(),
+  pax: zod.number(),
+  pricePerDay: zod.number(),
+  description: zod.string(),
+  features: zod.array(zod.string()),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  bookingVisible: zod.boolean(),
+  sortOrder: zod.number(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Delete a vehicle (admin)
+ */
+export const DeleteVehicleParams = zod.object({
+  id: zod.coerce.number(),
+});
 
 /**
  * @summary Update vehicle status (admin)
@@ -79,16 +211,179 @@ export const UpdateVehicleStatusParams = zod.object({
 });
 
 export const UpdateVehicleStatusBody = zod.object({
-  status: zod.enum(["available", "reserved", "busy"]),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]),
 });
 
 export const UpdateVehicleStatusResponse = zod.object({
   id: zod.number(),
   code: zod.string(),
+  name: zod.string(),
   model: zod.string(),
+  year: zod.number(),
   type: zod.string(),
-  status: zod.enum(["available", "reserved", "busy"]),
+  pax: zod.number(),
+  pricePerDay: zod.number(),
+  description: zod.string(),
+  features: zod.array(zod.string()),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  bookingVisible: zod.boolean(),
+  sortOrder: zod.number(),
+  status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  createdAt: zod.string(),
   updatedAt: zod.string(),
+});
+
+/**
+ * @summary List all blog posts
+ */
+export const ListBlogPostsResponseItem = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  excerpt: zod.string(),
+  cover: zod.string(),
+  gallery: zod.array(zod.string()),
+  location: zod.string(),
+  date: zod.string(),
+  readTime: zod.string(),
+  author: zod.string(),
+  category: zod.string(),
+  content: zod.array(
+    zod.object({
+      type: zod.enum(["paragraph", "heading", "quote", "image"]),
+      text: zod.string().optional(),
+      src: zod.string().optional(),
+      caption: zod.string().optional(),
+    }),
+  ),
+  published: zod.boolean(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListBlogPostsResponse = zod.array(ListBlogPostsResponseItem);
+
+/**
+ * @summary Create a blog post (admin)
+ */
+
+export const CreateBlogPostBody = zod.object({
+  slug: zod.string().min(1),
+  title: zod.string().min(1),
+  excerpt: zod.string(),
+  cover: zod.string(),
+  gallery: zod.array(zod.string()).optional(),
+  location: zod.string().optional(),
+  date: zod.string(),
+  readTime: zod.string().optional(),
+  author: zod.string().optional(),
+  category: zod.string().optional(),
+  content: zod
+    .array(
+      zod.object({
+        type: zod.enum(["paragraph", "heading", "quote", "image"]),
+        text: zod.string().optional(),
+        src: zod.string().optional(),
+        caption: zod.string().optional(),
+      }),
+    )
+    .optional(),
+  published: zod.boolean().optional(),
+});
+
+/**
+ * @summary Get blog post by slug
+ */
+export const GetBlogPostBySlugParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetBlogPostBySlugResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  excerpt: zod.string(),
+  cover: zod.string(),
+  gallery: zod.array(zod.string()),
+  location: zod.string(),
+  date: zod.string(),
+  readTime: zod.string(),
+  author: zod.string(),
+  category: zod.string(),
+  content: zod.array(
+    zod.object({
+      type: zod.enum(["paragraph", "heading", "quote", "image"]),
+      text: zod.string().optional(),
+      src: zod.string().optional(),
+      caption: zod.string().optional(),
+    }),
+  ),
+  published: zod.boolean(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update a blog post (admin)
+ */
+export const UpdateBlogPostParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateBlogPostBody = zod.object({
+  slug: zod.string().min(1),
+  title: zod.string().min(1),
+  excerpt: zod.string(),
+  cover: zod.string(),
+  gallery: zod.array(zod.string()).optional(),
+  location: zod.string().optional(),
+  date: zod.string(),
+  readTime: zod.string().optional(),
+  author: zod.string().optional(),
+  category: zod.string().optional(),
+  content: zod
+    .array(
+      zod.object({
+        type: zod.enum(["paragraph", "heading", "quote", "image"]),
+        text: zod.string().optional(),
+        src: zod.string().optional(),
+        caption: zod.string().optional(),
+      }),
+    )
+    .optional(),
+  published: zod.boolean().optional(),
+});
+
+export const UpdateBlogPostResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  excerpt: zod.string(),
+  cover: zod.string(),
+  gallery: zod.array(zod.string()),
+  location: zod.string(),
+  date: zod.string(),
+  readTime: zod.string(),
+  author: zod.string(),
+  category: zod.string(),
+  content: zod.array(
+    zod.object({
+      type: zod.enum(["paragraph", "heading", "quote", "image"]),
+      text: zod.string().optional(),
+      src: zod.string().optional(),
+      caption: zod.string().optional(),
+    }),
+  ),
+  published: zod.boolean(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Delete a blog post (admin)
+ */
+export const DeleteBlogPostParams = zod.object({
+  id: zod.coerce.number(),
 });
 
 /**

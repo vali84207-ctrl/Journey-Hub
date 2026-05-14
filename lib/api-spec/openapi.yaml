@@ -14,6 +14,8 @@ tags:
     description: Booking operations
   - name: vehicles
     description: Vehicle operations
+  - name: blog
+    description: Blog operations
   - name: admin
     description: Admin authentication
 paths:
@@ -73,7 +75,7 @@ paths:
     get:
       operationId: listVehicles
       tags: [vehicles]
-      summary: List all vehicles with status
+      summary: List all vehicles
       responses:
         "200":
           description: List of vehicles
@@ -83,6 +85,102 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Vehicle"
+    post:
+      operationId: createVehicle
+      tags: [vehicles]
+      summary: Create a vehicle (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleInput"
+      responses:
+        "201":
+          description: Vehicle created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /vehicles/{id}:
+    get:
+      operationId: getVehicle
+      tags: [vehicles]
+      summary: Get a vehicle by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Vehicle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateVehicle
+      tags: [vehicles]
+      summary: Update a vehicle (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleInput"
+      responses:
+        "200":
+          description: Updated vehicle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vehicle"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteVehicle
+      tags: [vehicles]
+      summary: Delete a vehicle (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /vehicles/{id}/status:
     patch:
@@ -110,6 +208,119 @@ paths:
                 $ref: "#/components/schemas/Vehicle"
         "404":
           description: Vehicle not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /blog:
+    get:
+      operationId: listBlogPosts
+      tags: [blog]
+      summary: List all blog posts
+      responses:
+        "200":
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+    post:
+      operationId: createBlogPost
+      tags: [blog]
+      summary: Create a blog post (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "201":
+          description: Blog post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /blog/by-slug/{slug}:
+    get:
+      operationId: getBlogPostBySlug
+      tags: [blog]
+      summary: Get blog post by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /blog/{id}:
+    put:
+      operationId: updateBlogPost
+      tags: [blog]
+      summary: Update a blog post (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "200":
+          description: Updated blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteBlogPost
+      tags: [blog]
+      summary: Delete a blog post (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
           content:
             application/json:
               schema:
@@ -251,29 +462,115 @@ components:
         - available
         - reserved
         - busy
+        - hidden
 
     Vehicle:
       type: object
       required:
         - id
         - code
+        - name
         - model
+        - year
         - type
+        - pax
+        - pricePerDay
+        - description
+        - features
+        - mainImage
+        - gallery
+        - bookingVisible
+        - sortOrder
         - status
+        - createdAt
         - updatedAt
       properties:
         id:
           type: integer
         code:
           type: string
+        name:
+          type: string
         model:
           type: string
+        year:
+          type: integer
         type:
           type: string
+        pax:
+          type: integer
+        pricePerDay:
+          type: integer
+        description:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        mainImage:
+          type: string
+        gallery:
+          type: array
+          items:
+            type: string
+        bookingVisible:
+          type: boolean
+        sortOrder:
+          type: integer
         status:
           $ref: "#/components/schemas/VehicleStatus"
+        createdAt:
+          type: string
         updatedAt:
           type: string
+
+    VehicleInput:
+      type: object
+      required:
+        - code
+        - model
+        - type
+      properties:
+        code:
+          type: string
+          minLength: 1
+        name:
+          type: string
+        model:
+          type: string
+          minLength: 1
+        year:
+          type: integer
+          minimum: 1990
+          maximum: 2099
+        type:
+          type: string
+          minLength: 1
+        pax:
+          type: integer
+          minimum: 1
+          maximum: 50
+        pricePerDay:
+          type: integer
+          minimum: 0
+        description:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        mainImage:
+          type: string
+        gallery:
+          type: array
+          items:
+            type: string
+        bookingVisible:
+          type: boolean
+        sortOrder:
+          type: integer
+        status:
+          $ref: "#/components/schemas/VehicleStatus"
 
     VehicleStatusUpdate:
       type: object
@@ -282,6 +579,115 @@ components:
       properties:
         status:
           $ref: "#/components/schemas/VehicleStatus"
+
+    BlogContentBlock:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [paragraph, heading, quote, image]
+        text:
+          type: string
+        src:
+          type: string
+        caption:
+          type: string
+
+    BlogPost:
+      type: object
+      required:
+        - id
+        - slug
+        - title
+        - excerpt
+        - cover
+        - gallery
+        - location
+        - date
+        - readTime
+        - author
+        - category
+        - content
+        - published
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        excerpt:
+          type: string
+        cover:
+          type: string
+        gallery:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        date:
+          type: string
+        readTime:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/BlogContentBlock"
+        published:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    BlogPostInput:
+      type: object
+      required:
+        - slug
+        - title
+        - excerpt
+        - cover
+        - date
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        title:
+          type: string
+          minLength: 1
+        excerpt:
+          type: string
+        cover:
+          type: string
+        gallery:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        date:
+          type: string
+        readTime:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/BlogContentBlock"
+        published:
+          type: boolean
 
     AdminLoginInput:
       type: object

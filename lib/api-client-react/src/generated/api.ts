@@ -20,11 +20,14 @@ import type {
   AdminLoginInput,
   AdminLoginResponse,
   AdminVerifyResponse,
+  BlogPost,
+  BlogPostInput,
   Booking,
   BookingInput,
   ErrorResponse,
   HealthStatus,
   Vehicle,
+  VehicleInput,
   VehicleStatusUpdate,
 } from "./api.schemas";
 
@@ -275,7 +278,7 @@ export function useListBookings<
 }
 
 /**
- * @summary List all vehicles with status
+ * @summary List all vehicles
  */
 export const getListVehiclesUrl = () => {
   return `/api/vehicles`;
@@ -326,7 +329,7 @@ export type ListVehiclesQueryResult = NonNullable<
 export type ListVehiclesQueryError = ErrorType<unknown>;
 
 /**
- * @summary List all vehicles with status
+ * @summary List all vehicles
  */
 
 export function useListVehicles<
@@ -348,6 +351,350 @@ export function useListVehicles<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Create a vehicle (admin)
+ */
+export const getCreateVehicleUrl = () => {
+  return `/api/vehicles`;
+};
+
+export const createVehicle = async (
+  vehicleInput: VehicleInput,
+  options?: RequestInit,
+): Promise<Vehicle> => {
+  return customFetch<Vehicle>(getCreateVehicleUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(vehicleInput),
+  });
+};
+
+export const getCreateVehicleMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createVehicle>>,
+    TError,
+    { data: BodyType<VehicleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createVehicle>>,
+  TError,
+  { data: BodyType<VehicleInput> },
+  TContext
+> => {
+  const mutationKey = ["createVehicle"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createVehicle>>,
+    { data: BodyType<VehicleInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createVehicle(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateVehicleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createVehicle>>
+>;
+export type CreateVehicleMutationBody = BodyType<VehicleInput>;
+export type CreateVehicleMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Create a vehicle (admin)
+ */
+export const useCreateVehicle = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createVehicle>>,
+    TError,
+    { data: BodyType<VehicleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createVehicle>>,
+  TError,
+  { data: BodyType<VehicleInput> },
+  TContext
+> => {
+  return useMutation(getCreateVehicleMutationOptions(options));
+};
+
+/**
+ * @summary Get a vehicle by id
+ */
+export const getGetVehicleUrl = (id: number) => {
+  return `/api/vehicles/${id}`;
+};
+
+export const getVehicle = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Vehicle> => {
+  return customFetch<Vehicle>(getGetVehicleUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetVehicleQueryKey = (id: number) => {
+  return [`/api/vehicles/${id}`] as const;
+};
+
+export const getGetVehicleQueryOptions = <
+  TData = Awaited<ReturnType<typeof getVehicle>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getVehicle>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetVehicleQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getVehicle>>> = ({
+    signal,
+  }) => getVehicle(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getVehicle>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetVehicleQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getVehicle>>
+>;
+export type GetVehicleQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Get a vehicle by id
+ */
+
+export function useGetVehicle<
+  TData = Awaited<ReturnType<typeof getVehicle>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getVehicle>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetVehicleQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update a vehicle (admin)
+ */
+export const getUpdateVehicleUrl = (id: number) => {
+  return `/api/vehicles/${id}`;
+};
+
+export const updateVehicle = async (
+  id: number,
+  vehicleInput: VehicleInput,
+  options?: RequestInit,
+): Promise<Vehicle> => {
+  return customFetch<Vehicle>(getUpdateVehicleUrl(id), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(vehicleInput),
+  });
+};
+
+export const getUpdateVehicleMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateVehicle>>,
+    TError,
+    { id: number; data: BodyType<VehicleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateVehicle>>,
+  TError,
+  { id: number; data: BodyType<VehicleInput> },
+  TContext
+> => {
+  const mutationKey = ["updateVehicle"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateVehicle>>,
+    { id: number; data: BodyType<VehicleInput> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateVehicle(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateVehicleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateVehicle>>
+>;
+export type UpdateVehicleMutationBody = BodyType<VehicleInput>;
+export type UpdateVehicleMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Update a vehicle (admin)
+ */
+export const useUpdateVehicle = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateVehicle>>,
+    TError,
+    { id: number; data: BodyType<VehicleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateVehicle>>,
+  TError,
+  { id: number; data: BodyType<VehicleInput> },
+  TContext
+> => {
+  return useMutation(getUpdateVehicleMutationOptions(options));
+};
+
+/**
+ * @summary Delete a vehicle (admin)
+ */
+export const getDeleteVehicleUrl = (id: number) => {
+  return `/api/vehicles/${id}`;
+};
+
+export const deleteVehicle = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteVehicleUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteVehicleMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteVehicle>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteVehicle>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteVehicle"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteVehicle>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteVehicle(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteVehicleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteVehicle>>
+>;
+
+export type DeleteVehicleMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Delete a vehicle (admin)
+ */
+export const useDeleteVehicle = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteVehicle>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteVehicle>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteVehicleMutationOptions(options));
+};
 
 /**
  * @summary Update vehicle status (admin)
@@ -434,6 +781,425 @@ export const useUpdateVehicleStatus = <
   TContext
 > => {
   return useMutation(getUpdateVehicleStatusMutationOptions(options));
+};
+
+/**
+ * @summary List all blog posts
+ */
+export const getListBlogPostsUrl = () => {
+  return `/api/blog`;
+};
+
+export const listBlogPosts = async (
+  options?: RequestInit,
+): Promise<BlogPost[]> => {
+  return customFetch<BlogPost[]>(getListBlogPostsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListBlogPostsQueryKey = () => {
+  return [`/api/blog`] as const;
+};
+
+export const getListBlogPostsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listBlogPosts>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listBlogPosts>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListBlogPostsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listBlogPosts>>> = ({
+    signal,
+  }) => listBlogPosts({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listBlogPosts>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListBlogPostsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listBlogPosts>>
+>;
+export type ListBlogPostsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all blog posts
+ */
+
+export function useListBlogPosts<
+  TData = Awaited<ReturnType<typeof listBlogPosts>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listBlogPosts>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListBlogPostsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create a blog post (admin)
+ */
+export const getCreateBlogPostUrl = () => {
+  return `/api/blog`;
+};
+
+export const createBlogPost = async (
+  blogPostInput: BlogPostInput,
+  options?: RequestInit,
+): Promise<BlogPost> => {
+  return customFetch<BlogPost>(getCreateBlogPostUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(blogPostInput),
+  });
+};
+
+export const getCreateBlogPostMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createBlogPost>>,
+    TError,
+    { data: BodyType<BlogPostInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createBlogPost>>,
+  TError,
+  { data: BodyType<BlogPostInput> },
+  TContext
+> => {
+  const mutationKey = ["createBlogPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createBlogPost>>,
+    { data: BodyType<BlogPostInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createBlogPost(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateBlogPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createBlogPost>>
+>;
+export type CreateBlogPostMutationBody = BodyType<BlogPostInput>;
+export type CreateBlogPostMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Create a blog post (admin)
+ */
+export const useCreateBlogPost = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createBlogPost>>,
+    TError,
+    { data: BodyType<BlogPostInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createBlogPost>>,
+  TError,
+  { data: BodyType<BlogPostInput> },
+  TContext
+> => {
+  return useMutation(getCreateBlogPostMutationOptions(options));
+};
+
+/**
+ * @summary Get blog post by slug
+ */
+export const getGetBlogPostBySlugUrl = (slug: string) => {
+  return `/api/blog/by-slug/${slug}`;
+};
+
+export const getBlogPostBySlug = async (
+  slug: string,
+  options?: RequestInit,
+): Promise<BlogPost> => {
+  return customFetch<BlogPost>(getGetBlogPostBySlugUrl(slug), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetBlogPostBySlugQueryKey = (slug: string) => {
+  return [`/api/blog/by-slug/${slug}`] as const;
+};
+
+export const getGetBlogPostBySlugQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBlogPostBySlug>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  slug: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBlogPostBySlug>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetBlogPostBySlugQueryKey(slug);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getBlogPostBySlug>>
+  > = ({ signal }) => getBlogPostBySlug(slug, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!slug,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBlogPostBySlug>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBlogPostBySlugQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBlogPostBySlug>>
+>;
+export type GetBlogPostBySlugQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Get blog post by slug
+ */
+
+export function useGetBlogPostBySlug<
+  TData = Awaited<ReturnType<typeof getBlogPostBySlug>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  slug: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBlogPostBySlug>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBlogPostBySlugQueryOptions(slug, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update a blog post (admin)
+ */
+export const getUpdateBlogPostUrl = (id: number) => {
+  return `/api/blog/${id}`;
+};
+
+export const updateBlogPost = async (
+  id: number,
+  blogPostInput: BlogPostInput,
+  options?: RequestInit,
+): Promise<BlogPost> => {
+  return customFetch<BlogPost>(getUpdateBlogPostUrl(id), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(blogPostInput),
+  });
+};
+
+export const getUpdateBlogPostMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBlogPost>>,
+    TError,
+    { id: number; data: BodyType<BlogPostInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateBlogPost>>,
+  TError,
+  { id: number; data: BodyType<BlogPostInput> },
+  TContext
+> => {
+  const mutationKey = ["updateBlogPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateBlogPost>>,
+    { id: number; data: BodyType<BlogPostInput> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateBlogPost(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateBlogPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateBlogPost>>
+>;
+export type UpdateBlogPostMutationBody = BodyType<BlogPostInput>;
+export type UpdateBlogPostMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Update a blog post (admin)
+ */
+export const useUpdateBlogPost = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBlogPost>>,
+    TError,
+    { id: number; data: BodyType<BlogPostInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateBlogPost>>,
+  TError,
+  { id: number; data: BodyType<BlogPostInput> },
+  TContext
+> => {
+  return useMutation(getUpdateBlogPostMutationOptions(options));
+};
+
+/**
+ * @summary Delete a blog post (admin)
+ */
+export const getDeleteBlogPostUrl = (id: number) => {
+  return `/api/blog/${id}`;
+};
+
+export const deleteBlogPost = async (
+  id: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getDeleteBlogPostUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteBlogPostMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteBlogPost>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteBlogPost>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteBlogPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteBlogPost>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteBlogPost(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteBlogPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteBlogPost>>
+>;
+
+export type DeleteBlogPostMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Delete a blog post (admin)
+ */
+export const useDeleteBlogPost = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteBlogPost>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteBlogPost>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteBlogPostMutationOptions(options));
 };
 
 /**

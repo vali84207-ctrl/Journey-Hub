@@ -1,4 +1,63 @@
-export interface BlogPost {
+import { db } from "@workspace/db";
+import { vehiclesTable, blogPostsTable, type BlogContentBlock } from "@workspace/db";
+import { eq, sql } from "drizzle-orm";
+
+const VEHICLES = [
+  {
+    code: "LC300-01", name: "Land Cruiser 300", model: "Toyota Land Cruiser 300", type: "LC300",
+    year: 2022, pax: 7, pricePerDay: 120, sortOrder: 1,
+    description: "The Land Cruiser 300 series delivers modern luxury with an imposing presence — ideal for VIP airport transfers and high-end executive travel.",
+    features: ["AC", "WiFi", "Professional Driver", "Luggage Space", "VIP Interior"],
+    mainImage: "/lc-hero.png",
+    gallery: [
+      "/lc-hero.png",
+      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&q=85",
+      "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=1200&q=85",
+    ],
+  },
+  {
+    code: "LC300-02", name: "Land Cruiser 300", model: "Toyota Land Cruiser 300", type: "LC300",
+    year: 2022, pax: 7, pricePerDay: 120, sortOrder: 2,
+    description: "A second LC300 in the fleet, configured for VIP convoys and back-to-back airport transfers.",
+    features: ["AC", "WiFi", "Professional Driver", "Luggage Space", "VIP Interior"],
+    mainImage: "/lc-hero.png",
+    gallery: ["/lc-hero.png"],
+  },
+  {
+    code: "LC300-03", name: "Land Cruiser 300", model: "Toyota Land Cruiser 300", type: "LC300",
+    year: 2023, pax: 7, pricePerDay: 120, sortOrder: 3,
+    description: "The newest addition to our LC300 line — pristine interior, low mileage, ideal for executive clients.",
+    features: ["AC", "WiFi", "Professional Driver", "Luggage Space", "VIP Interior", "Leather Seats"],
+    mainImage: "/lc-hero.png",
+    gallery: ["/lc-hero.png"],
+  },
+  {
+    code: "LC-PRADO-01", name: "Land Cruiser Prado", model: "Toyota Land Cruiser Prado", type: "LC-PRADO",
+    year: 2021, pax: 6, pricePerDay: 100, sortOrder: 4,
+    description: "The Prado combines off-road capability with refined comfort — perfect for mountain expeditions and tourism.",
+    features: ["AC", "Professional Driver", "Luggage Space", "Off-Road Capability"],
+    mainImage: "/lc-hero.png",
+    gallery: ["/lc-hero.png"],
+  },
+  {
+    code: "LC-PRADO-02", name: "Land Cruiser Prado", model: "Toyota Land Cruiser Prado", type: "LC-PRADO",
+    year: 2021, pax: 6, pricePerDay: 100, sortOrder: 5,
+    description: "Second Prado configured for tourism routes through the Pamir Highway and Fann Mountains.",
+    features: ["AC", "Professional Driver", "Luggage Space", "Off-Road Capability"],
+    mainImage: "/lc-hero.png",
+    gallery: ["/lc-hero.png"],
+  },
+  {
+    code: "LC-PRADO-03", name: "Land Cruiser Prado", model: "Toyota Land Cruiser Prado", type: "LC-PRADO",
+    year: 2022, pax: 6, pricePerDay: 100, sortOrder: 6,
+    description: "Newest Prado in the fleet — ideal for client convoys and family tourism trips.",
+    features: ["AC", "Professional Driver", "Luggage Space", "Off-Road Capability"],
+    mainImage: "/lc-hero.png",
+    gallery: ["/lc-hero.png"],
+  },
+];
+
+type SeedBlog = {
   slug: string;
   title: string;
   excerpt: string;
@@ -7,19 +66,16 @@ export interface BlogPost {
   location: string;
   date: string;
   readTime: string;
-  author: string;
   category: string;
-  content: { type: "paragraph" | "heading" | "quote" | "image"; text?: string; src?: string; caption?: string }[];
-}
+  content: BlogContentBlock[];
+};
 
-export const blogPosts: BlogPost[] = [
+const BLOG_POSTS: SeedBlog[] = [
   {
     slug: "pamir-highway-seven-day-odyssey",
     title: "The Pamir Highway: A Seven-Day Odyssey Across the Roof of the World",
-    excerpt:
-      "From Dushanbe to the high-altitude lakes of the Wakhan Corridor — an unhurried journey through one of the most dramatic mountain roads on earth.",
-    cover:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85",
+    excerpt: "From Dushanbe to the high-altitude lakes of the Wakhan Corridor — an unhurried journey through one of the most dramatic mountain roads on earth.",
+    cover: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85",
     gallery: [
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85",
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&q=85",
@@ -28,7 +84,6 @@ export const blogPosts: BlogPost[] = [
     location: "Pamir Highway, GBAO",
     date: "May 8, 2026",
     readTime: "9 min read",
-    author: "Pamir Luxe Editorial",
     category: "Mountain Journeys",
     content: [
       { type: "paragraph", text: "There are roads, and then there is the M41. Climbing from the green valleys of the Vakhsh basin to passes above 4,600 metres, the Pamir Highway has earned its title as the second-highest international road in the world — and one of the last truly cinematic overland journeys left on the planet." },
@@ -46,10 +101,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "iskanderkul-weekend",
     title: "A Weekend at Iskanderkul: Tajikistan's Alpine Mirror",
-    excerpt:
-      "Two days at Alexander's Lake — turquoise water, fortress ruins, and a private chauffeur who knows every viewpoint along the Fann Mountains.",
-    cover:
-      "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1600&q=85",
+    excerpt: "Two days at Alexander's Lake — turquoise water, fortress ruins, and a private chauffeur who knows every viewpoint along the Fann Mountains.",
+    cover: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1600&q=85",
     gallery: [
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1400&q=85",
       "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1400&q=85",
@@ -57,7 +110,6 @@ export const blogPosts: BlogPost[] = [
     location: "Iskanderkul, Fann Mountains",
     date: "April 22, 2026",
     readTime: "6 min read",
-    author: "Pamir Luxe Editorial",
     category: "Weekend Escapes",
     content: [
       { type: "paragraph", text: "Three hours northwest of Dushanbe, the Anzob Pass opens into the Fann Mountains — Tajikistan's most-photographed range and the home of Iskanderkul, a glacial lake said to be named after Alexander the Great himself." },
@@ -71,17 +123,12 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "vip-airport-transfer-experience",
     title: "What VIP Airport Transfer Really Means in Dushanbe",
-    excerpt:
-      "Behind the scenes of the Pamir Luxe meet-and-greet: from immigration fast-track coordination to the cool towel waiting on your back seat.",
-    cover:
-      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1600&q=85",
-    gallery: [
-      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1400&q=85",
-    ],
+    excerpt: "Behind the scenes of the Pamir Luxe meet-and-greet: from immigration fast-track coordination to the cool towel waiting on your back seat.",
+    cover: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1600&q=85",
+    gallery: ["https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1400&q=85"],
     location: "Dushanbe International Airport",
     date: "April 5, 2026",
     readTime: "4 min read",
-    author: "Pamir Luxe Editorial",
     category: "VIP Experiences",
     content: [
       { type: "paragraph", text: "A VIP transfer is not simply a car. It is a sequence of quiet, well-rehearsed details that begin the moment your flight clears Tajik airspace and end only when the door of your hotel suite closes behind you." },
@@ -95,10 +142,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "wedding-fleet-pamir-style",
     title: "A Pamir Wedding: Coordinating a Six-Vehicle Procession",
-    excerpt:
-      "How we delivered the bride, the groom, and a dozen relatives across three venues in a single afternoon — with not a minute lost.",
-    cover:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=85",
+    excerpt: "How we delivered the bride, the groom, and a dozen relatives across three venues in a single afternoon — with not a minute lost.",
+    cover: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=85",
     gallery: [
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1400&q=85",
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1400&q=85",
@@ -106,7 +151,6 @@ export const blogPosts: BlogPost[] = [
     location: "Dushanbe & Varzob Valley",
     date: "March 18, 2026",
     readTime: "5 min read",
-    author: "Pamir Luxe Editorial",
     category: "Client Stories",
     content: [
       { type: "paragraph", text: "Tajik weddings are large, joyful, and tightly choreographed. When the Karimov family asked us to handle transport for their daughter's three-venue celebration, we mobilised the entire fleet — six Land Cruisers, six chauffeurs, one operations lead in a chase vehicle." },
@@ -120,10 +164,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "fann-photography-itinerary",
     title: "A Photographer's Five-Day Itinerary Through the Fann Mountains",
-    excerpt:
-      "Golden hour at Kulikalon, the seven lakes of Marguzor, and the iron ore reds of Pendjikent — built around the light, not the clock.",
-    cover:
-      "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1600&q=85",
+    excerpt: "Golden hour at Kulikalon, the seven lakes of Marguzor, and the iron ore reds of Pendjikent — built around the light, not the clock.",
+    cover: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1600&q=85",
     gallery: [
       "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=1400&q=85",
       "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1400&q=85",
@@ -131,7 +173,6 @@ export const blogPosts: BlogPost[] = [
     location: "Fann Mountains & Zeravshan Valley",
     date: "February 28, 2026",
     readTime: "7 min read",
-    author: "Pamir Luxe Editorial",
     category: "Tourist Adventures",
     content: [
       { type: "paragraph", text: "Most operators build itineraries around accommodation. We build ours around light. For a serious landscape photographer, the difference is everything." },
@@ -144,17 +185,12 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "winter-in-pamirs",
     title: "Winter in the Pamirs: Why the Quiet Season Is the Best Season",
-    excerpt:
-      "Frozen waterfalls, empty roads, and a sky so clear you can read by starlight. A January chronicle from Murghab.",
-    cover:
-      "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=1600&q=85",
-    gallery: [
-      "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1400&q=85",
-    ],
+    excerpt: "Frozen waterfalls, empty roads, and a sky so clear you can read by starlight. A January chronicle from Murghab.",
+    cover: "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=1600&q=85",
+    gallery: ["https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1400&q=85"],
     location: "Murghab, Eastern Pamirs",
     date: "January 30, 2026",
     readTime: "8 min read",
-    author: "Pamir Luxe Editorial",
     category: "Mountain Journeys",
     content: [
       { type: "paragraph", text: "Conventional wisdom says the Pamirs close in winter. Conventional wisdom is wrong. The high plateau, dry and wind-scoured, is more accessible in January than the muddy shoulder seasons — and infinitely more beautiful." },
@@ -165,6 +201,35 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
-export function getPostBySlug(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug);
+export async function seedAll() {
+  for (const v of VEHICLES) {
+    const existing = await db.select().from(vehiclesTable).where(eq(vehiclesTable.code, v.code));
+    if (existing.length === 0) {
+      await db.insert(vehiclesTable).values({ ...v, status: "available" });
+    } else {
+      await db
+        .update(vehiclesTable)
+        .set({
+          name: sql`CASE WHEN ${vehiclesTable.name} = '' THEN ${v.name} ELSE ${vehiclesTable.name} END`,
+          year: sql`CASE WHEN ${vehiclesTable.year} = 2024 THEN ${v.year} ELSE ${vehiclesTable.year} END`,
+          pricePerDay: sql`CASE WHEN ${vehiclesTable.pricePerDay} = 100 AND ${v.pricePerDay} <> 100 THEN ${v.pricePerDay} ELSE ${vehiclesTable.pricePerDay} END`,
+          description: sql`CASE WHEN ${vehiclesTable.description} = '' THEN ${v.description} ELSE ${vehiclesTable.description} END`,
+          mainImage: sql`CASE WHEN ${vehiclesTable.mainImage} = '' THEN ${v.mainImage} ELSE ${vehiclesTable.mainImage} END`,
+          features: sql`CASE WHEN ${vehiclesTable.features} = '[]'::jsonb THEN ${JSON.stringify(v.features)}::jsonb ELSE ${vehiclesTable.features} END`,
+          gallery: sql`CASE WHEN ${vehiclesTable.gallery} = '[]'::jsonb THEN ${JSON.stringify(v.gallery)}::jsonb ELSE ${vehiclesTable.gallery} END`,
+          sortOrder: sql`CASE WHEN ${vehiclesTable.sortOrder} = 0 THEN ${v.sortOrder} ELSE ${vehiclesTable.sortOrder} END`,
+        })
+        .where(eq(vehiclesTable.code, v.code));
+    }
+  }
+  for (const p of BLOG_POSTS) {
+    const existing = await db.select().from(blogPostsTable).where(eq(blogPostsTable.slug, p.slug));
+    if (existing.length === 0) {
+      await db.insert(blogPostsTable).values({
+        ...p,
+        author: "Pamir Luxe Editorial",
+        published: true,
+      });
+    }
+  }
 }

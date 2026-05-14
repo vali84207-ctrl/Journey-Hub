@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { bookingsTable } from "@workspace/db";
 import { CreateBookingBody } from "@workspace/api-zod";
+import { requireAdmin } from "../middlewares/requireAdmin";
 
 const router = Router();
 
@@ -102,7 +103,7 @@ router.post("/bookings", async (req, res) => {
   });
 });
 
-router.get("/bookings", async (_req, res) => {
+router.get("/bookings", requireAdmin, async (_req, res) => {
   const bookings = await db
     .select()
     .from(bookingsTable)

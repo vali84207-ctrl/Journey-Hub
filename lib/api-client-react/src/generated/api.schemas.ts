@@ -55,19 +55,112 @@ export const VehicleStatus = {
   available: "available",
   reserved: "reserved",
   busy: "busy",
+  hidden: "hidden",
 } as const;
 
 export interface Vehicle {
   id: number;
   code: string;
+  name: string;
   model: string;
+  year: number;
   type: string;
+  pax: number;
+  pricePerDay: number;
+  description: string;
+  features: string[];
+  mainImage: string;
+  gallery: string[];
+  bookingVisible: boolean;
+  sortOrder: number;
   status: VehicleStatus;
+  createdAt: string;
   updatedAt: string;
+}
+
+export interface VehicleInput {
+  /** @minLength 1 */
+  code: string;
+  name?: string;
+  /** @minLength 1 */
+  model: string;
+  /**
+   * @minimum 1990
+   * @maximum 2099
+   */
+  year?: number;
+  /** @minLength 1 */
+  type: string;
+  /**
+   * @minimum 1
+   * @maximum 50
+   */
+  pax?: number;
+  /** @minimum 0 */
+  pricePerDay?: number;
+  description?: string;
+  features?: string[];
+  mainImage?: string;
+  gallery?: string[];
+  bookingVisible?: boolean;
+  sortOrder?: number;
+  status?: VehicleStatus;
 }
 
 export interface VehicleStatusUpdate {
   status: VehicleStatus;
+}
+
+export type BlogContentBlockType =
+  (typeof BlogContentBlockType)[keyof typeof BlogContentBlockType];
+
+export const BlogContentBlockType = {
+  paragraph: "paragraph",
+  heading: "heading",
+  quote: "quote",
+  image: "image",
+} as const;
+
+export interface BlogContentBlock {
+  type: BlogContentBlockType;
+  text?: string;
+  src?: string;
+  caption?: string;
+}
+
+export interface BlogPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  cover: string;
+  gallery: string[];
+  location: string;
+  date: string;
+  readTime: string;
+  author: string;
+  category: string;
+  content: BlogContentBlock[];
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogPostInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  title: string;
+  excerpt: string;
+  cover: string;
+  gallery?: string[];
+  location?: string;
+  date: string;
+  readTime?: string;
+  author?: string;
+  category?: string;
+  content?: BlogContentBlock[];
+  published?: boolean;
 }
 
 export interface AdminLoginInput {

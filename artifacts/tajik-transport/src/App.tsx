@@ -1,8 +1,10 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import { getAdminToken } from "@/lib/adminAuth";
 
 import { Navbar } from "./components/home/Navbar";
 import { Hero } from "./components/home/Hero";
@@ -18,9 +20,14 @@ import { FleetPage } from "./pages/FleetPage";
 import { VehicleDetailPage } from "./pages/VehicleDetailPage";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogDetailPage } from "./pages/BlogDetailPage";
-import { AdminPage } from "./pages/AdminPage";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
+import { AdminFleetPage } from "./pages/admin/AdminFleetPage";
+import { AdminBlogPage } from "./pages/admin/AdminBlogPage";
+import { AdminBookingsPage } from "./pages/admin/AdminBookingsPage";
+
+setAuthTokenGetter(() => getAdminToken());
 
 const queryClient = new QueryClient();
 
@@ -49,9 +56,10 @@ function Router() {
       <Route path="/blog" component={BlogPage} />
       <Route path="/blog/:slug" component={BlogDetailPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
-      <Route path="/admin">
-        {() => <ProtectedRoute component={AdminPage} />}
-      </Route>
+      <Route path="/admin">{() => <ProtectedRoute component={AdminDashboardPage} />}</Route>
+      <Route path="/admin/fleet">{() => <ProtectedRoute component={AdminFleetPage} />}</Route>
+      <Route path="/admin/blog">{() => <ProtectedRoute component={AdminBlogPage} />}</Route>
+      <Route path="/admin/bookings">{() => <ProtectedRoute component={AdminBookingsPage} />}</Route>
       <Route component={NotFound} />
     </Switch>
   );
