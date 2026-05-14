@@ -68,7 +68,7 @@ export function Hero() {
               <h1
                 className="font-sans font-black text-white uppercase leading-[0.92] mb-2"
                 style={{
-                  fontSize: "clamp(3.2rem, 8vw, 7rem)",
+                  fontSize: "clamp(2.4rem, 6.2vw, 5.25rem)",
                   letterSpacing: "-0.01em",
                   textShadow: "0 4px 40px rgba(0,0,0,0.85), 0 0 80px rgba(221,184,95,0.08)",
                 }}
@@ -78,7 +78,7 @@ export function Hero() {
               <h1
                 className="font-sans font-black uppercase leading-[0.92] mb-8"
                 style={{
-                  fontSize: "clamp(3.2rem, 8vw, 7rem)",
+                  fontSize: "clamp(2.4rem, 6.2vw, 5.25rem)",
                   letterSpacing: "-0.01em",
                   background: "linear-gradient(180deg, #F0D079 0%, #DDB85F 45%, #B8923D 100%)",
                   WebkitBackgroundClip: "text",
