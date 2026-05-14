@@ -22,7 +22,7 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-4">
               <a
-                href="https://wa.me/992000000000"
+                href="https://wa.me/992004044035"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-wider"
@@ -31,7 +31,7 @@ export function Footer() {
               </a>
               <span className="text-white/10">|</span>
               <a
-                href="https://t.me/username"
+                href="https://t.me/PamirLuxeDrive"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-wider"

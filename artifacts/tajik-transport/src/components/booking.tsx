@@ -118,7 +118,7 @@ export function Booking() {
                     <FormItem>
                       <FormLabel className="text-gray-300 font-light tracking-wide">Phone Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="+992 XXX XX XX XX" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input placeholder="+992 00 404 40 35" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
                       </FormControl>
                       <FormMessage className="text-destructive/80" />
                     </FormItem>

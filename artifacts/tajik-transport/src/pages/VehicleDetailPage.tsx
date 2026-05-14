@@ -372,7 +372,7 @@ export function VehicleDetailPage() {
                     <p>Our dispatch team is available around the clock to assist with bookings, route planning, and any special requirements.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        { icon: Phone, label: "Phone / WhatsApp", value: "+992 00 000 0000" },
+                        { icon: Phone, label: "Phone / WhatsApp", value: "+992 00 404 40 35" },
                         { icon: MessageCircle, label: "Telegram", value: "@TajikElite" },
                         { icon: MapPin, label: "Base Location", value: "Dushanbe, Tajikistan" },
                         { icon: Clock, label: "Operating Hours", value: "24 / 7 — 365 days" },
@@ -388,13 +388,13 @@ export function VehicleDetailPage() {
                     </div>
                     <div className="flex flex-wrap gap-3 mt-4">
                       <Button
-                        onClick={() => window.open("https://wa.me/992000000000", "_blank")}
+                        onClick={() => window.open("https://wa.me/992004044035", "_blank")}
                         className="bg-[#25D366] hover:bg-[#1ebe5a] text-white rounded-none px-6 py-3 text-sm tracking-wider uppercase"
                       >
                         <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
                       </Button>
                       <Button
-                        onClick={() => window.open("https://t.me/TajikElite", "_blank")}
+                        onClick={() => window.open("https://t.me/PamirLuxeDrive", "_blank")}
                         className="bg-[#229ED9] hover:bg-[#1a8cc2] text-white rounded-none px-6 py-3 text-sm tracking-wider uppercase"
                       >
                         <Phone className="w-4 h-4 mr-2" /> Telegram
@@ -423,7 +423,7 @@ export function VehicleDetailPage() {
 
               {/* WhatsApp quick contact */}
               <Button
-                onClick={() => window.open(`https://wa.me/992000000000?text=I'd like to book ${vehicle.code} — `, "_blank")}
+                onClick={() => window.open(`https://wa.me/992004044035?text=I'd like to book ${vehicle.code} — `, "_blank")}
                 className="w-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366] hover:text-white rounded-none mb-6 py-3 text-sm tracking-wider uppercase transition-all duration-300"
               >
                 <MessageCircle className="w-4 h-4 mr-2" /> Book via WhatsApp
@@ -445,7 +445,7 @@ export function VehicleDetailPage() {
                     This vehicle is <span className="text-amber-400">{vehicle.status}</span>. Contact us to check alternatives.
                   </p>
                   <Button
-                    onClick={() => window.open("https://wa.me/992000000000", "_blank")}
+                    onClick={() => window.open("https://wa.me/992004044035", "_blank")}
                     className="w-full bg-transparent border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-none"
                   >
                     <Phone className="w-4 h-4 mr-2" /> Inquire via WhatsApp

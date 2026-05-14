@@ -53,7 +53,7 @@ export function Contact() {
 
             <div className="space-y-6">
               {[
-                { icon: Phone, label: "Phone", value: "+992 00 000 0000", mono: false },
+                { icon: Phone, label: "Phone", value: "+992 00 404 40 35", mono: false },
                 { icon: Mail, label: "Email", value: "info@pamirLuxedrive.com", mono: false },
                 { icon: MapPin, label: "Headquarters", value: "Rudaki Avenue, Dushanbe\nTajikistan", mono: false },
               ].map(({ icon: Icon, label, value }) => (
@@ -78,7 +78,7 @@ export function Contact() {
                 <Button
                   variant="outline"
                   className="rounded-none border-[#25D366]/40 text-[#25D366] hover:bg-[#25D366] hover:text-white bg-transparent h-11 px-5 text-sm transition-all duration-300"
-                  onClick={() => window.open("https://wa.me/992000000000", "_blank")}
+                  onClick={() => window.open("https://wa.me/992004044035", "_blank")}
                 >
                   <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
                 </Button>

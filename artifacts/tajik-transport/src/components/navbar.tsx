@@ -56,7 +56,7 @@ export function Navbar() {
             
             <Button 
               className="bg-primary/10 text-primary border border-primary hover:bg-primary hover:text-black transition-all duration-300"
-              onClick={() => window.open("https://wa.me/992000000000", "_blank")}
+              onClick={() => window.open("https://wa.me/992004044035", "_blank")}
             >
               <Phone className="w-4 h-4 mr-2" />
               WhatsApp
@@ -84,7 +84,7 @@ export function Navbar() {
           
           <Button 
             className="bg-primary text-black hover:bg-primary/90 w-full"
-            onClick={() => window.open("https://wa.me/992000000000", "_blank")}
+            onClick={() => window.open("https://wa.me/992004044035", "_blank")}
           >
             <Phone className="w-4 h-4 mr-2" />
             WhatsApp
