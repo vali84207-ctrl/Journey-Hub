@@ -50,34 +50,34 @@
 }
 
 :root {
-  --background: 0 0% 4%; /* #0a0a0a */
+  --background: 0 0% 5%;       /* slightly lighter than pure #0a0a0a */
   --foreground: 0 0% 100%;
-  --border: 0 0% 15%;
-  --card: 0 0% 10%; /* #1a1a1a */
+  --border: 0 0% 18%;
+  --card: 0 0% 11%;             /* lifted from 10% */
   --card-foreground: 0 0% 100%;
-  --card-border: 44 55% 40%; /* subtle gold border for cards */
-  --popover: 0 0% 10%;
+  --card-border: 44 55% 40%;
+  --popover: 0 0% 11%;
   --popover-foreground: 0 0% 100%;
   --popover-border: 44 55% 40%;
   
-  /* Gold primary */
-  --primary: 44 55% 54%; /* #C9A84C */
+  /* Gold primary — slightly richer saturation */
+  --primary: 44 65% 56%;        /* #CBA94E — a touch brighter */
   --primary-foreground: 0 0% 0%;
   
-  --secondary: 0 0% 15%;
+  --secondary: 0 0% 17%;
   --secondary-foreground: 0 0% 100%;
   
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 70%;
+  --muted: 0 0% 17%;
+  --muted-foreground: 0 0% 72%;
   
-  --accent: 44 55% 54%;
+  --accent: 44 65% 56%;
   --accent-foreground: 0 0% 0%;
   
   --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
   
-  --input: 0 0% 20%;
-  --ring: 44 55% 54%;
+  --input: 0 0% 22%;
+  --ring: 44 65% 56%;
   
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: 'Playfair Display', serif;
@@ -85,27 +85,27 @@
 }
 
 .dark {
-  --background: 0 0% 4%;
+  --background: 0 0% 5%;
   --foreground: 0 0% 100%;
-  --border: 0 0% 15%;
-  --card: 0 0% 10%;
+  --border: 0 0% 18%;
+  --card: 0 0% 11%;
   --card-foreground: 0 0% 100%;
-  --card-border: 0 0% 20%;
-  --popover: 0 0% 10%;
+  --card-border: 0 0% 22%;
+  --popover: 0 0% 11%;
   --popover-foreground: 0 0% 100%;
-  --popover-border: 0 0% 20%;
-  --primary: 44 55% 54%; /* #C9A84C */
+  --popover-border: 0 0% 22%;
+  --primary: 44 65% 56%;
   --primary-foreground: 0 0% 0%;
-  --secondary: 0 0% 15%;
+  --secondary: 0 0% 17%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 70%;
-  --accent: 44 55% 54%;
+  --muted: 0 0% 17%;
+  --muted-foreground: 0 0% 72%;
+  --accent: 44 65% 56%;
   --accent-foreground: 0 0% 0%;
   --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
-  --input: 0 0% 20%;
-  --ring: 44 55% 54%;
+  --input: 0 0% 22%;
+  --ring: 44 65% 56%;
 }
 
 @layer base {
@@ -138,15 +138,60 @@
   }
 }
 
+/* ── Utility classes ──────────────────────────────────────────────── */
+
 .glass-panel {
-  @apply bg-card/60 backdrop-blur-md border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)];
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
 .gold-glow {
-  box-shadow: 0 0 20px rgba(201, 168, 76, 0.15);
+  box-shadow: 0 0 24px rgba(203, 169, 78, 0.2);
 }
 
 .hover-gold-glow:hover {
-  box-shadow: 0 0 25px rgba(201, 168, 76, 0.3);
-  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 32px rgba(203, 169, 78, 0.25), 0 2px 16px rgba(0,0,0,0.4);
+  border-color: hsl(var(--primary) / 0.45);
+}
+
+/* Gold top-border glow on card hover */
+.card-gold-top {
+  position: relative;
+  overflow: hidden;
+}
+.card-gold-top::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-gold-top:hover::before {
+  opacity: 1;
+}
+
+/* Ambient gold glow behind sections */
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(203, 169, 78, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Divider line with gold centre */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent);
 }

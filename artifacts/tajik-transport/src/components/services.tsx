@@ -38,9 +38,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
+    transition: { staggerChildren: 0.1 }
   }
 };
 
@@ -55,27 +53,35 @@ const itemVariants = {
 
 export function Services() {
   return (
-    <section id="services" className="py-24 bg-black relative">
+    <section id="services" className="py-28 bg-black relative section-glow">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light"
+          >
+            What We Offer
+          </motion.p>
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif text-white mb-4"
+            className="text-4xl md:text-5xl font-serif text-white mb-5"
           >
             Our Services
           </motion.h2>
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "80px" }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-[2px] bg-primary mx-auto"
+            className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
           />
         </div>
 
-        <motion.div 
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -84,12 +90,19 @@ export function Services() {
         >
           {services.map((service, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <div className="glass-panel p-8 rounded-sm h-full hover-gold-glow transition-all duration-500 group cursor-default">
-                <div className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-primary/50 transition-colors">
+              <div className="glass-panel card-gold-top p-8 h-full hover-gold-glow transition-all duration-500 group cursor-default">
+                {/* Icon */}
+                <div className="w-14 h-14 flex items-center justify-center mb-6 border border-primary/20 group-hover:border-primary/60 transition-all duration-400 relative"
+                  style={{ background: 'rgba(203,169,78,0.06)' }}
+                >
                   <service.icon className="w-6 h-6 text-primary" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                    style={{ boxShadow: 'inset 0 0 20px rgba(203,169,78,0.12)' }} />
                 </div>
-                <h3 className="text-xl font-serif text-white mb-3 tracking-wide">{service.title}</h3>
-                <p className="text-gray-400 font-light leading-relaxed">
+                <h3 className="text-xl font-serif text-white mb-3 tracking-wide group-hover:text-primary/90 transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="text-gray-300/80 font-light leading-relaxed text-[15px]">
                   {service.description}
                 </p>
               </div>

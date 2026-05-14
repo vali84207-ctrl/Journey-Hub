@@ -4,23 +4,34 @@ import { Button } from "@/components/ui/button";
 
 export function Contact() {
   return (
-    <section id="contact" className="py-24 bg-[#050505] relative border-t border-white/5">
+    <section id="contact" className="py-28 bg-[#070707] relative">
+      {/* Top gold divider */}
+      <div className="gold-divider absolute top-0 left-0 right-0" />
+
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light"
+          >
+            Reach Out
+          </motion.p>
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif text-white mb-4"
+            className="text-4xl md:text-5xl font-serif text-white mb-5"
           >
             Contact Us
           </motion.h2>
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "80px" }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-[2px] bg-primary mx-auto"
+            className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
           />
         </div>
 
@@ -34,67 +45,56 @@ export function Contact() {
             className="space-y-10"
           >
             <div>
-              <h3 className="text-2xl font-serif text-white mb-6">Get in Touch</h3>
-              <p className="text-gray-400 font-light leading-relaxed mb-8">
+              <h3 className="text-2xl font-serif text-white mb-4">Get in Touch</h3>
+              <p className="text-gray-300/70 font-light leading-relaxed text-[15px]">
                 Our concierge team is available 24/7 to assist you with reservations, special requests, and inquiries. Experience the pinnacle of ground transportation in Tajikistan.
               </p>
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center shrink-0 mt-1">
-                  <Phone className="w-5 h-5 text-primary" />
+              {[
+                { icon: Phone, label: "Phone", value: "+992 00 000 0000", mono: false },
+                { icon: Mail, label: "Email", value: "info@pamirLuxedrive.com", mono: false },
+                { icon: MapPin, label: "Headquarters", value: "Rudaki Avenue, Dushanbe\nTajikistan", mono: false },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-start gap-4 group">
+                  <div
+                    className="w-12 h-12 flex items-center justify-center shrink-0 mt-0.5 border border-white/12 group-hover:border-primary/50 transition-all duration-300"
+                    style={{ background: 'rgba(203,169,78,0.05)' }}
+                  >
+                    <Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{label}</p>
+                    <p className="text-white font-light leading-relaxed whitespace-pre-line">{value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500 uppercase tracking-widest mb-1">Phone</p>
-                  <p className="text-lg text-white font-light">+992 00 000 0000</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center shrink-0 mt-1">
-                  <Mail className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 uppercase tracking-widest mb-1">Email</p>
-                  <p className="text-lg text-white font-light">info@tajikelite.com</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center shrink-0 mt-1">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 uppercase tracking-widest mb-1">Headquarters</p>
-                  <p className="text-lg text-white font-light">Rudaki Avenue, Dushanbe<br/>Tajikistan</p>
-                </div>
-              </div>
+              ))}
             </div>
 
-            <div className="pt-6">
-              <p className="text-sm text-gray-500 uppercase tracking-widest mb-4">Connect With Us</p>
-              <div className="flex flex-wrap gap-4">
-                <Button 
-                  variant="outline" 
-                  className="rounded-none border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-white bg-transparent h-12 px-6"
+            <div className="pt-2">
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-4">Connect With Us</p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="outline"
+                  className="rounded-none border-[#25D366]/40 text-[#25D366] hover:bg-[#25D366] hover:text-white bg-transparent h-11 px-5 text-sm transition-all duration-300"
                   onClick={() => window.open("https://wa.me/992000000000", "_blank")}
                 >
-                  <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
+                  <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="rounded-none border-[#0088cc]/50 text-[#0088cc] hover:bg-[#0088cc] hover:text-white bg-transparent h-12 px-6"
-                  onClick={() => window.open("https://t.me/TajikElite", "_blank")}
+                <Button
+                  variant="outline"
+                  className="rounded-none border-[#0088cc]/40 text-[#0088cc] hover:bg-[#0088cc] hover:text-white bg-transparent h-11 px-5 text-sm transition-all duration-300"
+                  onClick={() => window.open("https://t.me/PamirLuxeDrive", "_blank")}
                 >
-                  <Send className="w-5 h-5 mr-2" /> Telegram
+                  <Send className="w-4 h-4 mr-2" /> Telegram
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="rounded-none border-[#E1306C]/50 text-[#E1306C] hover:bg-gradient-to-r hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#F56040] hover:text-white hover:border-transparent bg-transparent h-12 px-6"
-                  onClick={() => window.open("https://instagram.com/TajikElite", "_blank")}
+                <Button
+                  variant="outline"
+                  className="rounded-none border-[#E1306C]/40 text-[#E1306C] hover:bg-gradient-to-r hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#F56040] hover:text-white hover:border-transparent bg-transparent h-11 px-5 text-sm transition-all duration-300"
+                  onClick={() => window.open("https://instagram.com/PamirLuxeDrive", "_blank")}
                 >
-                  <Instagram className="w-5 h-5 mr-2" /> Instagram
+                  <Instagram className="w-4 h-4 mr-2" /> Instagram
                 </Button>
               </div>
             </div>
@@ -105,19 +105,19 @@ export function Contact() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="h-[400px] md:h-[500px] w-full bg-white/5 border border-white/10 rounded-sm overflow-hidden"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="h-[400px] md:h-[500px] w-full border overflow-hidden"
+            style={{ borderColor: 'rgba(203,169,78,0.2)', boxShadow: '0 0 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(203,169,78,0.08)' }}
           >
-            {/* Using a styled map iframe centered on Dushanbe */}
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100140.23071378875!2d68.70425712282245!3d38.561146399120614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b5d1685256b3bf%3A0x8bd57dc5eb5e6d92!2sDushanbe%2C%20Tajikistan!5e0!3m2!1sen!2sus!4v1709214316988!5m2!1sen!2sus" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(80%) grayscale(80%)' }} 
-              allowFullScreen={true} 
-              loading="lazy" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100140.23071378875!2d68.70425712282245!3d38.561146399120614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b5d1685256b3bf%3A0x8bd57dc5eb5e6d92!2sDushanbe%2C%20Tajikistan!5e0!3m2!1sen!2sus!4v1709214316988!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(80%) grayscale(80%)' }}
+              allowFullScreen={true}
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+            />
           </motion.div>
         </div>
       </div>

@@ -35,23 +35,31 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section className="py-24 bg-black relative">
+    <section className="py-28 bg-black relative section-glow">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
         <div className="text-center mb-16">
-          <motion.h2 
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light"
+          >
+            Common Questions
+          </motion.p>
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif text-white mb-4"
+            className="text-4xl md:text-5xl font-serif text-white mb-5"
           >
             Frequently Asked Questions
           </motion.h2>
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "80px" }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-[2px] bg-primary mx-auto"
+            className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
           />
         </div>
 
@@ -61,17 +69,18 @@ export function FAQ() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <Accordion type="single" collapsible className="w-full space-y-3">
             {faqs.map((faq, index) => (
-              <AccordionItem 
-                key={index} 
+              <AccordionItem
+                key={index}
                 value={`item-${index}`}
-                className="border border-white/10 bg-white/[0.02] px-6 py-2"
+                className="border border-white/8 px-6 py-1 transition-colors duration-300 hover:border-primary/25"
+                style={{ background: 'rgba(255,255,255,0.025)' }}
               >
-                <AccordionTrigger className="text-lg font-serif hover:text-primary hover:no-underline text-left">
+                <AccordionTrigger className="text-base md:text-lg font-serif hover:text-primary hover:no-underline text-left py-5 text-white/90">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-400 font-light leading-relaxed pb-4 text-base">
+                <AccordionContent className="text-gray-300/75 font-light leading-relaxed pb-5 text-[15px]">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
