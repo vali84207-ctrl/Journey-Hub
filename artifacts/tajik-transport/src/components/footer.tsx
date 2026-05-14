@@ -31,7 +31,7 @@ export function Footer() {
               </a>
               <span className="text-white/10">|</span>
               <a
-                href="https://t.me/PamirLuveDrive"
+                href="https://t.me/PamirLuxeDrive"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-primary transition-colors text-sm uppercase tracking-wider"
