@@ -1,117 +1,189 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Crown, User, Shield, Clock } from "lucide-react";
+import { Link } from "wouter";
+
+const vehicles = [
+  { code: "LC300-01", type: "LC300", id: 1, pos: "object-right" },
+  { code: "LC300-02", type: "LC300", id: 2, pos: "object-right" },
+  { code: "LC300-03", type: "LC300", id: 3, pos: "object-right" },
+  { code: "LC200-01", type: "LC200", id: 4, pos: "object-left" },
+  { code: "LC200-02", type: "LC200", id: 5, pos: "object-left" },
+  { code: "LC200-03", type: "LC200", id: 6, pos: "object-left" },
+];
+
+const features = [
+  { icon: Crown, title: "Premium Fleet", desc: "Latest luxury vehicles" },
+  { icon: User, title: "Professional Drivers", desc: "Experienced & discreet" },
+  { icon: Shield, title: "Safety First", desc: "Your safety is our priority" },
+  { icon: Clock, title: "24/7 Service", desc: "We are always here" },
+];
 
 export function Hero() {
-  const scrollToBooking = () => {
-    document.querySelector("#book")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transform transition-transform duration-[20s] ease-out hover:scale-100"
-          style={{ backgroundImage: `url(/lc-hero.png)` }}
-        />
-        {/* Reduced overlays so the photo reads more vividly */}
-        <div className="absolute inset-0 bg-black/38" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/30" />
-        {/* Subtle gold ambient glow at the centre */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 70%, rgba(203,169,78,0.06) 0%, transparent 65%)' }} />
-      </div>
+    <section className="relative bg-black">
 
-      {/* Content */}
-      <div className="container relative z-10 mx-auto px-6 py-32 text-center max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-        >
-          {/* Decorative gold rule */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mx-auto mb-6 h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent"
+      {/* ── CINEMATIC HERO ───────────────────────────── */}
+      <div className="relative min-h-screen flex flex-col overflow-hidden">
+
+        {/* Background */}
+        <div className="absolute inset-0">
+          <img
+            src="/lc-hero.png"
+            alt="Pamir Luxe Drive"
+            className="w-full h-full object-cover object-center"
+            style={{ transform: "scale(1.04)", transformOrigin: "center 40%" }}
           />
-          <h2 className="text-primary font-medium tracking-[0.25em] uppercase mb-5 text-xs md:text-sm">
-            Premium VIP Transportation
-          </h2>
-          <h1
-            className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-6"
-            style={{ textShadow: '0 2px 40px rgba(0,0,0,0.8)' }}
-          >
-            Luxury Across<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-yellow-200 to-primary">
-              Tajikistan
-            </span>
-          </h1>
-          <p className="text-base md:text-xl text-white/75 font-light mb-12 max-w-2xl mx-auto tracking-wide leading-relaxed">
-            Comfort. Safety. Prestige. Experience unhurried elegance with our exclusive Land Cruiser fleet and professional chauffeurs.
-          </p>
-        </motion.div>
+          {/* Left dark gradient for text legibility */}
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(105deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.70) 38%, rgba(0,0,0,0.28) 65%, rgba(0,0,0,0.20) 100%)" }}
+          />
+          {/* Bottom fade into vehicle strip */}
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 45%)" }}
+          />
+          {/* Top fade */}
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 18%)" }}
+          />
+          {/* Subtle warm ambient over mountain */}
+          <div className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 70% 35%, rgba(203,169,78,0.07) 0%, transparent 55%)" }}
+          />
+        </div>
 
+        {/* Text content — left aligned */}
+        <div className="relative z-10 flex-1 flex items-center">
+          <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-28 pt-32 pb-16 max-w-3xl">
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.2 }}
+            >
+              {/* Eyebrow */}
+              <div className="flex items-center gap-3 mb-7">
+                <div className="h-px w-8 bg-primary/80" />
+                <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">
+                  Premium VIP Transportation — Tajikistan
+                </span>
+              </div>
+
+              {/* Main headline */}
+              <h1
+                className="font-sans font-black text-white uppercase leading-[0.92] mb-2"
+                style={{
+                  fontSize: "clamp(3.2rem, 8vw, 7rem)",
+                  letterSpacing: "-0.01em",
+                  textShadow: "0 4px 60px rgba(0,0,0,0.9)",
+                }}
+              >
+                Luxury Travel
+              </h1>
+              <h1
+                className="font-sans font-black uppercase leading-[0.92] mb-8"
+                style={{
+                  fontSize: "clamp(3.2rem, 8vw, 7rem)",
+                  letterSpacing: "-0.01em",
+                  color: "hsl(44,65%,56%)",
+                  textShadow: "0 4px 60px rgba(0,0,0,0.7), 0 0 40px rgba(203,169,78,0.2)",
+                }}
+              >
+                In Tajikistan
+              </h1>
+
+              {/* Subtitle */}
+              <p className="text-white/70 text-base lg:text-[17px] font-light leading-relaxed mb-10 max-w-sm">
+                Premium transportation services<br />for the most discerning travelers.
+              </p>
+
+              {/* CTA buttons */}
+              <div className="flex flex-wrap gap-4">
+                <Link href="/fleet">
+                  <button
+                    className="flex items-center gap-3 border border-white/55 text-white hover:bg-white hover:text-black transition-all duration-300 text-xs tracking-[0.22em] uppercase font-semibold px-8 py-4"
+                  >
+                    Explore Fleet <ArrowRight size={14} />
+                  </button>
+                </Link>
+                <button
+                  onClick={() => document.querySelector("#book")?.scrollIntoView({ behavior: "smooth" })}
+                  className="flex items-center gap-3 bg-primary text-black hover:bg-primary/90 transition-all duration-300 text-xs tracking-[0.22em] uppercase font-semibold px-8 py-4"
+                  style={{ boxShadow: "0 0 24px rgba(203,169,78,0.35)" }}
+                >
+                  Book Now
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* ── Vehicle showcase row ─────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-5"
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="relative z-10 grid grid-cols-3 md:grid-cols-6"
+          style={{ borderTop: "1px solid rgba(203,169,78,0.15)" }}
         >
-          <Button
-            size="lg"
-            className="w-full sm:w-auto bg-primary text-black hover:bg-primary/90 font-semibold tracking-wider uppercase px-12 py-7 text-sm rounded-none border border-primary transition-all duration-300"
-            style={{ boxShadow: '0 0 28px rgba(203,169,78,0.35)' }}
-            onClick={scrollToBooking}
-          >
-            Book Now
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="w-full sm:w-auto bg-white/5 text-white border-white/25 hover:bg-white/10 hover:border-white/60 font-semibold tracking-wider uppercase px-12 py-7 text-sm rounded-none transition-all duration-300 backdrop-blur-sm"
-            onClick={() => window.open("https://wa.me/992000000000", "_blank")}
-          >
-            WhatsApp
-          </Button>
-        </motion.div>
-
-        {/* Stats strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
-          className="mt-16 flex flex-wrap justify-center gap-10 md:gap-16"
-        >
-          {[
-            { value: "6", label: "Luxury Vehicles" },
-            { value: "24/7", label: "Available" },
-            { value: "100%", label: "Professional" },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-2xl md:text-3xl font-serif text-primary font-bold">{value}</p>
-              <p className="text-xs text-white/45 uppercase tracking-widest mt-1">{label}</p>
-            </div>
+          {vehicles.map((v, i) => (
+            <Link key={v.code} href={`/fleet/${v.id}`}>
+              <div className="group relative h-32 md:h-40 overflow-hidden cursor-pointer"
+                style={{ borderRight: i < 5 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
+              >
+                <img
+                  src="/lc-hero.png"
+                  alt={v.code}
+                  className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${v.pos}`}
+                />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-400" />
+                {/* Bottom gradient */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)" }} />
+                {/* Gold top line on hover */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
+                {/* Label */}
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-[9px] text-primary/80 uppercase tracking-widest font-light">{v.type}</p>
+                  <p className="text-white text-[10px] font-mono tracking-wider mt-0.5">{v.code}</p>
+                </div>
+                {/* Logo watermark on hover */}
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-70 transition-opacity duration-300">
+                  <img src="/pamir-luxe-logo.png" alt="" className="h-5 w-auto" />
+                </div>
+              </div>
+            </Link>
           ))}
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* ── Feature strip ───────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.8, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        transition={{ duration: 0.8, delay: 0.9 }}
+        className="grid grid-cols-2 lg:grid-cols-4"
+        style={{
+          background: "rgba(8,8,8,1)",
+          borderTop: "1px solid rgba(203,169,78,0.18)",
+          borderBottom: "1px solid rgba(255,255,255,0.04)",
+        }}
       >
-        <span className="text-[10px] text-white/35 uppercase tracking-widest font-medium">Scroll</span>
-        <div className="w-px h-12 bg-white/15 relative overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-0 w-full h-1/2 bg-primary"
-            animate={{ top: ["-50%", "100%"] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-          />
-        </div>
+        {features.map(({ icon: Icon, title, desc }, i) => (
+          <div
+            key={title}
+            className="flex items-center gap-4 px-8 py-7 group"
+            style={{ borderRight: i < 3 ? "1px solid rgba(255,255,255,0.05)" : "none" }}
+          >
+            <div className="w-10 h-10 flex items-center justify-center flex-shrink-0"
+              style={{ border: "1px solid rgba(203,169,78,0.35)" }}>
+              <Icon size={17} style={{ color: "hsl(44,65%,56%)" }} />
+            </div>
+            <div>
+              <p className="text-white text-xs font-semibold uppercase tracking-[0.12em]">{title}</p>
+              <p className="text-white/40 text-[11px] mt-0.5 font-light">{desc}</p>
+            </div>
+          </div>
+        ))}
       </motion.div>
     </section>
   );

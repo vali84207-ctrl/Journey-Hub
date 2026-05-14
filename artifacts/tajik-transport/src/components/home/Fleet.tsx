@@ -1,147 +1,131 @@
 import { motion } from "framer-motion";
-import { Users, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Users, ArrowRight, Wifi, Wind } from "lucide-react";
 import { Link } from "wouter";
 
 const fleet = [
-  {
-    code: "LC300-01",
-    type: "LC300",
-    name: "Land Cruiser 300",
-    subtitle: "New Generation · 2021+",
-    pax: 7,
-    price: 120,
-    id: 1,
-  },
-  {
-    code: "LC300-02",
-    type: "LC300",
-    name: "Land Cruiser 300",
-    subtitle: "New Generation · 2021+",
-    pax: 7,
-    price: 120,
-    id: 2,
-  },
-  {
-    code: "LC300-03",
-    type: "LC300",
-    name: "Land Cruiser 300",
-    subtitle: "New Generation · 2021+",
-    pax: 7,
-    price: 120,
-    id: 3,
-  },
-  {
-    code: "LC200-01",
-    type: "LC200",
-    name: "Land Cruiser 200",
-    subtitle: "Classic Series · 2015–2021",
-    pax: 7,
-    price: 100,
-    id: 4,
-  },
-  {
-    code: "LC200-02",
-    type: "LC200",
-    name: "Land Cruiser 200",
-    subtitle: "Classic Series · 2015–2021",
-    pax: 7,
-    price: 100,
-    id: 5,
-  },
-  {
-    code: "LC200-03",
-    type: "LC200",
-    name: "Land Cruiser 200",
-    subtitle: "Classic Series · 2015–2021",
-    pax: 7,
-    price: 100,
-    id: 6,
-  },
+  { code: "LC300-01", type: "LC300", name: "Land Cruiser 300", subtitle: "New Generation · 2021+", pax: 7, price: 120, id: 1, pos: "object-right" },
+  { code: "LC300-02", type: "LC300", name: "Land Cruiser 300", subtitle: "New Generation · 2021+", pax: 7, price: 120, id: 2, pos: "object-right" },
+  { code: "LC300-03", type: "LC300", name: "Land Cruiser 300", subtitle: "New Generation · 2021+", pax: 7, price: 120, id: 3, pos: "object-right" },
+  { code: "LC200-01", type: "LC200", name: "Land Cruiser 200", subtitle: "Classic Series · 2015–2021", pax: 7, price: 100, id: 4, pos: "object-left" },
+  { code: "LC200-02", type: "LC200", name: "Land Cruiser 200", subtitle: "Classic Series · 2015–2021", pax: 7, price: 100, id: 5, pos: "object-left" },
+  { code: "LC200-03", type: "LC200", name: "Land Cruiser 200", subtitle: "Classic Series · 2015–2021", pax: 7, price: 100, id: 6, pos: "object-left" },
 ];
 
 export function Fleet() {
   return (
-    <section id="fleet" className="py-32 relative bg-[#050505]">
+    <section id="fleet" className="py-28 relative" style={{ background: "#060606" }}>
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="text-center mb-20">
-          <p className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light">Exclusive Fleet</p>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Toyota Land Cruiser</h2>
-          <div className="w-24 h-[2px] bg-primary mx-auto mb-6" />
-          <p className="text-gray-400 font-light text-lg max-w-2xl mx-auto">
-            Six meticulously maintained Land Cruiser 200 and 300 series vehicles, each piloted by a professional chauffeur.
-          </p>
+
+        {/* Header */}
+        <div className="mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-4 mb-5"
+          >
+            <div className="h-px w-10 bg-primary/70" />
+            <p className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">Exclusive Fleet</p>
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="font-sans font-black text-white uppercase leading-none"
+            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.01em" }}
+          >
+            Toyota Land Cruiser
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-white/45 font-light text-sm mt-4 max-w-xl"
+          >
+            Six meticulously maintained Land Cruiser 200 and 300 series vehicles, each piloted by a professional VIP chauffeur.
+          </motion.p>
         </div>
 
-        {/* Hero image banner */}
-        <div className="relative mb-16 overflow-hidden h-64 md:h-80">
+        {/* Fleet banner */}
+        <div className="relative overflow-hidden mb-12 h-52 md:h-72">
           <img
             src="/lc-hero.png"
-            alt="Pamir Luxe Drive Fleet — LC200 & LC300"
-            className="w-full h-full object-cover object-center scale-105"
+            alt="Pamir Luxe Drive Fleet"
+            className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/60 via-transparent to-[#050505]/60" />
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-12 text-center">
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, #060606 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%, rgba(0,0,0,0.6) 100%)" }} />
+          {/* Model badges */}
+          <div className="absolute bottom-6 left-8 right-8 flex justify-between items-end">
             <div>
-              <p className="text-3xl font-serif text-primary font-bold">LC200</p>
-              <p className="text-xs text-white/60 uppercase tracking-widest mt-1">Classic Series</p>
+              <p className="text-primary font-black text-2xl md:text-3xl uppercase tracking-tight font-sans">LC200</p>
+              <p className="text-white/50 text-[10px] uppercase tracking-widest">Classic Series</p>
             </div>
-            <div className="w-[1px] bg-white/10" />
-            <div>
-              <p className="text-3xl font-serif text-primary font-bold">LC300</p>
-              <p className="text-xs text-white/60 uppercase tracking-widest mt-1">New Generation</p>
+            <div className="text-right">
+              <p className="text-primary font-black text-2xl md:text-3xl uppercase tracking-tight font-sans">LC300</p>
+              <p className="text-white/50 text-[10px] uppercase tracking-widest">New Generation</p>
             </div>
           </div>
         </div>
 
         {/* Vehicle cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "rgba(255,255,255,0.05)" }}>
           {fleet.map((car, index) => (
             <motion.div
               key={car.code}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: index * 0.08 }}
-              className="group bg-[#0a0a0a] border border-white/5 hover:border-primary/40 overflow-hidden transition-all duration-500"
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.55, delay: index * 0.07 }}
+              style={{ background: "#060606" }}
             >
-              <Link href={`/fleet/${car.id}`} className="block">
+              <Link href={`/fleet/${car.id}`} className="block group h-full">
                 {/* Image */}
-                <div className="aspect-[16/10] overflow-hidden relative">
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors z-10 duration-500" />
+                <div className="relative h-52 overflow-hidden">
                   <img
                     src="/lc-hero.png"
                     alt={car.name}
-                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${
-                      car.type === "LC300" ? "object-right" : "object-left"
-                    }`}
+                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${car.pos}`}
                   />
+                  <div className="absolute inset-0 bg-black/35 group-hover:bg-black/15 transition-colors duration-500" />
+                  {/* Top gold line */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
                   {/* Code badge */}
-                  <div className="absolute top-4 left-4 z-20">
-                    <span className="bg-black/80 backdrop-blur-sm border border-white/10 px-3 py-1 text-xs font-mono tracking-wider text-white">
+                  <div className="absolute top-4 left-4">
+                    <span className="text-[10px] font-mono tracking-widest text-white/90 bg-black/70 backdrop-blur-sm px-2.5 py-1 border border-white/10">
                       {car.code}
                     </span>
                   </div>
-                  {/* Logo badge */}
-                  <div className="absolute bottom-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <img src="/pamir-luxe-logo.png" alt="PLD" className="h-8 w-auto drop-shadow-lg" />
+                  {/* Type badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className="text-[10px] uppercase tracking-wider text-primary/90 bg-black/70 backdrop-blur-sm px-2.5 py-1 border border-primary/20">
+                      {car.type}
+                    </span>
                   </div>
                 </div>
 
-                <div className="p-8">
-                  <p className="text-xs text-primary/70 uppercase tracking-widest mb-1">{car.subtitle}</p>
-                  <h3 className="text-2xl font-serif font-bold text-white mb-5">{car.name}</h3>
+                {/* Content */}
+                <div className="p-6 border-t border-white/5 group-hover:border-primary/20 transition-colors duration-400">
+                  <p className="text-primary/60 text-[9px] uppercase tracking-[0.3em] mb-1">{car.subtitle}</p>
+                  <h3 className="text-white font-sans font-bold text-lg uppercase tracking-tight mb-4">{car.name}</h3>
 
-                  <div className="flex items-center gap-3 text-white/60 mb-8">
-                    <Users className="w-4 h-4 text-primary/60" />
-                    <span className="font-light tracking-wide text-sm">Up to {car.pax} Passengers</span>
-                    <span className="text-white/20 ml-auto text-sm font-light">From <span className="text-primary font-serif">${car.price}</span>/day</span>
+                  <div className="flex items-center gap-5 text-white/40 text-xs mb-5">
+                    <span className="flex items-center gap-1.5"><Users size={11} className="text-primary/50" />{car.pax} Pax</span>
+                    <span className="flex items-center gap-1.5"><Wifi size={11} className="text-primary/50" />WiFi</span>
+                    <span className="flex items-center gap-1.5"><Wind size={11} className="text-primary/50" />AC</span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                    <span className="text-xs text-gray-500 uppercase tracking-widest">View Details</span>
-                    <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                  <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div>
+                      <span className="text-[9px] text-white/35 uppercase tracking-widest block">From</span>
+                      <span className="text-primary font-sans font-bold text-xl">${car.price}</span>
+                      <span className="text-white/30 text-xs">/day</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/40 group-hover:text-primary transition-colors duration-300 text-[10px] tracking-widest uppercase">
+                      Details <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -150,11 +134,11 @@ export function Fleet() {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center">
+        <div className="mt-12 flex justify-center">
           <Link href="/fleet">
-            <Button className="bg-transparent border border-primary/50 hover:bg-primary hover:text-black text-primary font-semibold tracking-widest uppercase px-12 py-6 rounded-none transition-all duration-300 text-sm">
+            <button className="border border-primary/50 text-primary hover:bg-primary hover:text-black transition-all duration-300 text-xs tracking-[0.25em] uppercase font-semibold px-12 py-4">
               View Full Fleet
-            </Button>
+            </button>
           </Link>
         </div>
       </div>
