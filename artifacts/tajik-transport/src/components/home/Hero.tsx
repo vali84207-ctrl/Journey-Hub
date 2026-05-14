@@ -1,15 +1,16 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Crown, User, Shield, Clock } from "lucide-react";
 import { Link } from "wouter";
-
-const features = [
-  { icon: Crown, title: "Premium Fleet", desc: "Latest luxury vehicles" },
-  { icon: User, title: "Professional Drivers", desc: "Experienced & discreet" },
-  { icon: Shield, title: "Safety First", desc: "Your safety is our priority" },
-  { icon: Clock, title: "24/7 Service", desc: "We are always here" },
-];
+import { useTranslation } from "react-i18next";
 
 export function Hero() {
+  const { t } = useTranslation();
+  const features = [
+    { icon: Crown, key: "premium" as const },
+    { icon: User, key: "drivers" as const },
+    { icon: Shield, key: "safety" as const },
+    { icon: Clock, key: "service" as const },
+  ];
   return (
     <section className="relative bg-black">
 
@@ -59,7 +60,7 @@ export function Hero() {
               <div className="flex items-center gap-3 mb-7">
                 <div className="h-px w-8 bg-primary/80" />
                 <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">
-                  Premium VIP Transportation — Tajikistan
+                  {t("hero.eyebrow")}
                 </span>
               </div>
 
@@ -72,7 +73,7 @@ export function Hero() {
                   textShadow: "0 4px 40px rgba(0,0,0,0.85), 0 0 80px rgba(221,184,95,0.08)",
                 }}
               >
-                Luxury Travel
+                {t("hero.titleLine1")}
               </h1>
               <h1
                 className="font-sans font-black uppercase leading-[0.92] mb-8"
@@ -86,13 +87,13 @@ export function Hero() {
                   filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.6)) drop-shadow(0 0 40px rgba(221,184,95,0.35))",
                 }}
               >
-                In Tajikistan
+                {t("hero.titleLine2")}
               </h1>
 
               {/* Subtitle */}
               <p className="text-white/85 text-base lg:text-[17px] font-light leading-relaxed mb-10 max-w-sm"
                 style={{ textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}>
-                Premium transportation services<br />for the most discerning travelers.
+                {t("hero.subtitle")}
               </p>
 
               {/* CTA buttons */}
@@ -102,14 +103,14 @@ export function Hero() {
                     className="flex items-center gap-3 border border-white/70 text-white hover:bg-white hover:text-black hover:border-white transition-all duration-300 text-xs tracking-[0.22em] uppercase font-semibold px-8 py-4 backdrop-blur-sm"
                     style={{ background: "rgba(255,255,255,0.06)" }}
                   >
-                    Explore Fleet <ArrowRight size={14} />
+                    {t("hero.exploreFleet")} <ArrowRight size={14} />
                   </button>
                 </Link>
                 <button
                   onClick={() => document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" })}
                   className="flex items-center gap-3 bg-primary text-black hover:bg-primary/90 hover:scale-[1.03] transition-all duration-300 text-xs tracking-[0.22em] uppercase font-semibold px-8 py-4 gold-pulse"
                 >
-                  Book Now <ArrowRight size={14} />
+                  {t("hero.bookNow")} <ArrowRight size={14} />
                 </button>
               </div>
             </motion.div>
@@ -131,9 +132,9 @@ export function Hero() {
           boxShadow: "0 -10px 40px rgba(221,184,95,0.06), inset 0 1px 0 rgba(221,184,95,0.08)",
         }}
       >
-        {features.map(({ icon: Icon, title, desc }, i) => (
+        {features.map(({ icon: Icon, key }, i) => (
           <div
-            key={title}
+            key={key}
             className="flex items-center gap-4 px-8 py-8 group transition-all duration-400 hover:bg-white/[0.02]"
             style={{ borderRight: i < 3 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
           >
@@ -145,8 +146,8 @@ export function Hero() {
               <Icon size={18} style={{ color: "hsl(44,72%,62%)" }} className="transition-transform duration-400 group-hover:scale-110" />
             </div>
             <div>
-              <p className="text-white text-xs font-semibold uppercase tracking-[0.13em]">{title}</p>
-              <p className="text-white/55 text-[11px] mt-1 font-light">{desc}</p>
+              <p className="text-white text-xs font-semibold uppercase tracking-[0.13em]">{t(`hero.features.${key}.title`)}</p>
+              <p className="text-white/55 text-[11px] mt-1 font-light">{t(`hero.features.${key}.desc`)}</p>
             </div>
           </div>
         ))}

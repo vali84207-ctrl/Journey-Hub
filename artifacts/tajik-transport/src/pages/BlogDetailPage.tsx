@@ -2,11 +2,13 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { ArrowLeft, ArrowRight, MapPin, Calendar, Clock, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "../components/home/Navbar";
 import { Footer } from "../components/footer";
 import { useGetBlogPostBySlug, useListBlogPosts } from "@workspace/api-client-react";
 
 export function BlogDetailPage() {
+  const { t } = useTranslation();
   const params = useParams<{ slug: string }>();
   const { data: post, isLoading } = useGetBlogPostBySlug(params.slug);
   const { data: allPosts } = useListBlogPosts();
@@ -29,11 +31,11 @@ export function BlogDetailPage() {
       <main className="min-h-screen bg-background text-white">
         <Navbar />
         <div className="container mx-auto px-6 max-w-2xl pt-40 pb-20 text-center">
-          <p className="text-primary text-[10px] tracking-[0.35em] uppercase mb-4">404 — Not Found</p>
-          <h1 className="font-sans font-black text-3xl uppercase mb-6">This story doesn't exist</h1>
-          <p className="text-white/60 mb-8">The journal entry you're looking for has either moved or hasn't been published yet.</p>
+          <p className="text-primary text-[10px] tracking-[0.35em] uppercase mb-4">{t("blog.notFoundEyebrow")}</p>
+          <h1 className="font-sans font-black text-3xl uppercase mb-6">{t("blog.notFoundTitle")}</h1>
+          <p className="text-white/60 mb-8">{t("blog.notFoundBody")}</p>
           <Link href="/blog" className="inline-block border border-primary/60 text-primary hover:bg-primary hover:text-black transition-all px-8 py-3 text-xs tracking-[0.25em] uppercase font-semibold">
-            ← Back to Journal
+            {t("blog.notFoundBack")}
           </Link>
         </div>
         <Footer />
@@ -58,7 +60,7 @@ export function BlogDetailPage() {
           <div className="container mx-auto px-6 max-w-4xl">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
               <Link href="/blog" className="inline-flex items-center gap-2 text-white/70 hover:text-primary text-[10px] tracking-[0.3em] uppercase mb-8 transition-colors">
-                <ArrowLeft size={12} /> Back to Journal
+                <ArrowLeft size={12} /> {t("blog.backToJournal")}
               </Link>
               <div className="inline-block bg-primary text-black text-[10px] tracking-[0.25em] uppercase font-bold px-3 py-1.5 mb-5">{post.category}</div>
               <h1 className="font-sans font-black text-white uppercase leading-[1] mb-6" style={{ fontSize: "clamp(2rem, 5vw, 4rem)", letterSpacing: "-0.01em", textShadow: "0 4px 30px rgba(0,0,0,0.7)" }}>
@@ -125,7 +127,7 @@ export function BlogDetailPage() {
           <div className="container mx-auto px-6 max-w-6xl mt-20">
             <div className="flex items-center gap-3 mb-8">
               <div className="h-px w-8 bg-primary/70" />
-              <span className="text-primary text-[10px] tracking-[0.3em] uppercase font-medium">Gallery</span>
+              <span className="text-primary text-[10px] tracking-[0.3em] uppercase font-medium">{t("blog.gallery")}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {post.gallery.map((src, i) => (
@@ -144,11 +146,11 @@ export function BlogDetailPage() {
             <Link href={`/blog/${next.slug}`}>
               <div className="group grid grid-cols-1 md:grid-cols-2 gap-8 cursor-pointer">
                 <div className="flex flex-col justify-center">
-                  <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium mb-3">Next Story</span>
+                  <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium mb-3">{t("blog.nextStory")}</span>
                   <h3 className="font-sans font-bold text-white text-2xl lg:text-3xl uppercase leading-tight mb-5 group-hover:text-primary transition-colors duration-400">{next.title}</h3>
                   <p className="text-white/55 text-sm font-light max-w-md mb-6">{next.excerpt}</p>
                   <div className="flex items-center gap-3 text-primary text-xs tracking-[0.25em] uppercase font-semibold">
-                    Continue Reading <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
+                    {t("blog.continueReading")} <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
                 <div className="relative overflow-hidden h-56 md:h-72">

@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Calendar } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "../LanguageSwitcher";
 
 export function Navbar() {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location, setLocation] = useLocation();
@@ -15,11 +18,11 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/", type: "route" as const },
-    { name: "Fleet", href: "/fleet", type: "route" as const },
-    { name: "Services", href: "#services", type: "anchor" as const },
-    { name: "Journal", href: "/blog", type: "route" as const },
-    { name: "Contact", href: "#contact", type: "anchor" as const },
+    { name: t("nav.home"), href: "/", type: "route" as const },
+    { name: t("nav.fleet"), href: "/fleet", type: "route" as const },
+    { name: t("nav.services"), href: "#services", type: "anchor" as const },
+    { name: t("nav.journal"), href: "/blog", type: "route" as const },
+    { name: t("nav.contact"), href: "#contact", type: "anchor" as const },
   ];
 
   const handleClick = (link: typeof navLinks[number]) => {
@@ -29,7 +32,6 @@ export function Navbar() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    // anchor — only works on home page; otherwise navigate home then scroll
     if (location !== "/") {
       setLocation("/");
       setTimeout(() => document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" }), 100);
@@ -52,37 +54,28 @@ export function Navbar() {
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: isScrolled
-          ? "rgba(5,5,5,0.97)"
-          : "rgba(5,5,5,0.82)",
+        background: isScrolled ? "rgba(5,5,5,0.97)" : "rgba(5,5,5,0.82)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(203,169,78,0.12)",
       }}
     >
       <div className="mx-auto px-6 lg:px-10 flex items-center justify-between h-[70px]">
-
-        {/* Logo + brand */}
         <Link
           href="/"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-3 flex-shrink-0"
         >
-          <img
-            src="/pamir-luxe-logo.png"
-            alt="Pamir Luxe Drive"
-            className="h-11 w-auto"
-          />
+          <img src="/pamir-luxe-logo.png" alt="Pamir Luxe Drive" className="h-11 w-auto" />
           <div className="hidden sm:block leading-tight">
             <p className="text-primary font-serif font-bold text-sm tracking-[0.12em] uppercase">
               Pamir Luxe Drive
             </p>
             <p className="text-white/40 text-[9px] tracking-[0.2em] uppercase font-light">
-              VIP Transportation
+              {t("brand.tagline")}
             </p>
           </div>
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => {
             const isActive =
@@ -90,7 +83,7 @@ export function Navbar() {
               (link.href !== "/" && link.type === "route" && location.startsWith(link.href));
             return (
               <button
-                key={link.name}
+                key={link.href}
                 onClick={() => handleClick(link)}
                 className={`text-xs tracking-[0.15em] uppercase font-medium transition-colors duration-200 ${
                   isActive ? "text-primary" : "text-white/70 hover:text-primary"
@@ -102,20 +95,19 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Reserve Now CTA */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center gap-4">
+          <LanguageSwitcher />
           <button
             onClick={handleReserveClick}
             className="flex items-center gap-2 border border-primary/70 text-primary hover:bg-primary hover:text-black transition-all duration-300 text-xs tracking-[0.2em] uppercase font-medium px-5 py-2.5"
           >
             <Calendar size={13} />
-            Reserve Now
+            {t("nav.reserveNow")}
           </button>
         </div>
 
-        {/* Mobile Toggle */}
         <button
-          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileMenuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
           className="md:hidden text-white/80 p-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
@@ -123,7 +115,6 @@ export function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Nav */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -138,18 +129,19 @@ export function Navbar() {
             </div>
             {navLinks.map((link) => (
               <button
-                key={link.name}
+                key={link.href}
                 onClick={() => handleClick(link)}
                 className="text-left text-white/80 hover:text-primary transition-colors text-sm tracking-[0.15em] uppercase border-b border-white/5 pb-4"
               >
                 {link.name}
               </button>
             ))}
+            <LanguageSwitcher variant="mobile" />
             <button
               onClick={handleReserveClick}
               className="w-full border border-primary/70 text-primary text-sm tracking-widest uppercase py-4 flex items-center justify-center gap-2 hover:bg-primary hover:text-black transition-all"
             >
-              <Calendar size={14} /> Reserve Now
+              <Calendar size={14} /> {t("nav.reserveNow")}
             </button>
           </motion.div>
         )}

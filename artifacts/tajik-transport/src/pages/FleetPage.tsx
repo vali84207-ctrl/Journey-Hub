@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, ArrowLeft, ArrowRight, Wifi, Wind, Briefcase, Shield } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { useListVehicles } from "@workspace/api-client-react";
 
@@ -11,6 +12,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function FleetPage() {
+  const { t } = useTranslation();
   const { data: vehicles, isLoading } = useListVehicles();
 
   const visible = (vehicles ?? []).filter((v) => v.status !== "hidden");
@@ -20,23 +22,35 @@ export function FleetPage() {
   }, {});
   const types = Object.keys(grouped).sort();
 
+  const statusLabel = (s: string) =>
+    s === "available" ? t("fleet.status.available")
+      : s === "reserved" ? t("fleet.status.reserved")
+      : s === "busy" ? t("fleet.status.busy")
+      : s;
+
+  const infoCards = [
+    { icon: Shield, title: t("fleet.infoCards.insured.title"), desc: t("fleet.infoCards.insured.desc") },
+    { icon: Users, title: t("fleet.infoCards.drivers.title"), desc: t("fleet.infoCards.drivers.desc") },
+    { icon: Wind, title: t("fleet.infoCards.climate.title"), desc: t("fleet.infoCards.climate.desc") },
+  ];
+
   return (
     <main className="min-h-screen bg-[#050505] text-white pt-24 pb-24">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <Link href="/" className="inline-flex items-center text-primary hover:text-white transition-colors mb-10 text-sm uppercase tracking-wider cursor-pointer">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
+          <ArrowLeft className="w-4 h-4 mr-2" /> {t("nav.backToHome")}
         </Link>
 
         <div className="mb-16">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light">
-            Exclusive Fleet
+            {t("fleet.pageEyebrow")}
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-6xl font-serif text-white mb-4">
-            Our Vehicles
+            {t("fleet.pageTitle")}
           </motion.h1>
           <motion.div initial={{ width: 0 }} animate={{ width: "80px" }} transition={{ duration: 0.8, delay: 0.2 }} className="h-[2px] bg-primary mb-6" />
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-gray-400 font-light text-lg max-w-2xl">
-            A meticulously maintained fleet of Land Cruisers, each equipped with premium amenities and a professional VIP driver.
+            {t("fleet.pageSubtitle")}
           </motion.p>
         </div>
 
@@ -44,7 +58,7 @@ export function FleetPage() {
           {Object.entries(STATUS_STYLES).map(([status, cls]) => (
             <div key={status} className={`flex items-center gap-2 px-3 py-1.5 border text-xs uppercase tracking-wider ${cls}`}>
               <div className={`w-2 h-2 rounded-full ${status === "available" ? "bg-green-400" : status === "reserved" ? "bg-amber-400" : "bg-red-400"}`} />
-              {status}
+              {statusLabel(status)}
             </div>
           ))}
         </div>
@@ -63,7 +77,7 @@ export function FleetPage() {
                 <div key={type} className="mb-16">
                   <div className="flex items-center gap-4 mb-8">
                     <h2 className="text-2xl font-serif text-white">{first.name || first.model}</h2>
-                    <span className="text-gray-500 font-light text-sm">{first.year} · {first.pax} passengers · ${first.pricePerDay}/day</span>
+                    <span className="text-gray-500 font-light text-sm">{first.year} · {first.pax} {t("fleet.passengersWord")} · ${first.pricePerDay}{t("fleet.perDay")}</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {group.map((vehicle, index) => {
@@ -94,7 +108,7 @@ export function FleetPage() {
                               </div>
                               <div className="absolute top-4 right-4 z-20">
                                 <span className={`px-3 py-1 text-xs tracking-wider uppercase backdrop-blur-sm border ${STATUS_STYLES[vehicle.status] ?? STATUS_STYLES.busy}`}>
-                                  {vehicle.status}
+                                  {statusLabel(vehicle.status)}
                                 </span>
                               </div>
                             </div>
@@ -106,32 +120,32 @@ export function FleetPage() {
                               <div className="flex items-center gap-5 mb-5 text-sm text-gray-400">
                                 <div className="flex items-center gap-1.5">
                                   <Users className="w-4 h-4 text-primary/60" />
-                                  <span>{vehicle.pax} Pax</span>
+                                  <span>{vehicle.pax} {t("fleet.pax")}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                   <Briefcase className="w-4 h-4 text-primary/60" />
-                                  <span>3 Bags</span>
+                                  <span>3 {t("fleet.bags")}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                   <Wifi className="w-4 h-4 text-primary/60" />
-                                  <span>WiFi</span>
+                                  <span>{t("fleet.wifi")}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                   <Wind className="w-4 h-4 text-primary/60" />
-                                  <span>AC</span>
+                                  <span>{t("fleet.ac")}</span>
                                 </div>
                               </div>
 
                               <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                 <div>
-                                  <span className="text-xs text-gray-500 uppercase tracking-wider">From</span>
-                                  <div className="text-2xl font-serif text-primary">${vehicle.pricePerDay}<span className="text-sm text-gray-500 font-light">/day</span></div>
+                                  <span className="text-xs text-gray-500 uppercase tracking-wider">{t("fleet.fromPrice")}</span>
+                                  <div className="text-2xl font-serif text-primary">${vehicle.pricePerDay}<span className="text-sm text-gray-500 font-light">{t("fleet.perDay")}</span></div>
                                 </div>
                                 <Button
                                   className="bg-transparent border border-white/20 group-hover:border-primary group-hover:bg-primary group-hover:text-black transition-all duration-300 rounded-none text-white tracking-widest uppercase text-xs px-5 py-3"
                                   tabIndex={-1}
                                 >
-                                  Details <ArrowRight className="ml-1.5 w-3 h-3" />
+                                  {t("fleet.viewDetails")} <ArrowRight className="ml-1.5 w-3 h-3" />
                                 </Button>
                               </div>
                             </div>
@@ -147,11 +161,7 @@ export function FleetPage() {
         )}
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 border border-white/5 bg-[#0a0a0a] p-8">
-          {[
-            { icon: Shield, title: "Fully Insured", desc: "All vehicles carry comprehensive insurance for your peace of mind." },
-            { icon: Users, title: "Professional Drivers", desc: "Experienced, multilingual drivers trained in VIP hospitality." },
-            { icon: Wind, title: "Climate Controlled", desc: "Premium dual-zone air conditioning throughout every journey." },
-          ].map(({ icon: Icon, title, desc }) => (
+          {infoCards.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex gap-4">
               <div className="w-10 h-10 border border-primary/30 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-primary" />

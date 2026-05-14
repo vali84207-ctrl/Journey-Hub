@@ -2,11 +2,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { z } from "zod";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
+import { useCreateBooking } from "@workspace/api-client-react";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,29 +16,50 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-import { useCreateBooking } from "@workspace/api-client-react";
-
-const formSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(7, "Please enter a valid phone number"),
-  pickup: z.string().min(2, "Pickup location is required"),
-  destination: z.string().min(2, "Destination is required"),
-  date: z.string().min(1, "Date is required"),
-  time: z.string().min(1, "Time is required"),
-  carType: z.string().min(1, "Please select a car type"),
-  passengers: z.coerce.number().min(1).max(20),
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+const CAR_TYPES = [
+  "Mercedes S-Class",
+  "Toyota Land Cruiser",
+  "Lexus LX570",
+  "BMW 7 Series",
+  "Hyundai Staria",
+  "Chevrolet Tahoe",
+];
 
 export function Booking() {
-  const [showSuccess, setShowSuccess] = useState(false);
+  const { t } = useTranslation();
+  const [successOpen, setSuccessOpen] = useState(false);
   const createBooking = useCreateBooking();
+
+  const formSchema = z.object({
+    fullName: z.string().min(2, t("booking.errors.nameMin")),
+    phone: z.string().min(7, t("booking.errors.phoneMin")),
+    pickup: z.string().min(2, t("booking.errors.pickupMin")),
+    destination: z.string().min(2, t("booking.errors.destMin")),
+    date: z.string().min(1, t("booking.errors.dateReq")),
+    time: z.string().min(1, t("booking.errors.timeReq")),
+    carType: z.string().min(1, t("booking.errors.carReq")),
+    passengers: z.coerce.number().min(1).max(20),
+    notes: z.string().optional().nullable(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -55,37 +76,30 @@ export function Booking() {
     },
   });
 
-  function onSubmit(values: FormValues) {
+  const onSubmit = (data: FormValues) => {
     createBooking.mutate(
-      { data: values },
+      { data },
       {
         onSuccess: () => {
-          setShowSuccess(true);
+          setSuccessOpen(true);
           form.reset();
         },
       }
     );
-  }
+  };
 
   return (
-    <section id="booking" className="py-24 bg-black relative">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-5xl">
+    <section id="booking" className="py-32 relative bg-background">
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="container mx-auto px-6 max-w-4xl relative z-10">
         <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-serif text-white mb-4"
-          >
-            Reserve Your Journey
-          </motion.h2>
-          <motion.div 
-            initial={{ width: 0 }}
-            whileInView={{ width: "80px" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-[2px] bg-primary mx-auto"
-          />
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">{t("booking.title")}</h2>
+          <p className="text-white/60 font-light max-w-2xl mx-auto">
+            {t("booking.subtitle")}
+          </p>
         </div>
 
         <motion.div
@@ -93,21 +107,21 @@ export function Booking() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="glass-panel p-8 md:p-12 rounded-sm border border-primary/20"
+          className="glass-panel p-8 md:p-12 relative"
         >
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Full Name</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.fullName")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input placeholder={t("booking.fields.fullNamePh")} className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -116,11 +130,11 @@ export function Booking() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Phone Number</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.phone")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="+992 00 404 40 35" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input placeholder={t("booking.fields.phonePh")} className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -130,11 +144,11 @@ export function Booking() {
                   name="pickup"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Pickup Location</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.pickup")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Dushanbe International Airport" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input placeholder={t("booking.fields.pickupPh")} className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -143,11 +157,11 @@ export function Booking() {
                   name="destination"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Destination</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.destination")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Serena Hotel Dushanbe" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input placeholder={t("booking.fields.destinationPh")} className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -157,11 +171,11 @@ export function Booking() {
                   name="date"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Date</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.date")}</FormLabel>
                       <FormControl>
-                        <Input type="date" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none [color-scheme:dark]" {...field} />
+                        <Input type="date" className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary [color-scheme:dark]" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -170,11 +184,11 @@ export function Booking() {
                   name="time"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Time</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.time")}</FormLabel>
                       <FormControl>
-                        <Input type="time" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none [color-scheme:dark]" {...field} />
+                        <Input type="time" className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary [color-scheme:dark]" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -184,23 +198,22 @@ export function Booking() {
                   name="carType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Vehicle Class</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.vehicleClass")}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none">
-                            <SelectValue placeholder="Select vehicle..." />
+                          <SelectTrigger className="bg-white/5 border-white/10 rounded-none h-12 text-white focus:ring-primary">
+                            <SelectValue placeholder={t("booking.fields.vehiclePlaceholder")} />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-black border-white/10 text-white">
-                          <SelectItem value="LC300-01">LC300-01 — Land Cruiser 300</SelectItem>
-                          <SelectItem value="LC300-02">LC300-02 — Land Cruiser 300</SelectItem>
-                          <SelectItem value="LC300-03">LC300-03 — Land Cruiser 300</SelectItem>
-                          <SelectItem value="LC200-01">LC200-01 — Land Cruiser 200</SelectItem>
-                          <SelectItem value="LC200-02">LC200-02 — Land Cruiser 200</SelectItem>
-                          <SelectItem value="LC200-03">LC200-03 — Land Cruiser 200</SelectItem>
+                        <SelectContent className="bg-card border-white/10 text-white rounded-none">
+                          {CAR_TYPES.map(car => (
+                            <SelectItem key={car} value={car} className="focus:bg-primary/20 focus:text-primary rounded-none">
+                              {car}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -209,11 +222,11 @@ export function Booking() {
                   name="passengers"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-300 font-light tracking-wide">Passengers</FormLabel>
+                      <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.passengers")}</FormLabel>
                       <FormControl>
-                        <Input type="number" min="1" max="20" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none" {...field} />
+                        <Input type="number" min={1} max={20} className="bg-white/5 border-white/10 rounded-none h-12 text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary" {...field} />
                       </FormControl>
-                      <FormMessage className="text-destructive/80" />
+                      <FormMessage className="text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -224,52 +237,53 @@ export function Booking() {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-300 font-light tracking-wide">Special Requests (Optional)</FormLabel>
+                    <FormLabel className="text-white/80 uppercase text-xs tracking-widest">{t("booking.fields.notes")}</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Any special requirements..." 
-                        className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none min-h-[100px]" 
-                        {...field} 
+                      <Textarea
+                        placeholder={t("booking.fields.notesPh")}
+                        className="bg-white/5 border-white/10 rounded-none min-h-[100px] text-white placeholder:text-white/30 focus-visible:ring-primary focus-visible:border-primary"
+                        {...field}
+                        value={field.value || ""}
                       />
                     </FormControl>
-                    <FormMessage className="text-destructive/80" />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
 
-              <div className="pt-4 flex justify-center">
-                <Button 
-                  type="submit" 
-                  disabled={createBooking.isPending}
-                  className="bg-primary hover:bg-primary/90 text-black px-12 py-6 text-lg tracking-widest rounded-none w-full sm:w-auto sm:min-w-[250px]"
-                >
-                  {createBooking.isPending ? (
-                    <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> PROCESSING</>
-                  ) : (
-                    "RESERVE NOW"
-                  )}
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                disabled={createBooking.isPending}
+                className="w-full h-14 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold tracking-widest uppercase text-sm rounded-none border border-primary hover:gold-glow transition-all"
+              >
+                {createBooking.isPending ? (
+                  <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t("booking.submitting")}</>
+                ) : (
+                  t("booking.submit")
+                )}
+              </Button>
             </form>
           </Form>
         </motion.div>
       </div>
 
-      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
-        <DialogContent className="bg-black border border-primary/30 text-white sm:max-w-md p-10 outline-none">
-          <div className="flex flex-col items-center justify-center text-center space-y-6">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-primary" />
+      <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+        <DialogContent className="bg-card border border-white/10 rounded-none sm:max-w-md p-8">
+          <DialogHeader className="flex flex-col items-center text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <CheckCircle2 className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-3xl font-serif text-white">Booking Received</h2>
-            <p className="text-gray-400 font-light text-lg">
-              Thank you for choosing Tajik Elite. Our team will contact you shortly to confirm your reservation details.
-            </p>
-            <Button 
-              onClick={() => setShowSuccess(false)}
-              className="mt-4 bg-transparent border border-primary text-primary hover:bg-primary hover:text-black rounded-none px-8 tracking-widest uppercase"
+            <DialogTitle className="text-2xl font-serif text-white">{t("booking.success.title")}</DialogTitle>
+            <DialogDescription className="text-base text-white/60 font-light">
+              {t("booking.success.body")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-8 flex justify-center">
+            <Button
+              onClick={() => setSuccessOpen(false)}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-none px-8 font-semibold tracking-wider uppercase text-xs"
             >
-              Close
+              {t("booking.success.close")}
             </Button>
           </div>
         </DialogContent>

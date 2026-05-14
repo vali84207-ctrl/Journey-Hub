@@ -1,11 +1,17 @@
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, MessageCircle, Send, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export function Contact() {
+  const { t } = useTranslation();
+  const items = [
+    { icon: Phone, label: t("contact.phone"), value: "+992 00 404 40 35" },
+    { icon: Mail, label: t("contact.email"), value: "info@pamirLuxedrive.com" },
+    { icon: MapPin, label: t("contact.headquarters"), value: t("contact.address") },
+  ];
   return (
     <section id="contact" className="py-28 bg-[#070707] relative">
-      {/* Top gold divider */}
       <div className="gold-divider absolute top-0 left-0 right-0" />
 
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -16,7 +22,7 @@ export function Contact() {
             viewport={{ once: true }}
             className="text-primary uppercase tracking-[0.3em] text-xs mb-4 font-light"
           >
-            Reach Out
+            {t("contact.eyebrow")}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -24,7 +30,7 @@ export function Contact() {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-serif text-white mb-5"
           >
-            Contact Us
+            {t("contact.title")}
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}
@@ -36,7 +42,6 @@ export function Contact() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto overflow-hidden">
-          {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -45,22 +50,18 @@ export function Contact() {
             className="space-y-10"
           >
             <div>
-              <h3 className="text-2xl font-serif text-white mb-4">Get in Touch</h3>
+              <h3 className="text-2xl font-serif text-white mb-4">{t("contact.getInTouch")}</h3>
               <p className="text-gray-300/70 font-light leading-relaxed text-[15px]">
-                Our concierge team is available 24/7 to assist you with reservations, special requests, and inquiries. Experience the pinnacle of ground transportation in Tajikistan.
+                {t("contact.description")}
               </p>
             </div>
 
             <div className="space-y-6">
-              {[
-                { icon: Phone, label: "Phone", value: "+992 00 404 40 35", mono: false },
-                { icon: Mail, label: "Email", value: "info@pamirLuxedrive.com", mono: false },
-                { icon: MapPin, label: "Headquarters", value: "Rudaki Avenue, Dushanbe\nTajikistan", mono: false },
-              ].map(({ icon: Icon, label, value }) => (
+              {items.map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-4 group">
                   <div
                     className="w-12 h-12 flex items-center justify-center shrink-0 mt-0.5 border border-white/12 group-hover:border-primary/50 transition-all duration-300"
-                    style={{ background: 'rgba(203,169,78,0.05)' }}
+                    style={{ background: "rgba(203,169,78,0.05)" }}
                   >
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
@@ -73,7 +74,7 @@ export function Contact() {
             </div>
 
             <div className="pt-2">
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-4">Connect With Us</p>
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-4">{t("contact.connect")}</p>
               <div className="flex flex-wrap gap-3">
                 <Button
                   variant="outline"
@@ -100,20 +101,19 @@ export function Contact() {
             </div>
           </motion.div>
 
-          {/* Map */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="h-[400px] md:h-[500px] w-full border overflow-hidden"
-            style={{ borderColor: 'rgba(203,169,78,0.2)', boxShadow: '0 0 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(203,169,78,0.08)' }}
+            style={{ borderColor: "rgba(203,169,78,0.2)", boxShadow: "0 0 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(203,169,78,0.08)" }}
           >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100140.23071378875!2d68.70425712282245!3d38.561146399120614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b5d1685256b3bf%3A0x8bd57dc5eb5e6d92!2sDushanbe%2C%20Tajikistan!5e0!3m2!1sen!2sus!4v1709214316988!5m2!1sen!2sus"
               width="100%"
               height="100%"
-              style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(80%) grayscale(80%)' }}
+              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) contrast(80%) grayscale(80%)" }}
               allowFullScreen={true}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

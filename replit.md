@@ -66,6 +66,17 @@ All image inputs are URL-only (no file upload). Use Unsplash / CDN / `/lc-hero.p
 - Colors: deep black, charcoal, gold (#C9A84C / #D4AF37), white text
 - Fonts: Playfair Display (headings) + Inter (body)
 
+## i18n (Multilingual Frontend)
+
+- Public site supports EN (default), RU, TJ, UZ via `react-i18next` + `i18next-browser-languagedetector`
+- Setup: `src/i18n/index.ts`, locales in `src/i18n/locales/{en,ru,tj,uz}.ts`
+- Persisted in `localStorage` under key `pld_lang`
+- Language switcher: `src/components/LanguageSwitcher.tsx` — desktop dropdown + mobile 4-button grid in Navbar
+- Translation keys are flat-namespaced objects: `t("vehicleDetail.terms.s1.t")`, with interpolation `t("vehicleDetail.stats.passengers", { count: vehicle.pax })`
+- `en.ts` is the source-of-truth shape; `ru/tj/uz` typed as `typeof en` so missing keys cause TS errors
+- Admin panel, vehicle/blog DB content, brand name, phone, social handles are intentionally NOT translated
+- Zod error messages are built inside component bodies so they re-translate on language change
+
 ## Gotchas
 
 - After any OpenAPI spec change, run codegen then `pnpm run typecheck:libs` before typechecking the api-server

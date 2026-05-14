@@ -87,7 +87,7 @@ export function Booking() {
   };
 
   return (
-    <section id="book" className="py-32 relative bg-background">
+    <section id="booking" className="py-32 relative bg-background">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />

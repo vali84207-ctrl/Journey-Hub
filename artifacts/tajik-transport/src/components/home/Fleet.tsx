@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { Users, ArrowRight, Wifi, Wind } from "lucide-react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { useListVehicles } from "@workspace/api-client-react";
 
 export function Fleet() {
+  const { t } = useTranslation();
   const { data: vehicles } = useListVehicles();
   const visible = (vehicles ?? [])
     .filter((v) => v.status !== "hidden")
@@ -13,7 +15,6 @@ export function Fleet() {
   return (
     <section id="fleet" className="py-28 relative" style={{ background: "#060606" }}>
       <div className="container mx-auto px-6 max-w-7xl">
-        {/* Header */}
         <div className="mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -22,7 +23,7 @@ export function Fleet() {
             className="flex items-center gap-4 mb-5"
           >
             <div className="h-px w-10 bg-primary/70" />
-            <p className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">Exclusive Fleet</p>
+            <p className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">{t("fleet.eyebrow")}</p>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
@@ -32,7 +33,7 @@ export function Fleet() {
             className="font-sans font-black text-white uppercase leading-none"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.01em" }}
           >
-            Toyota Land Cruiser
+            {t("fleet.title")}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -41,11 +42,10 @@ export function Fleet() {
             transition={{ delay: 0.2 }}
             className="text-white/45 font-light text-sm mt-4 max-w-xl"
           >
-            Meticulously maintained Land Cruisers, each piloted by a professional VIP chauffeur.
+            {t("fleet.subtitle")}
           </motion.p>
         </div>
 
-        {/* Fleet banner */}
         <div className="relative overflow-hidden mb-12 h-52 md:h-72">
           <img
             src="/lc-hero.png"
@@ -56,7 +56,6 @@ export function Fleet() {
           <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%, rgba(0,0,0,0.6) 100%)" }} />
         </div>
 
-        {/* Vehicle cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "rgba(255,255,255,0.05)" }}>
           {visible.map((car, index) => (
             <motion.div
@@ -93,19 +92,19 @@ export function Fleet() {
                   <h3 className="text-white font-sans font-bold text-lg uppercase tracking-tight mb-4">{car.name || car.model}</h3>
 
                   <div className="flex items-center gap-5 text-white/40 text-xs mb-5">
-                    <span className="flex items-center gap-1.5"><Users size={11} className="text-primary/50" />{car.pax} Pax</span>
-                    <span className="flex items-center gap-1.5"><Wifi size={11} className="text-primary/50" />WiFi</span>
-                    <span className="flex items-center gap-1.5"><Wind size={11} className="text-primary/50" />AC</span>
+                    <span className="flex items-center gap-1.5"><Users size={11} className="text-primary/50" />{car.pax} {t("fleet.pax")}</span>
+                    <span className="flex items-center gap-1.5"><Wifi size={11} className="text-primary/50" />{t("fleet.wifi")}</span>
+                    <span className="flex items-center gap-1.5"><Wind size={11} className="text-primary/50" />{t("fleet.ac")}</span>
                   </div>
 
                   <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                     <div>
-                      <span className="text-[9px] text-white/35 uppercase tracking-widest block">From</span>
+                      <span className="text-[9px] text-white/35 uppercase tracking-widest block">{t("fleet.fromPrice")}</span>
                       <span className="text-primary font-sans font-bold text-xl">${car.pricePerDay}</span>
-                      <span className="text-white/30 text-xs">/day</span>
+                      <span className="text-white/30 text-xs">{t("fleet.perDay")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-white/40 group-hover:text-primary transition-colors duration-300 text-[10px] tracking-widest uppercase">
-                      Details <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+                      {t("fleet.viewDetails")} <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </div>
                 </div>
@@ -117,7 +116,7 @@ export function Fleet() {
         <div className="mt-12 flex justify-center">
           <Link href="/fleet">
             <button className="border border-primary/50 text-primary hover:bg-primary hover:text-black transition-all duration-300 text-xs tracking-[0.25em] uppercase font-semibold px-12 py-4">
-              View Full Fleet
+              {t("fleet.viewAll")}
             </button>
           </Link>
         </div>

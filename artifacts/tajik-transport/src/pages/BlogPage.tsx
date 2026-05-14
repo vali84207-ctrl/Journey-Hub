@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ArrowRight, MapPin, Calendar, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "../components/home/Navbar";
 import { Footer } from "../components/footer";
 import { useListBlogPosts } from "@workspace/api-client-react";
 
 export function BlogPage() {
+  const { t } = useTranslation();
   const { data, isLoading } = useListBlogPosts();
   const all = (data ?? []).filter((p) => p.published);
   const featured = all[0];
@@ -21,10 +23,10 @@ export function BlogPage() {
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
             <div className="flex items-center gap-3 mb-6">
               <div className="h-px w-10 bg-primary/80" />
-              <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">The Journal</span>
+              <span className="text-primary text-[10px] tracking-[0.35em] uppercase font-medium">{t("blog.eyebrow")}</span>
             </div>
             <h1 className="font-sans font-black text-white uppercase leading-[0.95] mb-6" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", letterSpacing: "-0.01em" }}>
-              Stories from the<br />
+              {t("blog.heroLine1")}<br />
               <span style={{
                 background: "linear-gradient(180deg, #F0D079 0%, #DDB85F 50%, #B8923D 100%)",
                 WebkitBackgroundClip: "text",
@@ -32,11 +34,11 @@ export function BlogPage() {
                 backgroundClip: "text",
                 filter: "drop-shadow(0 0 32px rgba(221,184,95,0.25))",
               }}>
-                Roof of the World
+                {t("blog.heroLine2")}
               </span>
             </h1>
             <p className="text-white/65 text-base lg:text-lg font-light leading-relaxed max-w-2xl">
-              Field notes, client journeys, and a closer look at the routes, rituals, and quiet luxuries that define travel in Tajikistan.
+              {t("blog.subtitle")}
             </p>
           </motion.div>
         </div>
@@ -48,7 +50,7 @@ export function BlogPage() {
         </section>
       ) : all.length === 0 ? (
         <section className="py-24 text-center" style={{ background: "#0a0a0a" }}>
-          <p className="text-white/50 font-light">No stories published yet — check back soon.</p>
+          <p className="text-white/50 font-light">{t("blog.empty")}</p>
         </section>
       ) : (
         <>
@@ -66,7 +68,7 @@ export function BlogPage() {
                     <div className="relative overflow-hidden h-72 lg:h-[480px]">
                       <img src={featured.cover} alt={featured.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      <div className="absolute top-5 left-5 bg-primary text-black text-[10px] tracking-[0.25em] uppercase font-bold px-3 py-1.5">Featured</div>
+                      <div className="absolute top-5 left-5 bg-primary text-black text-[10px] tracking-[0.25em] uppercase font-bold px-3 py-1.5">{t("blog.featured")}</div>
                       <div className="absolute bottom-5 left-5 text-[10px] uppercase tracking-widest text-white/85 bg-black/60 backdrop-blur-sm px-3 py-1.5 border border-white/10">{featured.category}</div>
                     </div>
 
@@ -81,7 +83,7 @@ export function BlogPage() {
                       </h2>
                       <p className="text-white/65 text-base font-light leading-relaxed mb-8 max-w-xl">{featured.excerpt}</p>
                       <div className="flex items-center gap-3 text-primary text-xs tracking-[0.25em] uppercase font-semibold">
-                        Read Story <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-400" />
+                        {t("blog.readStory")} <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-400" />
                       </div>
                     </div>
                   </motion.article>
@@ -99,9 +101,9 @@ export function BlogPage() {
                   <div>
                     <div className="flex items-center gap-3 mb-3">
                       <div className="h-px w-8 bg-primary/70" />
-                      <span className="text-primary text-[10px] tracking-[0.3em] uppercase font-medium">All Stories</span>
+                      <span className="text-primary text-[10px] tracking-[0.3em] uppercase font-medium">{t("blog.allStoriesEyebrow")}</span>
                     </div>
-                    <h3 className="font-sans font-black text-white uppercase text-3xl lg:text-4xl">More from the Journal</h3>
+                    <h3 className="font-sans font-black text-white uppercase text-3xl lg:text-4xl">{t("blog.allStoriesTitle")}</h3>
                   </div>
                 </div>
 
@@ -137,7 +139,7 @@ export function BlogPage() {
                               <Clock size={10} className="text-primary/50" />{post.readTime}
                             </span>
                             <div className="flex items-center gap-2 text-primary text-[10px] tracking-widest uppercase font-semibold">
-                              Read More <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+                              {t("blog.readMore")} <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
                             </div>
                           </div>
                         </div>

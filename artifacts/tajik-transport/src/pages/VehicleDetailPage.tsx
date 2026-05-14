@@ -8,6 +8,7 @@ import {
   Loader2, Phone, Shield, Star, MapPin, Clock, ChevronRight,
   MessageCircle, Car,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useListVehicles, useCreateBooking } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -22,20 +23,8 @@ const STATUS_STYLES: Record<string, string> = {
   busy: "bg-red-500/10 border-red-500/30 text-red-400",
 };
 
-const formSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(7, "Please enter a valid phone number"),
-  pickup: z.string().min(2, "Pickup location is required"),
-  destination: z.string().min(2, "Destination is required"),
-  date: z.string().min(1, "Date is required"),
-  time: z.string().min(1, "Time is required"),
-  carType: z.string().min(1, "Vehicle code is required"),
-  passengers: z.coerce.number().min(1).max(20),
-  notes: z.string().optional(),
-});
-type FormValues = z.infer<typeof formSchema>;
-
 export function VehicleDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { data: vehicles, isLoading } = useListVehicles();
   const vehicle = vehicles?.find((v) => v.id === Number(id));
@@ -45,6 +34,19 @@ export function VehicleDetailPage() {
   const [activeTab, setActiveTab] = useState<"terms" | "policy" | "travel" | "contact">("terms");
 
   const createBooking = useCreateBooking();
+
+  const formSchema = z.object({
+    fullName: z.string().min(2, t("vehicleDetail.errors.nameMin")),
+    phone: z.string().min(7, t("vehicleDetail.errors.phoneMin")),
+    pickup: z.string().min(2, t("vehicleDetail.errors.pickupMin")),
+    destination: z.string().min(2, t("vehicleDetail.errors.destMin")),
+    date: z.string().min(1, t("vehicleDetail.errors.dateReq")),
+    time: z.string().min(1, t("vehicleDetail.errors.timeReq")),
+    carType: z.string().min(1, t("vehicleDetail.errors.carReq")),
+    passengers: z.coerce.number().min(1).max(20),
+    notes: z.string().optional(),
+  });
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -84,9 +86,9 @@ export function VehicleDetailPage() {
     return (
       <main className="min-h-screen bg-[#050505] text-white pt-24 px-4 text-center">
         <Car className="w-16 h-16 text-primary/30 mx-auto mb-6" />
-        <h1 className="text-3xl font-serif text-primary mb-4">Vehicle Not Found</h1>
+        <h1 className="text-3xl font-serif text-primary mb-4">{t("vehicleDetail.notFoundTitle")}</h1>
         <Link href="/fleet" className="text-gray-400 hover:text-white underline cursor-pointer">
-          Return to Fleet
+          {t("vehicleDetail.returnToFleet")}
         </Link>
       </main>
     );
@@ -100,9 +102,36 @@ export function VehicleDetailPage() {
   const displayName = vehicle.name || vehicle.model;
   const features = vehicle.features ?? [];
 
+  const statusLabel = vehicle.status === "available" ? t("fleet.status.available")
+    : vehicle.status === "reserved" ? t("fleet.status.reserved")
+    : vehicle.status === "busy" ? t("fleet.status.busy")
+    : vehicle.status;
+
+  const includedItems = [
+    t("vehicleDetail.included.i1"),
+    t("vehicleDetail.included.i2"),
+    t("vehicleDetail.included.i3"),
+    t("vehicleDetail.included.i4"),
+    t("vehicleDetail.included.i5"),
+    t("vehicleDetail.included.i6"),
+  ];
+
+  const termsSections = (["s1", "s2", "s3", "s4", "s5"] as const).map((k) => ({
+    title: t(`vehicleDetail.terms.${k}.t`),
+    body: t(`vehicleDetail.terms.${k}.b`),
+  }));
+  const policySections = (["s1", "s2", "s3", "s4", "s5"] as const).map((k) => ({
+    title: t(`vehicleDetail.policy.${k}.t`),
+    body: t(`vehicleDetail.policy.${k}.b`),
+  }));
+  const travelSections = (["s1", "s2", "s3", "s4"] as const).map((k, i) => ({
+    icon: [MapPin, Clock, Shield, Star][i],
+    title: t(`vehicleDetail.travel.${k}.t`),
+    body: t(`vehicleDetail.travel.${k}.b`),
+  }));
+
   return (
     <main className="min-h-screen bg-[#050505] text-white pb-24">
-      {/* Hero / Image Gallery */}
       <div className="relative w-full h-[55vh] md:h-[65vh] overflow-hidden bg-black">
         <AnimatePresence mode="wait">
           <motion.img
@@ -139,12 +168,11 @@ export function VehicleDetailPage() {
             href="/fleet"
             className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-sm border border-white/10 px-4 py-2 text-sm text-white hover:text-primary transition-colors cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" /> Fleet
+            <ArrowLeft className="w-4 h-4" /> {t("vehicleDetail.backFleet")}
           </Link>
         </div>
       </div>
 
-      {/* Main */}
       <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-10">
         <div className={`grid grid-cols-1 ${showBooking ? "lg:grid-cols-5" : ""} gap-12 lg:gap-16`}>
           <div className={showBooking ? "lg:col-span-3" : ""}>
@@ -153,7 +181,7 @@ export function VehicleDetailPage() {
                 {vehicle.code}
               </span>
               <span className={`px-3 py-1 text-sm tracking-wider uppercase border ${STATUS_STYLES[vehicle.status] ?? STATUS_STYLES.busy}`}>
-                {vehicle.status}
+                {statusLabel}
               </span>
               <span className="text-gray-500 text-sm font-light">{vehicle.year}</span>
             </div>
@@ -162,10 +190,10 @@ export function VehicleDetailPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
               {[
-                { icon: Users, label: `${vehicle.pax} Passengers` },
-                { icon: Briefcase, label: "Luggage" },
-                { icon: Wind, label: "Climate Control" },
-                { icon: Wifi, label: "4G WiFi" },
+                { icon: Users, label: t("vehicleDetail.stats.passengers", { count: vehicle.pax }) },
+                { icon: Briefcase, label: t("vehicleDetail.stats.luggage") },
+                { icon: Wind, label: t("vehicleDetail.stats.climate") },
+                { icon: Wifi, label: t("vehicleDetail.stats.wifi") },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex flex-col items-center gap-2 bg-white/3 border border-white/5 p-4 text-center">
                   <Icon className="w-6 h-6 text-primary" />
@@ -176,7 +204,7 @@ export function VehicleDetailPage() {
 
             {features.length > 0 && (
               <>
-                <h3 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">Features & Inclusions</h3>
+                <h3 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">{t("vehicleDetail.featuresIncl")}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
                   {features.map((item) => (
                     <div key={item} className="flex items-center gap-3">
@@ -188,16 +216,9 @@ export function VehicleDetailPage() {
               </>
             )}
 
-            <h3 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">What's Always Included</h3>
+            <h3 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">{t("vehicleDetail.includedTitle")}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
-              {[
-                "Professional licensed chauffeur",
-                "Door-to-door VIP service",
-                "Complimentary bottled water",
-                "24/7 dispatch support",
-                "Full comprehensive insurance",
-                "Meet & greet at airport",
-              ].map((item) => (
+              {includedItems.map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
                   <span className="text-gray-300 font-light text-sm">{item}</span>
@@ -210,7 +231,7 @@ export function VehicleDetailPage() {
                 {[1,2,3,4,5].map((s) => <Star key={s} className="w-4 h-4 fill-primary text-primary" />)}
               </div>
               <span className="text-primary font-serif text-lg">5.0</span>
-              <span className="text-gray-400 text-sm font-light">— consistently rated excellent by our clients</span>
+              <span className="text-gray-400 text-sm font-light">{t("vehicleDetail.ratingNote")}</span>
             </div>
 
             <div id="info" className="mb-4">
@@ -223,10 +244,7 @@ export function VehicleDetailPage() {
                       activeTab === tab ? "text-primary border-b-2 border-primary" : "text-gray-500 hover:text-white"
                     }`}
                   >
-                    {tab === "terms" ? "Terms & Conditions"
-                      : tab === "policy" ? "Booking Policy"
-                      : tab === "travel" ? "Travel Information"
-                      : "Contact Us"}
+                    {t(`vehicleDetail.tabs.${tab}`)}
                   </button>
                 ))}
               </div>
@@ -234,16 +252,10 @@ export function VehicleDetailPage() {
               <AnimatePresence mode="wait">
                 {activeTab === "terms" && (
                   <motion.div key="terms" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5 text-gray-400 font-light leading-relaxed text-sm">
-                    <h4 className="text-white font-serif text-lg">Terms & Conditions</h4>
-                    <p>By completing a booking with Pamir Luxe Drive, you agree to the following terms. Please read them carefully before confirming your reservation.</p>
-                    {[
-                      ["1. Service Agreement", "Pamir Luxe Drive provides premium ground transportation services within the Republic of Tajikistan. All bookings are subject to vehicle availability at the time of confirmation."],
-                      ["2. Driver Conduct", "Our chauffeurs are professionally trained and licensed, bound by a strict code of conduct encompassing punctuality, discretion, and guest safety at all times."],
-                      ["3. Liability", "We hold full comprehensive vehicle insurance. The company is not responsible for delays caused by circumstances beyond our control."],
-                      ["4. Luggage & Property", "Clients are responsible for their personal belongings. We accept no liability for items left in the vehicle."],
-                      ["5. Governing Law", "These terms are governed by the laws of the Republic of Tajikistan."],
-                    ].map(([title, body]) => (
-                      <div key={title as string}>
+                    <h4 className="text-white font-serif text-lg">{t("vehicleDetail.terms.heading")}</h4>
+                    <p>{t("vehicleDetail.terms.intro")}</p>
+                    {termsSections.map(({ title, body }) => (
+                      <div key={title}>
                         <h5 className="text-white text-sm font-medium mb-1">{title}</h5>
                         <p>{body}</p>
                       </div>
@@ -253,15 +265,9 @@ export function VehicleDetailPage() {
 
                 {activeTab === "policy" && (
                   <motion.div key="policy" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5 text-gray-400 font-light leading-relaxed text-sm">
-                    <h4 className="text-white font-serif text-lg">Booking Policy</h4>
-                    {[
-                      ["Reservations", "All bookings must be made at least 2 hours in advance. For same-day, contact us via WhatsApp or Telegram."],
-                      ["Confirmation", "Your reservation is not guaranteed until you receive a written confirmation. Our dispatch will contact you within 30 minutes."],
-                      ["Cancellations", "Cancellations more than 24 hours before pickup are fully refunded. Within 24 hours: 50% fee. No-shows charged in full."],
-                      ["Waiting Time", "Complimentary 15 min for city pickups, 45 min for airport arrivals from actual landing time."],
-                      ["Payment", "Tajik Somoni (TJS) or US Dollars (USD) in cash, or via prior arrangement. Corporate invoicing available."],
-                    ].map(([title, body]) => (
-                      <div key={title as string} className="flex gap-3">
+                    <h4 className="text-white font-serif text-lg">{t("vehicleDetail.policy.heading")}</h4>
+                    {policySections.map(({ title, body }) => (
+                      <div key={title} className="flex gap-3">
                         <ChevronRight className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                         <div>
                           <h5 className="text-white text-sm font-medium mb-1">{title}</h5>
@@ -274,14 +280,9 @@ export function VehicleDetailPage() {
 
                 {activeTab === "travel" && (
                   <motion.div key="travel" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5 text-gray-400 font-light leading-relaxed text-sm">
-                    <h4 className="text-white font-serif text-lg">Travel Information — Tajikistan</h4>
-                    <p>Tajikistan offers some of Central Asia's most dramatic landscapes. Our Land Cruiser fleet is purpose-suited to its terrain.</p>
-                    {[
-                      { icon: MapPin, title: "Key Routes", body: "Dushanbe Airport · Khujand · Kulob · Murghab · Ishkashim · Wakhan Corridor. Full Pamir Highway expeditions by arrangement." },
-                      { icon: Clock, title: "Journey Times", body: "Dushanbe city transfers: 30–60 min. Dushanbe–Khujand: ~8 hrs. Dushanbe–Murghab: ~16–20 hrs depending on conditions." },
-                      { icon: Shield, title: "Safety", body: "All vehicles carry first-aid kits, high-altitude emergency equipment, and satellite communication for remote routes." },
-                      { icon: Star, title: "Best Seasons", body: "May–October optimal for mountain routes. Winter possible on main highways with our 4WD fleet." },
-                    ].map(({ icon: Icon, title, body }) => (
+                    <h4 className="text-white font-serif text-lg">{t("vehicleDetail.travel.heading")}</h4>
+                    <p>{t("vehicleDetail.travel.intro")}</p>
+                    {travelSections.map(({ icon: Icon, title, body }) => (
                       <div key={title} className="flex gap-3">
                         <div className="w-8 h-8 border border-primary/30 flex items-center justify-center flex-shrink-0">
                           <Icon className="w-4 h-4 text-primary" />
@@ -297,14 +298,14 @@ export function VehicleDetailPage() {
 
                 {activeTab === "contact" && (
                   <motion.div key="contact" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5 text-gray-400 font-light leading-relaxed text-sm">
-                    <h4 className="text-white font-serif text-lg">Contact Pamir Luxe Drive</h4>
-                    <p>Our dispatch team is available around the clock for bookings, route planning, and special requirements.</p>
+                    <h4 className="text-white font-serif text-lg">{t("vehicleDetail.contact.heading")}</h4>
+                    <p>{t("vehicleDetail.contact.intro")}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        { icon: Phone, label: "Phone / WhatsApp", value: "+992 00 404 40 35" },
-                        { icon: MessageCircle, label: "Telegram", value: "@PamirLuxeDrive" },
-                        { icon: MapPin, label: "Base Location", value: "Dushanbe, Tajikistan" },
-                        { icon: Clock, label: "Operating Hours", value: "24 / 7 — 365 days" },
+                        { icon: Phone, label: t("vehicleDetail.contact.labels.phone"), value: "+992 00 404 40 35" },
+                        { icon: MessageCircle, label: t("vehicleDetail.contact.labels.telegram"), value: "@PamirLuxeDrive" },
+                        { icon: MapPin, label: t("vehicleDetail.contact.labels.base"), value: t("vehicleDetail.contact.values.base") },
+                        { icon: Clock, label: t("vehicleDetail.contact.labels.hours"), value: t("vehicleDetail.contact.values.hours") },
                       ].map(({ icon: Icon, label, value }) => (
                         <div key={label} className="flex gap-3 bg-white/3 border border-white/5 p-4">
                           <Icon className="w-5 h-5 text-primary flex-shrink-0" />
@@ -317,10 +318,10 @@ export function VehicleDetailPage() {
                     </div>
                     <div className="flex flex-wrap gap-3 mt-4">
                       <Button onClick={() => window.open("https://wa.me/992004044035", "_blank")} className="bg-[#25D366] hover:bg-[#1ebe5a] text-white rounded-none px-6 py-3 text-sm tracking-wider uppercase">
-                        <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
+                        <MessageCircle className="w-4 h-4 mr-2" /> {t("vehicleDetail.contact.whatsapp")}
                       </Button>
                       <Button onClick={() => window.open("https://t.me/PamirLuxeDrive", "_blank")} className="bg-[#229ED9] hover:bg-[#1a8cc2] text-white rounded-none px-6 py-3 text-sm tracking-wider uppercase">
-                        <Phone className="w-4 h-4 mr-2" /> Telegram
+                        <Phone className="w-4 h-4 mr-2" /> {t("vehicleDetail.contact.telegramBtn")}
                       </Button>
                     </div>
                   </motion.div>
@@ -333,26 +334,26 @@ export function VehicleDetailPage() {
             <div className="lg:col-span-2">
               <div className="glass-panel p-8 border border-primary/20 sticky top-28">
                 <div className="text-center pb-6 mb-6 border-b border-white/10">
-                  <span className="text-gray-500 uppercase tracking-widest text-xs">Starting from</span>
+                  <span className="text-gray-500 uppercase tracking-widest text-xs">{t("vehicleDetail.sidebar.startingFrom")}</span>
                   <div className="text-5xl font-serif text-primary mt-1">${vehicle.pricePerDay}</div>
-                  <span className="text-gray-500 text-sm font-light">per day · trip variations apply</span>
+                  <span className="text-gray-500 text-sm font-light">{t("vehicleDetail.sidebar.perDayNote")}</span>
                 </div>
 
-                <h2 className="text-2xl font-serif text-white mb-1">Reserve This Vehicle</h2>
+                <h2 className="text-2xl font-serif text-white mb-1">{t("vehicleDetail.sidebar.reserveTitle")}</h2>
                 <p className="text-gray-400 font-light text-sm mb-6">
-                  Complete the form to secure <span className="text-primary font-mono">{vehicle.code}</span> for your journey.
+                  {t("vehicleDetail.sidebar.reserveDesc")} <span className="text-primary font-mono">{vehicle.code}</span> {t("vehicleDetail.sidebar.reserveDescTail")}
                 </p>
 
                 <Button
                   onClick={() => window.open(`https://wa.me/992004044035?text=I'd like to book ${vehicle.code} — `, "_blank")}
                   className="w-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366] hover:text-white rounded-none mb-6 py-3 text-sm tracking-wider uppercase transition-all duration-300"
                 >
-                  <MessageCircle className="w-4 h-4 mr-2" /> Book via WhatsApp
+                  <MessageCircle className="w-4 h-4 mr-2" /> {t("vehicleDetail.sidebar.bookViaWhatsapp")}
                 </Button>
 
                 <div className="flex items-center gap-3 mb-6">
                   <div className="flex-1 h-px bg-white/10" />
-                  <span className="text-gray-600 text-xs uppercase tracking-wider">or fill the form</span>
+                  <span className="text-gray-600 text-xs uppercase tracking-wider">{t("vehicleDetail.sidebar.orFillForm")}</span>
                   <div className="flex-1 h-px bg-white/10" />
                 </div>
 
@@ -361,12 +362,12 @@ export function VehicleDetailPage() {
                     <div className="w-14 h-14 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
                       <Car className="w-7 h-7 text-amber-500" />
                     </div>
-                    <h3 className="text-lg font-serif text-white mb-2">Currently Unavailable</h3>
+                    <h3 className="text-lg font-serif text-white mb-2">{t("vehicleDetail.sidebar.currentlyUnavailable")}</h3>
                     <p className="text-gray-400 font-light text-sm mb-6">
-                      This vehicle is <span className="text-amber-400">{vehicle.status}</span>. Contact us to check alternatives.
+                      {t("vehicleDetail.sidebar.unavailableBodyA")} <span className="text-amber-400">{statusLabel}</span>{t("vehicleDetail.sidebar.unavailableBodyB")}
                     </p>
                     <Button onClick={() => window.open("https://wa.me/992004044035", "_blank")} className="w-full bg-transparent border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-none">
-                      <Phone className="w-4 h-4 mr-2" /> Inquire via WhatsApp
+                      <Phone className="w-4 h-4 mr-2" /> {t("vehicleDetail.sidebar.inquireWhatsapp")}
                     </Button>
                   </div>
                 ) : (
@@ -374,7 +375,7 @@ export function VehicleDetailPage() {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                       <FormField control={form.control} name="carType" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Vehicle</FormLabel>
+                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.vehicle")}</FormLabel>
                           <FormControl>
                             <Input readOnly className="bg-primary/10 border-primary/30 text-primary focus:border-primary rounded-none font-mono text-sm" {...field} />
                           </FormControl>
@@ -384,28 +385,28 @@ export function VehicleDetailPage() {
                       <div className="grid grid-cols-2 gap-4">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Full Name</FormLabel>
-                            <FormControl><Input placeholder="John Doe" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
+                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.fullName")}</FormLabel>
+                            <FormControl><Input placeholder={t("vehicleDetail.form.fullNamePh")} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
                             <FormMessage className="text-red-400 text-xs" />
                           </FormItem>
                         )} />
                         <FormField control={form.control} name="phone" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Phone</FormLabel>
-                            <FormControl><Input placeholder="+992 …" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
+                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.phone")}</FormLabel>
+                            <FormControl><Input placeholder={t("vehicleDetail.form.phonePh")} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
                             <FormMessage className="text-red-400 text-xs" />
                           </FormItem>
                         )} />
                         <FormField control={form.control} name="date" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Date</FormLabel>
+                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.date")}</FormLabel>
                             <FormControl><Input type="date" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none [color-scheme:dark] text-sm" {...field} /></FormControl>
                             <FormMessage className="text-red-400 text-xs" />
                           </FormItem>
                         )} />
                         <FormField control={form.control} name="time" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Time</FormLabel>
+                            <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.time")}</FormLabel>
                             <FormControl><Input type="time" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none [color-scheme:dark] text-sm" {...field} /></FormControl>
                             <FormMessage className="text-red-400 text-xs" />
                           </FormItem>
@@ -414,37 +415,37 @@ export function VehicleDetailPage() {
 
                       <FormField control={form.control} name="pickup" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Pickup Location</FormLabel>
-                          <FormControl><Input placeholder="e.g. Dushanbe Airport" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
+                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.pickup")}</FormLabel>
+                          <FormControl><Input placeholder={t("vehicleDetail.form.pickupPh")} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
                           <FormMessage className="text-red-400 text-xs" />
                         </FormItem>
                       )} />
                       <FormField control={form.control} name="destination" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Destination</FormLabel>
-                          <FormControl><Input placeholder="e.g. Khujand" className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
+                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.destination")}</FormLabel>
+                          <FormControl><Input placeholder={t("vehicleDetail.form.destinationPh")} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
                           <FormMessage className="text-red-400 text-xs" />
                         </FormItem>
                       )} />
                       <FormField control={form.control} name="passengers" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Passengers</FormLabel>
+                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.passengers")}</FormLabel>
                           <FormControl><Input type="number" min="1" max={vehicle.pax} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none text-sm" {...field} /></FormControl>
                           <FormMessage className="text-red-400 text-xs" />
                         </FormItem>
                       )} />
                       <FormField control={form.control} name="notes" render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">Notes (Optional)</FormLabel>
-                          <FormControl><Textarea placeholder="Special requests, flight number, etc." className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none min-h-[70px] text-sm" {...field} /></FormControl>
+                          <FormLabel className="text-gray-400 font-light tracking-wide text-xs uppercase">{t("vehicleDetail.form.notes")}</FormLabel>
+                          <FormControl><Textarea placeholder={t("vehicleDetail.form.notesPh")} className="bg-black/50 border-white/10 text-white focus:border-primary rounded-none min-h-[70px] text-sm" {...field} /></FormControl>
                         </FormItem>
                       )} />
 
                       <Button type="submit" disabled={createBooking.isPending} className="bg-primary hover:bg-primary/90 text-black w-full py-5 text-sm tracking-widest rounded-none uppercase font-medium mt-2">
                         {createBooking.isPending ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing…</>
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("vehicleDetail.form.processing")}</>
                         ) : (
-                          "Confirm Reservation"
+                          t("vehicleDetail.form.confirm")
                         )}
                       </Button>
                     </form>
@@ -462,13 +463,13 @@ export function VehicleDetailPage() {
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-10 h-10 text-primary" />
             </div>
-            <h2 className="text-3xl font-serif text-white">Booking Received</h2>
+            <h2 className="text-3xl font-serif text-white">{t("vehicleDetail.success.title")}</h2>
             <p className="text-gray-400 font-light text-lg">
-              Thank you for choosing Pamir Luxe Drive. Your request for{" "}
-              <span className="text-primary font-mono">{vehicle.code}</span> has been received. Our team will contact you shortly to confirm.
+              {t("vehicleDetail.success.bodyA")}{" "}
+              <span className="text-primary font-mono">{vehicle.code}</span> {t("vehicleDetail.success.bodyB")}
             </p>
             <Button onClick={() => setShowSuccess(false)} className="bg-transparent border border-primary text-primary hover:bg-primary hover:text-black rounded-none px-8 tracking-widest uppercase">
-              Close
+              {t("vehicleDetail.success.close")}
             </Button>
           </div>
         </DialogContent>
