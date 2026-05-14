@@ -2,15 +2,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Crown, User, Shield, Clock } from "lucide-react";
 import { Link } from "wouter";
 
-const vehicles = [
-  { code: "LC300-01", type: "LC300", id: 1, pos: "object-right" },
-  { code: "LC300-02", type: "LC300", id: 2, pos: "object-right" },
-  { code: "LC300-03", type: "LC300", id: 3, pos: "object-right" },
-  { code: "LC200-01", type: "LC200", id: 4, pos: "object-left" },
-  { code: "LC200-02", type: "LC200", id: 5, pos: "object-left" },
-  { code: "LC200-03", type: "LC200", id: 6, pos: "object-left" },
-];
-
 const features = [
   { icon: Crown, title: "Premium Fleet", desc: "Latest luxury vehicles" },
   { icon: User, title: "Professional Drivers", desc: "Experienced & discreet" },
@@ -117,39 +108,6 @@ export function Hero() {
           </div>
         </div>
 
-        {/* ── Vehicle showcase row ─────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="relative z-10 grid grid-cols-3 md:grid-cols-6"
-          style={{ borderTop: "1px solid rgba(203,169,78,0.15)" }}
-        >
-          {vehicles.map((v, i) => (
-            <Link key={v.code} href={`/fleet/${v.id}`}>
-              <div className="group relative h-32 md:h-40 overflow-hidden cursor-pointer"
-                style={{ borderRight: i < 5 ? "1px solid rgba(255,255,255,0.06)" : "none" }}
-              >
-                <img
-                  src="/lc-hero.png"
-                  alt={v.code}
-                  className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${v.pos}`}
-                />
-                {/* Gold top line on hover */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
-                {/* Label */}
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-[9px] text-primary/80 uppercase tracking-widest font-light">{v.type}</p>
-                  <p className="text-white text-[10px] font-mono tracking-wider mt-0.5">{v.code}</p>
-                </div>
-                {/* Logo watermark on hover */}
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-70 transition-opacity duration-300">
-                  <img src="/pamir-luxe-logo.png" alt="" className="h-5 w-auto" />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </motion.div>
       </div>
 
       {/* ── Feature strip ───────────────────────────────── */}
