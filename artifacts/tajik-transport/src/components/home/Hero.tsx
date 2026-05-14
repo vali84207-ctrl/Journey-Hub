@@ -135,8 +135,6 @@ export function Hero() {
                   alt={v.code}
                   className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${v.pos}`}
                 />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-400" />
                 {/* Gold top line on hover */}
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
                 {/* Label */}
