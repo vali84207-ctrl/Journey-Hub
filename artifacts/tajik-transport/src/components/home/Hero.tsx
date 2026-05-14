@@ -137,8 +137,6 @@ export function Hero() {
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-400" />
-                {/* Bottom gradient */}
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)" }} />
                 {/* Gold top line on hover */}
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-400 origin-left" />
                 {/* Label */}
