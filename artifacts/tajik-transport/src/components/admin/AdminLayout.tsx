@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Car, BookOpen, CalendarClock, LogOut, Menu, X, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Car, Compass, BookOpen, CalendarClock, LogOut, Menu, X, ArrowLeft } from "lucide-react";
 import { clearAdminToken } from "@/lib/adminAuth";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/fleet", label: "Fleet", icon: Car },
+  { href: "/admin/tours", label: "Tours", icon: Compass },
   { href: "/admin/blog", label: "Blog", icon: BookOpen },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarClock },
 ];

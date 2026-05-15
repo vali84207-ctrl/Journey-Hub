@@ -1,5 +1,12 @@
 import { db } from "@workspace/db";
-import { vehiclesTable, blogPostsTable, type BlogContentBlock } from "@workspace/db";
+import {
+  vehiclesTable,
+  blogPostsTable,
+  toursTable,
+  type BlogContentBlock,
+  type TourHighlight,
+  type TourItineraryDay,
+} from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 
 const VEHICLES = [
@@ -201,6 +208,102 @@ const BLOG_POSTS: SeedBlog[] = [
   },
 ];
 
+type SeedTour = {
+  slug: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  duration: string;
+  startingPrice: number;
+  route: string;
+  mainImage: string;
+  gallery: string[];
+  highlights: TourHighlight[];
+  itinerary: TourItineraryDay[];
+  included: string[];
+  sortOrder: number;
+};
+
+const TOURS: SeedTour[] = [
+  {
+    slug: "dushanbe-pamir-tour",
+    title: "Dushanbe → Pamir Tour",
+    shortDescription:
+      "A seven-day chauffeured journey across the roof of the world — from the capital to the high lakes of the Wakhan.",
+    description:
+      "Trace the legendary Pamir Highway in a freshly detailed Land Cruiser 300, with a professional VIP chauffeur, curated stops, and unhurried mornings at altitude. We handle every logistic so you can focus on the landscape.",
+    duration: "7 Days · 6 Nights",
+    startingPrice: 2400,
+    route: "Dushanbe → Kalaikhum → Khorog → Wakhan → Murghab → Karakul → Sary-Tash",
+    mainImage:
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85",
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&q=85",
+      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1400&q=85",
+    ],
+    highlights: [
+      { title: "Wakhan Corridor", body: "Two unhurried days through the most cinematic valley in Central Asia." },
+      { title: "Lake Karakul", body: "Sunrise on the impossible blue of a 3,900-metre alpine lake." },
+      { title: "Private LC300", body: "Freshly detailed Land Cruiser 300 with VIP chauffeur for the full route." },
+    ],
+    itinerary: [
+      { day: 1, title: "Dushanbe → Kalaikhum", body: "Airport pickup, welcome basket, and a scenic drive east along the Vakhsh river to overnight in Kalaikhum." },
+      { day: 2, title: "Kalaikhum → Khorog", body: "The dramatic Panj river border road, with photo stops above the Afghan ridgeline." },
+      { day: 3, title: "Wakhan Corridor", body: "Mud-brick villages, Buddhist stupas, and a hot-spring stop at Bibi Fatima." },
+      { day: 4, title: "Khargush Pass → Murghab", body: "Crossing onto the high plateau before the afternoon winds rise." },
+      { day: 5, title: "Murghab → Lake Karakul", body: "Yak herders, salt flats, and sunset over Karakul." },
+      { day: 6, title: "Karakul → Sary-Tash", body: "Final pass with the Pamirs behind and the Tien Shan ahead." },
+      { day: 7, title: "Return transfer", body: "Comfortable transfer back to Dushanbe or onward handover at the Kyrgyz border." },
+    ],
+    included: [
+      "Private Land Cruiser 300 + VIP chauffeur",
+      "All fuel and road permits",
+      "Bottled water and welcome basket daily",
+      "Hand-picked guesthouses and homestays",
+      "Daily breakfast",
+      "24/7 operations support",
+    ],
+    sortOrder: 1,
+  },
+  {
+    slug: "dushanbe-khujand-tour",
+    title: "Dushanbe → Khujand Tour",
+    shortDescription:
+      "Three-day cultural drive across the Anzob tunnel to the ancient Silk Road capital of northern Tajikistan.",
+    description:
+      "From the modern capital to one of Central Asia's oldest continuously inhabited cities. Stop at Iskanderkul on the way, walk Khujand's Panjshanbe bazaar, and return through the Fann Mountains in luxury comfort.",
+    duration: "3 Days · 2 Nights",
+    startingPrice: 980,
+    route: "Dushanbe → Iskanderkul → Khujand → Istaravshan → Dushanbe",
+    mainImage:
+      "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1600&q=85",
+    gallery: [
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1400&q=85",
+      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1400&q=85",
+    ],
+    highlights: [
+      { title: "Iskanderkul Lake", body: "An afternoon at Alexander's turquoise lake in the Fann Mountains." },
+      { title: "Panjshanbe Bazaar", body: "The most atmospheric covered market in Central Asia." },
+      { title: "Anzob Tunnel", body: "The modern engineering marvel that links the two halves of the country." },
+    ],
+    itinerary: [
+      { day: 1, title: "Dushanbe → Iskanderkul → Khujand", body: "Morning departure with breakfast, lakeside lunch, and arrival in Khujand by evening." },
+      { day: 2, title: "Khujand exploration", body: "Panjshanbe bazaar, the Khujand fortress, and the historical museum with a private guide." },
+      { day: 3, title: "Khujand → Istaravshan → Dushanbe", body: "A stop in the medieval town of Istaravshan before the scenic drive home." },
+    ],
+    included: [
+      "Private Land Cruiser + VIP chauffeur",
+      "All fuel and road tolls",
+      "Bottled water and refreshments",
+      "Boutique hotel in Khujand (2 nights)",
+      "Daily breakfast",
+      "Local guide on day 2",
+    ],
+    sortOrder: 2,
+  },
+];
+
 export async function seedAll() {
   for (const v of VEHICLES) {
     const existing = await db.select().from(vehiclesTable).where(eq(vehiclesTable.code, v.code));
@@ -230,6 +333,12 @@ export async function seedAll() {
         author: "Pamir Luxe Editorial",
         published: true,
       });
+    }
+  }
+  for (const t of TOURS) {
+    const existing = await db.select().from(toursTable).where(eq(toursTable.slug, t.slug));
+    if (existing.length === 0) {
+      await db.insert(toursTable).values({ ...t, featured: true, hidden: false });
     }
   }
 }

@@ -3,6 +3,7 @@ import healthRouter from "./health";
 import bookingsRouter from "./bookings";
 import vehiclesRouter from "./vehicles";
 import blogRouter from "./blog";
+import toursRouter from "./tours";
 import adminRouter from "./admin";
 import { seedAll } from "./seed";
 
@@ -14,6 +15,7 @@ router.use(healthRouter);
 router.use(bookingsRouter);
 router.use(vehiclesRouter);
 router.use(blogRouter);
+router.use(toursRouter);
 router.use(adminRouter);
 
 export default router;

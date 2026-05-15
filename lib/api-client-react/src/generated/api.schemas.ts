@@ -163,6 +163,59 @@ export interface BlogPostInput {
   published?: boolean;
 }
 
+export interface TourHighlight {
+  title: string;
+  body: string;
+}
+
+export interface TourItineraryDay {
+  day: number;
+  title: string;
+  body: string;
+}
+
+export interface Tour {
+  id: number;
+  slug: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  duration: string;
+  startingPrice: number;
+  route: string;
+  mainImage: string;
+  gallery: string[];
+  highlights: TourHighlight[];
+  itinerary: TourItineraryDay[];
+  included: string[];
+  featured: boolean;
+  hidden: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TourInput {
+  /** @minLength 1 */
+  slug: string;
+  /** @minLength 1 */
+  title: string;
+  shortDescription?: string;
+  description?: string;
+  duration?: string;
+  /** @minimum 0 */
+  startingPrice?: number;
+  route?: string;
+  mainImage?: string;
+  gallery?: string[];
+  highlights?: TourHighlight[];
+  itinerary?: TourItineraryDay[];
+  included?: string[];
+  featured?: boolean;
+  hidden?: boolean;
+  sortOrder?: number;
+}
+
 export interface AdminLoginInput {
   username: string;
   password: string;

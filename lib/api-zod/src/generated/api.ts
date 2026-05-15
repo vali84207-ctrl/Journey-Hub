@@ -387,6 +387,201 @@ export const DeleteBlogPostParams = zod.object({
 });
 
 /**
+ * @summary List all tours
+ */
+export const ListToursResponseItem = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  shortDescription: zod.string(),
+  description: zod.string(),
+  duration: zod.string(),
+  startingPrice: zod.number(),
+  route: zod.string(),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  highlights: zod.array(
+    zod.object({
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  itinerary: zod.array(
+    zod.object({
+      day: zod.number(),
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  included: zod.array(zod.string()),
+  featured: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListToursResponse = zod.array(ListToursResponseItem);
+
+/**
+ * @summary Create a tour (admin)
+ */
+
+export const createTourBodyStartingPriceMin = 0;
+
+export const CreateTourBody = zod.object({
+  slug: zod.string().min(1),
+  title: zod.string().min(1),
+  shortDescription: zod.string().optional(),
+  description: zod.string().optional(),
+  duration: zod.string().optional(),
+  startingPrice: zod.number().min(createTourBodyStartingPriceMin).optional(),
+  route: zod.string().optional(),
+  mainImage: zod.string().optional(),
+  gallery: zod.array(zod.string()).optional(),
+  highlights: zod
+    .array(
+      zod.object({
+        title: zod.string(),
+        body: zod.string(),
+      }),
+    )
+    .optional(),
+  itinerary: zod
+    .array(
+      zod.object({
+        day: zod.number(),
+        title: zod.string(),
+        body: zod.string(),
+      }),
+    )
+    .optional(),
+  included: zod.array(zod.string()).optional(),
+  featured: zod.boolean().optional(),
+  hidden: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Get tour by slug
+ */
+export const GetTourBySlugParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetTourBySlugResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  shortDescription: zod.string(),
+  description: zod.string(),
+  duration: zod.string(),
+  startingPrice: zod.number(),
+  route: zod.string(),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  highlights: zod.array(
+    zod.object({
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  itinerary: zod.array(
+    zod.object({
+      day: zod.number(),
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  included: zod.array(zod.string()),
+  featured: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update a tour (admin)
+ */
+export const UpdateTourParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const updateTourBodyStartingPriceMin = 0;
+
+export const UpdateTourBody = zod.object({
+  slug: zod.string().min(1),
+  title: zod.string().min(1),
+  shortDescription: zod.string().optional(),
+  description: zod.string().optional(),
+  duration: zod.string().optional(),
+  startingPrice: zod.number().min(updateTourBodyStartingPriceMin).optional(),
+  route: zod.string().optional(),
+  mainImage: zod.string().optional(),
+  gallery: zod.array(zod.string()).optional(),
+  highlights: zod
+    .array(
+      zod.object({
+        title: zod.string(),
+        body: zod.string(),
+      }),
+    )
+    .optional(),
+  itinerary: zod
+    .array(
+      zod.object({
+        day: zod.number(),
+        title: zod.string(),
+        body: zod.string(),
+      }),
+    )
+    .optional(),
+  included: zod.array(zod.string()).optional(),
+  featured: zod.boolean().optional(),
+  hidden: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateTourResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  title: zod.string(),
+  shortDescription: zod.string(),
+  description: zod.string(),
+  duration: zod.string(),
+  startingPrice: zod.number(),
+  route: zod.string(),
+  mainImage: zod.string(),
+  gallery: zod.array(zod.string()),
+  highlights: zod.array(
+    zod.object({
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  itinerary: zod.array(
+    zod.object({
+      day: zod.number(),
+      title: zod.string(),
+      body: zod.string(),
+    }),
+  ),
+  included: zod.array(zod.string()),
+  featured: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Delete a tour (admin)
+ */
+export const DeleteTourParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary Admin login
  */
 export const AdminLoginBody = zod.object({

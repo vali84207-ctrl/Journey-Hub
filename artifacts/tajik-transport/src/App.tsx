@@ -20,10 +20,12 @@ import { FleetPage } from "./pages/FleetPage";
 import { VehicleDetailPage } from "./pages/VehicleDetailPage";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogDetailPage } from "./pages/BlogDetailPage";
+import { TourDetailPage } from "./pages/TourDetailPage";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
 import { AdminFleetPage } from "./pages/admin/AdminFleetPage";
+import { AdminToursPage } from "./pages/admin/AdminToursPage";
 import { AdminBlogPage } from "./pages/admin/AdminBlogPage";
 import { AdminBookingsPage } from "./pages/admin/AdminBookingsPage";
 
@@ -55,9 +57,11 @@ function Router() {
       <Route path="/fleet/:id" component={VehicleDetailPage} />
       <Route path="/blog" component={BlogPage} />
       <Route path="/blog/:slug" component={BlogDetailPage} />
+      <Route path="/tours/:slug" component={TourDetailPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       <Route path="/admin">{() => <ProtectedRoute component={AdminDashboardPage} />}</Route>
       <Route path="/admin/fleet">{() => <ProtectedRoute component={AdminFleetPage} />}</Route>
+      <Route path="/admin/tours">{() => <ProtectedRoute component={AdminToursPage} />}</Route>
       <Route path="/admin/blog">{() => <ProtectedRoute component={AdminBlogPage} />}</Route>
       <Route path="/admin/bookings">{() => <ProtectedRoute component={AdminBookingsPage} />}</Route>
       <Route component={NotFound} />
