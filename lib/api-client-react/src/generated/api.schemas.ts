@@ -46,7 +46,29 @@ export interface Booking {
   passengers: number;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  tourSlug?: string | null;
+  /** @nullable */
+  tourTitle?: string | null;
   createdAt: string;
+}
+
+export interface TourBookingInput {
+  /** @minLength 2 */
+  fullName: string;
+  /** @minLength 5 */
+  phone: string;
+  /** @minimum 1 */
+  passengers: number;
+  /** @minLength 1 */
+  date: string;
+  /** @minLength 2 */
+  pickup: string;
+  notes?: string;
+  /** @minLength 1 */
+  tourSlug: string;
+  /** @minLength 1 */
+  tourTitle: string;
 }
 
 export type VehicleStatus = (typeof VehicleStatus)[keyof typeof VehicleStatus];

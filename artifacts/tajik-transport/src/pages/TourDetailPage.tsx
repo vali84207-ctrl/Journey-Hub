@@ -16,6 +16,7 @@ import { useGetTourBySlug } from "@workspace/api-client-react";
 import { Navbar } from "@/components/home/Navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { TourBookingForm } from "@/components/TourBookingForm";
 
 export function TourDetailPage() {
   const { t } = useTranslation();
@@ -189,6 +190,8 @@ export function TourDetailPage() {
                   </div>
                 </section>
               )}
+
+              <TourBookingForm tourSlug={tour.slug} tourTitle={tour.title} />
             </div>
 
             {/* Sticky booking sidebar */}
@@ -232,12 +235,12 @@ export function TourDetailPage() {
                   <Phone className="w-4 h-4 mr-2" /> {t("tourDetail.telegramCta")}
                 </Button>
 
-                <Link
-                  href="/#booking"
+                <a
+                  href="#tour-booking"
                   className="block text-center w-full border border-primary/40 text-primary hover:bg-primary hover:text-black transition-all duration-300 rounded-none py-3 text-xs tracking-[0.2em] uppercase"
                 >
                   {t("tourDetail.requestForm")}
-                </Link>
+                </a>
               </div>
             </aside>
           </div>

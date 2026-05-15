@@ -27,6 +27,7 @@ import type {
   ErrorResponse,
   HealthStatus,
   Tour,
+  TourBookingInput,
   TourInput,
   Vehicle,
   VehicleInput,
@@ -1202,6 +1203,92 @@ export const useDeleteBlogPost = <
   TContext
 > => {
   return useMutation(getDeleteBlogPostMutationOptions(options));
+};
+
+/**
+ * @summary Create a tour booking request (sends Telegram notification)
+ */
+export const getCreateTourBookingUrl = () => {
+  return `/api/tour-bookings`;
+};
+
+export const createTourBooking = async (
+  tourBookingInput: TourBookingInput,
+  options?: RequestInit,
+): Promise<Booking> => {
+  return customFetch<Booking>(getCreateTourBookingUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(tourBookingInput),
+  });
+};
+
+export const getCreateTourBookingMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createTourBooking>>,
+    TError,
+    { data: BodyType<TourBookingInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createTourBooking>>,
+  TError,
+  { data: BodyType<TourBookingInput> },
+  TContext
+> => {
+  const mutationKey = ["createTourBooking"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createTourBooking>>,
+    { data: BodyType<TourBookingInput> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createTourBooking(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateTourBookingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createTourBooking>>
+>;
+export type CreateTourBookingMutationBody = BodyType<TourBookingInput>;
+export type CreateTourBookingMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Create a tour booking request (sends Telegram notification)
+ */
+export const useCreateTourBooking = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createTourBooking>>,
+    TError,
+    { data: BodyType<TourBookingInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createTourBooking>>,
+  TError,
+  { data: BodyType<TourBookingInput> },
+  TContext
+> => {
+  return useMutation(getCreateTourBookingMutationOptions(options));
 };
 
 /**

@@ -4,6 +4,7 @@ import bookingsRouter from "./bookings";
 import vehiclesRouter from "./vehicles";
 import blogRouter from "./blog";
 import toursRouter from "./tours";
+import tourBookingsRouter from "./tour-bookings";
 import adminRouter from "./admin";
 import { seedAll } from "./seed";
 
@@ -16,6 +17,7 @@ router.use(bookingsRouter);
 router.use(vehiclesRouter);
 router.use(blogRouter);
 router.use(toursRouter);
+router.use(tourBookingsRouter);
 router.use(adminRouter);
 
 export default router;

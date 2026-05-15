@@ -54,6 +54,8 @@ export const ListBookingsResponseItem = zod.object({
   carType: zod.string(),
   passengers: zod.number(),
   notes: zod.string().nullish(),
+  tourSlug: zod.string().nullish(),
+  tourTitle: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const ListBookingsResponse = zod.array(ListBookingsResponseItem);
@@ -384,6 +386,26 @@ export const UpdateBlogPostResponse = zod.object({
  */
 export const DeleteBlogPostParams = zod.object({
   id: zod.coerce.number(),
+});
+
+/**
+ * @summary Create a tour booking request (sends Telegram notification)
+ */
+export const createTourBookingBodyFullNameMin = 2;
+
+export const createTourBookingBodyPhoneMin = 5;
+
+export const createTourBookingBodyPickupMin = 2;
+
+export const CreateTourBookingBody = zod.object({
+  fullName: zod.string().min(createTourBookingBodyFullNameMin),
+  phone: zod.string().min(createTourBookingBodyPhoneMin),
+  passengers: zod.number().min(1),
+  date: zod.string().min(1),
+  pickup: zod.string().min(createTourBookingBodyPickupMin),
+  notes: zod.string().optional(),
+  tourSlug: zod.string().min(1),
+  tourTitle: zod.string().min(1),
 });
 
 /**

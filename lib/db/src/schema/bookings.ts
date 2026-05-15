@@ -13,6 +13,8 @@ export const bookingsTable = pgTable("bookings", {
   carType: text("car_type").notNull(),
   passengers: integer("passengers").notNull(),
   notes: text("notes"),
+  tourSlug: text("tour_slug"),
+  tourTitle: text("tour_title"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

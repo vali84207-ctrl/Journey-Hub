@@ -328,6 +328,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /tour-bookings:
+    post:
+      operationId: createTourBooking
+      tags: [tours]
+      summary: Create a tour booking request (sends Telegram notification)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourBookingInput"
+      responses:
+        "201":
+          description: Tour booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /tours:
     get:
       operationId: listTours
@@ -568,8 +593,47 @@ components:
           type: integer
         notes:
           type: ["string", "null"]
+        tourSlug:
+          type: ["string", "null"]
+        tourTitle:
+          type: ["string", "null"]
         createdAt:
           type: string
+
+    TourBookingInput:
+      type: object
+      required:
+        - fullName
+        - phone
+        - passengers
+        - date
+        - pickup
+        - tourSlug
+        - tourTitle
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+        phone:
+          type: string
+          minLength: 5
+        passengers:
+          type: integer
+          minimum: 1
+        date:
+          type: string
+          minLength: 1
+        pickup:
+          type: string
+          minLength: 2
+        notes:
+          type: string
+        tourSlug:
+          type: string
+          minLength: 1
+        tourTitle:
+          type: string
+          minLength: 1
 
     VehicleStatus:
       type: string
