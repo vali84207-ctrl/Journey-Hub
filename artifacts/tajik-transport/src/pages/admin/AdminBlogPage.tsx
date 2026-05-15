@@ -12,6 +12,8 @@ import {
 } from "@workspace/api-client-react";
 import { Plus, Pencil, Trash2, GripVertical, X, ArrowUp, ArrowDown } from "lucide-react";
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
 
 const EMPTY: BlogPostInput = {
   slug: "",
@@ -177,30 +179,17 @@ function BlogForm({
         />
       </div>
 
-      <div>
-        <label className={labelCls}>Cover image URL *</label>
-        <input
-          value={data.cover}
-          onChange={(e) => setData({ ...data, cover: e.target.value })}
-          className={inputCls}
-          placeholder="https://images.unsplash.com/…"
-        />
-        {data.cover && (
-          <div className="mt-2 w-48 h-28 bg-black border border-white/10 overflow-hidden">
-            <img src={data.cover} alt="" className="w-full h-full object-cover" />
-          </div>
-        )}
-      </div>
+      <ImageUploadField
+        label="Cover image *"
+        value={data.cover}
+        onChange={(v) => setData({ ...data, cover: v })}
+      />
 
-      <div>
-        <label className={labelCls}>Gallery image URLs (one per line)</label>
-        <textarea
-          value={galleryText}
-          onChange={(e) => setGalleryText(e.target.value)}
-          rows={3}
-          className={`${inputCls} font-mono text-xs`}
-        />
-      </div>
+      <GalleryUploadField
+        label="Gallery images"
+        value={fromLines(galleryText)}
+        onChange={(arr) => setGalleryText(toLines(arr))}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -254,11 +243,10 @@ function BlogForm({
               </div>
               {b.type === "image" ? (
                 <div className="space-y-2">
-                  <input
+                  <ImageUploadField
+                    label="Image"
                     value={b.src ?? ""}
-                    onChange={(e) => updateBlock(i, { src: e.target.value })}
-                    placeholder="Image URL"
-                    className={inputCls}
+                    onChange={(v) => updateBlock(i, { src: v })}
                   />
                   <input
                     value={b.caption ?? ""}

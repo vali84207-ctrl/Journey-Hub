@@ -1,6 +1,7 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
+import { setUploadAuthTokenGetter } from "@workspace/object-storage-web";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
@@ -30,6 +31,7 @@ import { AdminBlogPage } from "./pages/admin/AdminBlogPage";
 import { AdminBookingsPage } from "./pages/admin/AdminBookingsPage";
 
 setAuthTokenGetter(() => getAdminToken());
+setUploadAuthTokenGetter(() => getAdminToken());
 
 const queryClient = new QueryClient();
 

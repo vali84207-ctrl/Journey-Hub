@@ -11,6 +11,8 @@ import {
 } from "@workspace/api-client-react";
 import { Plus, Pencil, Trash2, EyeOff, Eye } from "lucide-react";
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
 
 const STATUS_STYLES: Record<string, string> = {
   available: "bg-green-500/15 border-green-500/40 text-green-400",
@@ -197,31 +199,17 @@ function VehicleForm({
         />
       </div>
 
-      <div>
-        <label className={labelCls}>Main image URL</label>
-        <input
-          value={data.mainImage ?? ""}
-          onChange={(e) => setData({ ...data, mainImage: e.target.value })}
-          className={inputCls}
-          placeholder="https://… or /lc-hero.png"
-        />
-        {data.mainImage && (
-          <div className="mt-2 w-32 h-20 bg-black border border-white/10 overflow-hidden">
-            <img src={data.mainImage} alt="" className="w-full h-full object-cover" />
-          </div>
-        )}
-      </div>
+      <ImageUploadField
+        label="Main image"
+        value={data.mainImage ?? ""}
+        onChange={(v) => setData({ ...data, mainImage: v })}
+      />
 
-      <div>
-        <label className={labelCls}>Gallery image URLs (one per line)</label>
-        <textarea
-          value={galleryText}
-          onChange={(e) => setGalleryText(e.target.value)}
-          rows={4}
-          className={`${inputCls} font-mono text-xs`}
-          placeholder={"https://example.com/photo1.jpg\nhttps://example.com/photo2.jpg"}
-        />
-      </div>
+      <GalleryUploadField
+        label="Gallery images"
+        value={fromLines(galleryText)}
+        onChange={(arr) => setGalleryText(toLines(arr))}
+      />
 
       <div>
         <label className={labelCls}>Features (one per line)</label>
