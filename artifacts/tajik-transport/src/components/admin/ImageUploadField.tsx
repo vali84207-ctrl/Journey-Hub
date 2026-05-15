@@ -2,6 +2,7 @@ import { useRef, useState, type DragEvent, type ChangeEvent } from "react";
 import { Upload, X, Loader2, ImageIcon } from "lucide-react";
 import { useUpload } from "@workspace/object-storage-web";
 import { resolveImageUrl, objectPathToServedUrl } from "@/lib/imageUrl";
+import { compressImage } from "@/lib/compressImage";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,image/jpg";
 
@@ -39,7 +40,8 @@ export function ImageUploadField({ label, value, onChange, helperText }: Props) 
   async function handleFiles(files: FileList | null) {
     const file = files?.[0];
     if (!file || !validate(file)) return;
-    await uploadFile(file);
+    const optimized = await compressImage(file);
+    await uploadFile(optimized);
   }
 
   function onDrop(e: DragEvent<HTMLDivElement>) {

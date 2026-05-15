@@ -2,6 +2,8 @@ import { useRef, useState, type DragEvent, type ChangeEvent } from "react";
 import { Upload, X, Loader2, ArrowLeft, ArrowRight } from "lucide-react";
 import { useUpload } from "@workspace/object-storage-web";
 import { resolveImageUrl, objectPathToServedUrl } from "@/lib/imageUrl";
+import { compressImage } from "@/lib/compressImage";
+import { Star } from "lucide-react";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,image/jpg";
 
@@ -10,9 +12,13 @@ interface Props {
   value: string[];
   onChange: (value: string[]) => void;
   helperText?: string;
+  /** When provided, each thumbnail shows a "set as cover" star button. */
+  onSetCover?: (url: string) => void;
+  /** Currently selected cover, highlighted with a gold star. */
+  coverValue?: string;
 }
 
-export function GalleryUploadField({ label, value, onChange, helperText }: Props) {
+export function GalleryUploadField({ label, value, onChange, helperText, onSetCover, coverValue }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -39,7 +45,8 @@ export function GalleryUploadField({ label, value, onChange, helperText }: Props
     setPending(valid.length);
     const uploaded: string[] = [];
     for (const f of valid) {
-      const r = await uploadFile(f);
+      const optimized = await compressImage(f);
+      const r = await uploadFile(optimized);
       if (r) uploaded.push(objectPathToServedUrl(r.objectPath));
       setPending((p) => p - 1);
     }
@@ -106,7 +113,26 @@ export function GalleryUploadField({ label, value, onChange, helperText }: Props
                   alt=""
                   className="w-full h-full object-cover"
                 />
+                {onSetCover && coverValue === src && (
+                  <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary text-black text-[9px] uppercase tracking-wider font-semibold flex items-center gap-1">
+                    <Star className="w-2.5 h-2.5 fill-black" /> Cover
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                  {onSetCover && (
+                    <button
+                      type="button"
+                      onClick={() => onSetCover(src)}
+                      title="Set as cover"
+                      className={`p-1.5 text-white ${
+                        coverValue === src
+                          ? "bg-primary text-black"
+                          : "bg-white/10 hover:bg-primary hover:text-black"
+                      }`}
+                    >
+                      <Star className="w-3 h-3" />
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => move(i, -1)}

@@ -209,6 +209,9 @@ function VehicleForm({
         label="Gallery images"
         value={fromLines(galleryText)}
         onChange={(arr) => setGalleryText(toLines(arr))}
+        coverValue={data.mainImage ?? ""}
+        onSetCover={(url) => setData({ ...data, mainImage: url })}
+        helperText="Click the ★ on any gallery image to use it as the cover."
       />
 
       <div>
