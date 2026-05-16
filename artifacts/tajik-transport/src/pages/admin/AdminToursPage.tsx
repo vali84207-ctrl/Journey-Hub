@@ -24,6 +24,27 @@ import { LocalizedField } from "@/components/admin/LocalizedField";
 import { DeparturesEditor, ReviewsEditor, FaqEditor } from "@/components/admin/TourExtrasEditors";
 import { pickLocale, type LocalizedString } from "@/lib/locale";
 
+function generateSlug(title: string, existingSlugs: string[] = [], currentSlug = ""): string {
+  const base = title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  if (!base) return currentSlug;
+
+  const taken = new Set(existingSlugs.filter((s) => s !== currentSlug));
+  if (!taken.has(base)) return base;
+
+  let i = 2;
+  while (taken.has(`${base}-${i}`)) i++;
+  return `${base}-${i}`;
+}
+
 const EMPTY: TourInput = {
   slug: "",
   title: "",
@@ -330,13 +351,20 @@ function TourForm({
   pending,
   onSubmit,
   onCancel,
+  existingSlugs = [],
+  currentSlug = "",
 }: {
   initial: TourInput;
   pending: boolean;
   onSubmit: (data: TourInput) => void;
   onCancel: () => void;
+  existingSlugs?: string[];
+  currentSlug?: string;
 }) {
-  const [data, setData] = useState<TourInput>(initial);
+  const [data, setData] = useState<TourInput>({
+    ...initial,
+    slug: initial.slug || generateSlug(initial.title, existingSlugs, currentSlug),
+  });
   const [galleryText, setGalleryText] = useState(toLines(initial.gallery));
   const [included, setIncluded] = useState<LocalizedString[]>(initial.included ?? []);
   const [highlights, setHighlights] = useState<TourHighlight[]>(initial.highlights ?? []);
@@ -346,7 +374,10 @@ function TourForm({
   const [faq, setFaq] = useState<TourFaqItem[]>(initial.faq ?? []);
 
   useEffect(() => {
-    setData(initial);
+    setData({
+      ...initial,
+      slug: initial.slug || generateSlug(initial.title, existingSlugs, currentSlug),
+    });
     setGalleryText(toLines(initial.gallery));
     setIncluded(initial.included ?? []);
     setHighlights(initial.highlights ?? []);
@@ -374,25 +405,26 @@ function TourForm({
       className="space-y-5"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className={labelCls}>Slug *</label>
-          <input
-            required
-            value={data.slug}
-            onChange={(e) => setData({ ...data, slug: e.target.value })}
-            className={inputCls}
-            placeholder="dushanbe-pamir-tour"
-          />
-        </div>
-        <div>
+        <div className="md:col-span-2">
           <label className={labelCls}>Title *</label>
           <input
             required
             value={data.title}
-            onChange={(e) => setData({ ...data, title: e.target.value })}
+            onChange={(e) => {
+              const title = e.target.value;
+              setData({
+                ...data,
+                title,
+                slug: generateSlug(title, existingSlugs, currentSlug),
+              });
+            }}
             className={inputCls}
             placeholder="Dushanbe → Pamir Tour"
           />
+          <p className="text-[10px] text-gray-500 mt-1">
+            URL slug auto-generated:{" "}
+            <span className="font-mono text-gray-400">{data.slug || "—"}</span>
+          </p>
           <I18nField
             value={data.titleI18n}
             onChange={(v) => setData({ ...data, titleI18n: v })}
@@ -809,6 +841,7 @@ export function AdminToursPage() {
           pending={createT.isPending}
           onSubmit={handleCreate}
           onCancel={() => setAdding(false)}
+          existingSlugs={tours?.map((t) => t.slug) ?? []}
         />
       </ModalShell>
 
@@ -838,6 +871,8 @@ export function AdminToursPage() {
             pending={updateT.isPending}
             onSubmit={handleUpdate}
             onCancel={() => setEditing(null)}
+            existingSlugs={tours?.map((t) => t.slug) ?? []}
+            currentSlug={editing?.slug ?? ""}
           />
         )}
       </ModalShell>
