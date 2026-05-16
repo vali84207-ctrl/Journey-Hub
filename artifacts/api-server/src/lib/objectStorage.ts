@@ -70,6 +70,10 @@ export class ObjectStorageService {
     return dir;
   }
 
+  getPrivateObjectDirSafe(): string | null {
+    return process.env.PRIVATE_OBJECT_DIR || null;
+  }
+
   async searchPublicObject(filePath: string): Promise<File | null> {
     for (const searchPath of this.getPublicObjectSearchPaths()) {
       const fullPath = `${searchPath}/${filePath}`;
