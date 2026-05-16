@@ -91,6 +91,14 @@ export const en = {
       limited: "Limited spots",
       soldout: "Sold out",
     },
+    tabs: {
+      aria: "Tour sections",
+      about: "About the trip",
+      itinerary: "Itinerary",
+      dates: "Dates & prices",
+      reviews: "Reviews",
+      faq: "FAQ",
+    },
   },
   tourBooking: {
     eyebrow: "Tour Request",

@@ -1,0 +1,95 @@
+Rebuild the Tours pages to closely match the structure and UX of the Intrepid Travel tour pages.
+
+REFERENCE:
+Use the Intrepid Travel layout/style structure as the main inspiration:
+:contentReference[oaicite:0]{index=0}
+
+IMPORTANT:
+- I want a VERY SIMILAR structure and experience
+- Keep my current black/gold luxury branding
+- Keep my logo
+- Preserve backend and Telegram integrations
+
+========================
+MATCH THIS STRUCTURE
+========================
+
+The tour pages should include:
+
+1. Large hero image/gallery at the top
+2. Right-side booking/pricing card
+3. Sticky top navigation tabs:
+   - About the trip
+   - Itinerary
+   - Dates & prices
+   - Reviews
+   - FAQ
+
+4. Dedicated Dates & Prices section EXACTLY like premium travel websites:
+   - starting date
+   - ending date
+   - available spots
+   - pricing
+   - status badges
+
+5. Day-by-day itinerary timeline
+6. Reviews section
+7. FAQ section
+8. Included services section
+9. Tour overview section
+
+========================
+VERY IMPORTANT
+========================
+
+Currently all buttons/tabs redirect to the same page/list.
+
+Fix this behavior:
+
+- Each tab/button must open or scroll to its OWN section
+- Smooth scrolling navigation
+- Sticky active tabs while scrolling
+- Proper section anchors
+
+Example:
+- “Itinerary” → itinerary section
+- “Dates & Prices” → dates/prices section
+- “Reviews” → reviews section
+
+NOT all redirecting to the same page.
+
+========================
+ADMIN PANEL
+========================
+
+Admin must fully manage:
+- itinerary
+- dates
+- prices
+- seats available
+- reviews
+- FAQ
+- images
+
+All updates must appear automatically on frontend.
+
+========================
+DESIGN
+========================
+
+Keep:
+- luxury black/gold colors
+- Pamir Luxe Drive branding
+- cinematic style
+
+But make the TOUR PAGE STRUCTURE very similar to Intrepid Travel.
+
+========================
+IMPORTANT
+========================
+
+- Preserve backend
+- Preserve booking forms
+- Preserve Telegram notifications
+- Preserve multilingual functionality
+- Preserve responsiveness

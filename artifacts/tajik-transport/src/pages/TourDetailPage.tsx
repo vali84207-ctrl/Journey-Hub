@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -45,6 +45,15 @@ function formatDate(iso: string, lang: string) {
   }
 }
 
+const SCROLL_OFFSET = 128;
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET + 1;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
 export function TourDetailPage() {
   const { t, i18n } = useTranslation();
   const lang = useActiveLang(i18n.language);
@@ -52,11 +61,14 @@ export function TourDetailPage() {
   const { data: tour, isLoading, error } = useGetTourBySlug(slug ?? "");
   const [activeImg, setActiveImg] = useState(0);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("about");
+  const programmaticScrollUntil = useRef(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setActiveImg(0);
     setOpenFaq(null);
+    setActiveTab("about");
   }, [slug]);
 
   const sortedDepartures = useMemo(() => {
@@ -64,6 +76,59 @@ export function TourDetailPage() {
       (a.startDate || "").localeCompare(b.startDate || ""),
     );
   }, [tour?.departures]);
+
+  const tabs = useMemo(() => {
+    const list: { id: string; label: string }[] = [
+      { id: "about", label: t("tourDetail.tabs.about") },
+    ];
+    if (tour?.itinerary && tour.itinerary.length > 0) {
+      list.push({ id: "itinerary", label: t("tourDetail.tabs.itinerary") });
+    }
+    if (sortedDepartures.length > 0) {
+      list.push({ id: "dates-prices", label: t("tourDetail.tabs.dates") });
+    }
+    if (tour?.reviews && tour.reviews.length > 0) {
+      list.push({ id: "reviews", label: t("tourDetail.tabs.reviews") });
+    }
+    if (tour?.faq && tour.faq.length > 0) {
+      list.push({ id: "faq", label: t("tourDetail.tabs.faq") });
+    }
+    return list;
+  }, [tour?.itinerary, tour?.reviews, tour?.faq, sortedDepartures.length, t]);
+
+  // Scroll spy — highlight the section currently in view.
+  // Sections are sorted by their actual DOM position because the visual tab
+  // order (e.g. Itinerary before Dates) may differ from the order sections
+  // appear on the page.
+  useEffect(() => {
+    if (tabs.length < 2) return;
+    const sections = tabs
+      .map((tab) => document.getElementById(tab.id))
+      .filter((el): el is HTMLElement => el !== null)
+      .sort((a, b) => a.offsetTop - b.offsetTop);
+    if (sections.length === 0) return;
+
+    const onScroll = () => {
+      if (Date.now() < programmaticScrollUntil.current) return;
+      const probeY = SCROLL_OFFSET + 8;
+      let current = sections[0]!.id;
+      for (const sec of sections) {
+        const rect = sec.getBoundingClientRect();
+        if (rect.top - probeY <= 0) current = sec.id;
+        else break;
+      }
+      setActiveTab((prev) => (prev === current ? prev : current));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [tabs]);
+
+  const handleTabClick = (id: string) => {
+    setActiveTab(id);
+    programmaticScrollUntil.current = Date.now() + 800;
+    scrollToSection(id);
+  };
 
   if (isLoading) {
     return (
@@ -147,10 +212,48 @@ export function TourDetailPage() {
           </div>
         </div>
 
+        {/* Sticky section tabs */}
+        {tabs.length > 1 && (
+          <nav
+            aria-label={t("tourDetail.tabs.aria")}
+            className="sticky top-16 md:top-20 z-30 bg-[#050505]/95 backdrop-blur-sm border-b border-white/10"
+          >
+            <div className="container mx-auto px-2 md:px-6 lg:px-8">
+              <ul className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                {tabs.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <li key={tab.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleTabClick(tab.id)}
+                        aria-current={isActive ? "true" : undefined}
+                        className={`relative px-4 py-4 text-[11px] md:text-xs uppercase tracking-widest font-light whitespace-nowrap transition-colors ${
+                          isActive
+                            ? "text-primary"
+                            : "text-gray-400 hover:text-white"
+                        }`}
+                      >
+                        {tab.label}
+                        <span
+                          className={`absolute left-3 right-3 bottom-0 h-px transition-colors ${
+                            isActive ? "bg-primary" : "bg-transparent"
+                          }`}
+                        />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </nav>
+        )}
+
         <div className="container mx-auto px-4 md:px-6 lg:px-8 pt-12">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
             {/* Main column */}
             <div className="lg:col-span-3">
+              <section id="about" className="scroll-mt-32">
               <div className="flex flex-wrap items-center gap-3 mb-4">
                 {duration && (
                   <span className="inline-flex items-center gap-1.5 bg-black border border-primary/30 text-primary px-3 py-1 text-xs uppercase tracking-widest">
@@ -207,6 +310,8 @@ export function TourDetailPage() {
                 {description || pickI18n(tour.shortDescription, tour.shortDescriptionI18n, lang)}
               </p>
 
+              </section>
+
               {tour.highlights && tour.highlights.length > 0 && (
                 <section className="mb-14">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
@@ -231,7 +336,7 @@ export function TourDetailPage() {
               )}
 
               {sortedDepartures.length > 0 && (
-                <section id="dates-prices" className="mb-14">
+                <section id="dates-prices" className="mb-14 scroll-mt-32">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.datesPrices")}
                   </h2>
@@ -303,7 +408,7 @@ export function TourDetailPage() {
               )}
 
               {tour.itinerary && tour.itinerary.length > 0 && (
-                <section className="mb-14">
+                <section id="itinerary" className="mb-14 scroll-mt-32">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.itinerary")}
                   </h2>
@@ -376,7 +481,7 @@ export function TourDetailPage() {
               )}
 
               {tour.reviews && tour.reviews.length > 0 && (
-                <section className="mb-14">
+                <section id="reviews" className="mb-14 scroll-mt-32">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.reviews")}
                   </h2>
@@ -427,7 +532,7 @@ export function TourDetailPage() {
               )}
 
               {tour.faq && tour.faq.length > 0 && (
-                <section className="mb-14">
+                <section id="faq" className="mb-14 scroll-mt-32">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.faq")}
                   </h2>
