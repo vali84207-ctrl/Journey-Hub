@@ -14,6 +14,9 @@ import { Plus, Pencil, Trash2, GripVertical, X, ArrowUp, ArrowDown } from "lucid
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
+import { I18nField } from "@/components/admin/I18nField";
+import { LocalizedField } from "@/components/admin/LocalizedField";
+import { pickLocale } from "@/lib/locale";
 
 const EMPTY: BlogPostInput = {
   slug: "",
@@ -32,6 +35,12 @@ const EMPTY: BlogPostInput = {
   category: "Mountain Journeys",
   content: [],
   published: true,
+  titleI18n: {},
+  excerptI18n: {},
+  locationI18n: {},
+  readTimeI18n: {},
+  authorI18n: {},
+  categoryI18n: {},
 };
 
 const BLOCK_TYPES: BlogContentBlock["type"][] = ["paragraph", "heading", "quote", "image"];
@@ -120,6 +129,11 @@ function BlogForm({
             onChange={(e) => setData({ ...data, title: e.target.value })}
             className={inputCls}
           />
+          <I18nField
+            value={data.titleI18n}
+            onChange={(v) => setData({ ...data, titleI18n: v })}
+            enPreview={data.title}
+          />
         </div>
         <div>
           <label className={labelCls}>Location</label>
@@ -129,6 +143,11 @@ function BlogForm({
             className={inputCls}
             placeholder="Pamir Highway, GBAO"
           />
+          <I18nField
+            value={data.locationI18n}
+            onChange={(v) => setData({ ...data, locationI18n: v })}
+            enPreview={data.location ?? ""}
+          />
         </div>
         <div>
           <label className={labelCls}>Category</label>
@@ -136,6 +155,11 @@ function BlogForm({
             value={data.category ?? ""}
             onChange={(e) => setData({ ...data, category: e.target.value })}
             className={inputCls}
+          />
+          <I18nField
+            value={data.categoryI18n}
+            onChange={(v) => setData({ ...data, categoryI18n: v })}
+            enPreview={data.category ?? ""}
           />
         </div>
         <div>
@@ -146,6 +170,11 @@ function BlogForm({
             className={inputCls}
             placeholder="5 min read"
           />
+          <I18nField
+            value={data.readTimeI18n}
+            onChange={(v) => setData({ ...data, readTimeI18n: v })}
+            enPreview={data.readTime ?? ""}
+          />
         </div>
         <div>
           <label className={labelCls}>Author</label>
@@ -153,6 +182,11 @@ function BlogForm({
             value={data.author ?? ""}
             onChange={(e) => setData({ ...data, author: e.target.value })}
             className={inputCls}
+          />
+          <I18nField
+            value={data.authorI18n}
+            onChange={(v) => setData({ ...data, authorI18n: v })}
+            enPreview={data.author ?? ""}
           />
         </div>
         <div className="md:col-span-2 flex items-center gap-3">
@@ -176,6 +210,13 @@ function BlogForm({
           onChange={(e) => setData({ ...data, excerpt: e.target.value })}
           rows={2}
           className={inputCls}
+        />
+        <I18nField
+          multiline
+          rows={2}
+          value={data.excerptI18n}
+          onChange={(v) => setData({ ...data, excerptI18n: v })}
+          enPreview={data.excerpt ?? ""}
         />
       </div>
 
@@ -218,25 +259,13 @@ function BlogForm({
                   <GripVertical className="w-3 h-3 text-gray-600" /> {b.type}
                 </span>
                 <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => moveBlock(i, -1)}
-                    className="p-1 text-gray-500 hover:text-white"
-                  >
+                  <button type="button" onClick={() => moveBlock(i, -1)} className="p-1 text-gray-500 hover:text-white">
                     <ArrowUp className="w-3 h-3" />
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => moveBlock(i, 1)}
-                    className="p-1 text-gray-500 hover:text-white"
-                  >
+                  <button type="button" onClick={() => moveBlock(i, 1)} className="p-1 text-gray-500 hover:text-white">
                     <ArrowDown className="w-3 h-3" />
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => removeBlock(i)}
-                    className="p-1 text-red-500/80 hover:text-red-400"
-                  >
+                  <button type="button" onClick={() => removeBlock(i)} className="p-1 text-red-500/80 hover:text-red-400">
                     <X className="w-3 h-3" />
                   </button>
                 </div>
@@ -248,22 +277,31 @@ function BlogForm({
                     value={b.src ?? ""}
                     onChange={(v) => updateBlock(i, { src: v })}
                   />
-                  <input
-                    value={b.caption ?? ""}
-                    onChange={(e) => updateBlock(i, { caption: e.target.value })}
+                  <LocalizedField
+                    label="Caption"
+                    value={b.caption}
+                    onChange={(v) => updateBlock(i, { caption: v })}
                     placeholder="Caption (optional)"
-                    className={inputCls}
                   />
                 </div>
               ) : (
-                <textarea
-                  value={b.text ?? ""}
-                  onChange={(e) => updateBlock(i, { text: e.target.value })}
+                <LocalizedField
+                  value={b.text}
+                  onChange={(v) => updateBlock(i, { text: v })}
+                  multiline
                   rows={b.type === "paragraph" ? 4 : 2}
-                  placeholder={b.type === "heading" ? "Section heading" : b.type === "quote" ? "Pull quote text" : "Paragraph text"}
-                  className={inputCls}
+                  placeholder={
+                    b.type === "heading"
+                      ? "Section heading"
+                      : b.type === "quote"
+                        ? "Pull quote text"
+                        : "Paragraph text"
+                  }
                 />
               )}
+              <div className="text-[10px] text-gray-600 mt-1">
+                EN: {pickLocale(b.type === "image" ? b.caption : b.text, "en") || "(empty)"}
+              </div>
             </div>
           ))}
         </div>
@@ -313,7 +351,7 @@ export function AdminBlogPage() {
           setAdding(false);
         },
         onError: (e) => setError((e as Error).message ?? "Failed to create"),
-      }
+      },
     );
   };
   const handleUpdate = (data: BlogPostInput) => {
@@ -327,7 +365,7 @@ export function AdminBlogPage() {
           setEditing(null);
         },
         onError: (e) => setError((e as Error).message ?? "Failed to update"),
-      }
+      },
     );
   };
   const handleDelete = () => {
@@ -339,7 +377,7 @@ export function AdminBlogPage() {
           refresh();
           setConfirmDel(null);
         },
-      }
+      },
     );
   };
 
@@ -357,6 +395,12 @@ export function AdminBlogPage() {
         category: editing.category,
         content: editing.content,
         published: editing.published,
+        titleI18n: editing.titleI18n,
+        excerptI18n: editing.excerptI18n,
+        locationI18n: editing.locationI18n,
+        readTimeI18n: editing.readTimeI18n,
+        authorI18n: editing.authorI18n,
+        categoryI18n: editing.categoryI18n,
       }
     : null;
 
@@ -400,12 +444,8 @@ export function AdminBlogPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-3 flex-wrap mb-1">
-                    <span className="text-[10px] uppercase tracking-wider text-primary">
-                      {p.category}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-wider text-gray-500">
-                      {p.date}
-                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-primary">{p.category}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-gray-500">{p.date}</span>
                     {!p.published && (
                       <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 border border-amber-500/30 bg-amber-500/10 text-amber-400">
                         Draft

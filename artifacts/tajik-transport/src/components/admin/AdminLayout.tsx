@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, Car, Compass, BookOpen, CalendarClock, LogOut, Menu, X, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Car, Compass, BookOpen, CalendarClock, Settings, LogOut, Menu, X, ArrowLeft } from "lucide-react";
 import { clearAdminToken } from "@/lib/adminAuth";
 
 const NAV = [
@@ -9,6 +9,7 @@ const NAV = [
   { href: "/admin/tours", label: "Tours", icon: Compass },
   { href: "/admin/blog", label: "Blog", icon: BookOpen },
   { href: "/admin/bookings", label: "Bookings", icon: CalendarClock },
+  { href: "/admin/site", label: "Site Settings", icon: Settings },
 ];
 
 export function AdminLayout({ title, children }: { title: string; children: ReactNode }) {

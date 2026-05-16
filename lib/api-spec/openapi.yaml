@@ -22,6 +22,8 @@ tags:
     description: Admin authentication
   - name: storage
     description: Object storage upload and serving endpoints
+  - name: site-settings
+    description: Global site content + contact settings
 paths:
   /storage/uploads/request-url:
     post:
@@ -103,6 +105,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /site-settings:
+    get:
+      tags: [site-settings]
+      operationId: getSiteSettings
+      summary: Get global site settings
+      responses:
+        '200':
+          description: Settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteSettings'
+    put:
+      tags: [site-settings]
+      operationId: updateSiteSettings
+      summary: Update global site settings (admin)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteSettingsInput'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteSettings'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /healthz:
     get:
       operationId: healthCheck
@@ -743,6 +783,87 @@ components:
           type: string
           minLength: 1
 
+    LangMap:
+      type: object
+      description: Optional translations keyed by language code (en uses the base column).
+      properties:
+        ru: { type: string }
+        tj: { type: string }
+        uz: { type: string }
+
+    LocalizedString:
+      description: Either a plain string (legacy / EN-only) or a per-language object.
+      oneOf:
+        - type: string
+        - type: object
+          additionalProperties: true
+          properties:
+            en: { type: string }
+            ru: { type: string }
+            tj: { type: string }
+            uz: { type: string }
+
+    SiteSettings:
+      type: object
+      required:
+        - id
+        - heroEyebrow
+        - heroTitleLine1
+        - heroTitleLine2
+        - heroSubtitle
+        - heroBackgroundImage
+        - contactPhone
+        - contactWhatsapp
+        - contactTelegram
+        - contactEmail
+        - contactAddress
+        - contactMapsUrl
+        - footerTagline
+        - updatedAt
+      properties:
+        id: { type: integer }
+        heroEyebrow: { type: string }
+        heroEyebrowI18n: { $ref: "#/components/schemas/LangMap" }
+        heroTitleLine1: { type: string }
+        heroTitleLine1I18n: { $ref: "#/components/schemas/LangMap" }
+        heroTitleLine2: { type: string }
+        heroTitleLine2I18n: { $ref: "#/components/schemas/LangMap" }
+        heroSubtitle: { type: string }
+        heroSubtitleI18n: { $ref: "#/components/schemas/LangMap" }
+        heroBackgroundImage: { type: string }
+        contactPhone: { type: string }
+        contactWhatsapp: { type: string }
+        contactTelegram: { type: string }
+        contactEmail: { type: string }
+        contactAddress: { type: string }
+        contactAddressI18n: { $ref: "#/components/schemas/LangMap" }
+        contactMapsUrl: { type: string }
+        footerTagline: { type: string }
+        footerTaglineI18n: { $ref: "#/components/schemas/LangMap" }
+        updatedAt: { type: string }
+
+    SiteSettingsInput:
+      type: object
+      properties:
+        heroEyebrow: { type: string }
+        heroEyebrowI18n: { $ref: "#/components/schemas/LangMap" }
+        heroTitleLine1: { type: string }
+        heroTitleLine1I18n: { $ref: "#/components/schemas/LangMap" }
+        heroTitleLine2: { type: string }
+        heroTitleLine2I18n: { $ref: "#/components/schemas/LangMap" }
+        heroSubtitle: { type: string }
+        heroSubtitleI18n: { $ref: "#/components/schemas/LangMap" }
+        heroBackgroundImage: { type: string }
+        contactPhone: { type: string }
+        contactWhatsapp: { type: string }
+        contactTelegram: { type: string }
+        contactEmail: { type: string }
+        contactAddress: { type: string }
+        contactAddressI18n: { $ref: "#/components/schemas/LangMap" }
+        contactMapsUrl: { type: string }
+        footerTagline: { type: string }
+        footerTaglineI18n: { $ref: "#/components/schemas/LangMap" }
+
     VehicleStatus:
       type: string
       enum:
@@ -793,7 +914,7 @@ components:
         features:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/LocalizedString"
         mainImage:
           type: string
         gallery:
@@ -806,6 +927,10 @@ components:
           type: integer
         status:
           $ref: "#/components/schemas/VehicleStatus"
+        nameI18n: { $ref: "#/components/schemas/LangMap" }
+        modelI18n: { $ref: "#/components/schemas/LangMap" }
+        typeI18n: { $ref: "#/components/schemas/LangMap" }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
         createdAt:
           type: string
         updatedAt:
@@ -845,7 +970,7 @@ components:
         features:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/LocalizedString"
         mainImage:
           type: string
         gallery:
@@ -858,6 +983,10 @@ components:
           type: integer
         status:
           $ref: "#/components/schemas/VehicleStatus"
+        nameI18n: { $ref: "#/components/schemas/LangMap" }
+        modelI18n: { $ref: "#/components/schemas/LangMap" }
+        typeI18n: { $ref: "#/components/schemas/LangMap" }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
 
     VehicleStatusUpdate:
       type: object
@@ -876,11 +1005,11 @@ components:
           type: string
           enum: [paragraph, heading, quote, image]
         text:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
         src:
           type: string
         caption:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
 
     BlogPost:
       type: object
@@ -931,6 +1060,12 @@ components:
             $ref: "#/components/schemas/BlogContentBlock"
         published:
           type: boolean
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        excerptI18n: { $ref: "#/components/schemas/LangMap" }
+        locationI18n: { $ref: "#/components/schemas/LangMap" }
+        readTimeI18n: { $ref: "#/components/schemas/LangMap" }
+        authorI18n: { $ref: "#/components/schemas/LangMap" }
+        categoryI18n: { $ref: "#/components/schemas/LangMap" }
         createdAt:
           type: string
         updatedAt:
@@ -975,15 +1110,21 @@ components:
             $ref: "#/components/schemas/BlogContentBlock"
         published:
           type: boolean
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        excerptI18n: { $ref: "#/components/schemas/LangMap" }
+        locationI18n: { $ref: "#/components/schemas/LangMap" }
+        readTimeI18n: { $ref: "#/components/schemas/LangMap" }
+        authorI18n: { $ref: "#/components/schemas/LangMap" }
+        categoryI18n: { $ref: "#/components/schemas/LangMap" }
 
     TourHighlight:
       type: object
       required: [title, body]
       properties:
         title:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
         body:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
 
     TourItineraryDay:
       type: object
@@ -992,9 +1133,20 @@ components:
         day:
           type: integer
         title:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
         body:
-          type: string
+          $ref: "#/components/schemas/LocalizedString"
+        locations:
+          type: array
+          items: { $ref: "#/components/schemas/LocalizedString" }
+        activities:
+          type: array
+          items: { $ref: "#/components/schemas/LocalizedString" }
+        overnightLocation:
+          $ref: "#/components/schemas/LocalizedString"
+        images:
+          type: array
+          items: { type: string }
 
     Tour:
       type: object
@@ -1038,10 +1190,15 @@ components:
           items: { $ref: "#/components/schemas/TourItineraryDay" }
         included:
           type: array
-          items: { type: string }
+          items: { $ref: "#/components/schemas/LocalizedString" }
         featured: { type: boolean }
         hidden: { type: boolean }
         sortOrder: { type: integer }
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        shortDescriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        durationI18n: { $ref: "#/components/schemas/LangMap" }
+        routeI18n: { $ref: "#/components/schemas/LangMap" }
         createdAt: { type: string }
         updatedAt: { type: string }
 
@@ -1076,10 +1233,15 @@ components:
           items: { $ref: "#/components/schemas/TourItineraryDay" }
         included:
           type: array
-          items: { type: string }
+          items: { $ref: "#/components/schemas/LocalizedString" }
         featured: { type: boolean }
         hidden: { type: boolean }
         sortOrder: { type: integer }
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        shortDescriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        durationI18n: { $ref: "#/components/schemas/LangMap" }
+        routeI18n: { $ref: "#/components/schemas/LangMap" }
 
     AdminLoginInput:
       type: object

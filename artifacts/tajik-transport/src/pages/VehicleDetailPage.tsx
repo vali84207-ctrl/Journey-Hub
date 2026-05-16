@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useListVehicles, useCreateBooking } from "@workspace/api-client-react";
+import { pickI18n, pickLocaleArray, useActiveLang } from "@/lib/locale";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -24,7 +25,8 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function VehicleDetailPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = useActiveLang(i18n.language);
   const { id } = useParams();
   const { data: vehicles, isLoading } = useListVehicles();
   const vehicle = vehicles?.find((v) => v.id === Number(id));
@@ -99,8 +101,11 @@ export function VehicleDetailPage() {
   const gallery = vehicle.gallery && vehicle.gallery.length > 0
     ? vehicle.gallery
     : [vehicle.mainImage || "/lc-hero.png"];
-  const displayName = vehicle.name || vehicle.model;
-  const features = vehicle.features ?? [];
+  const displayName =
+    pickI18n(vehicle.name, vehicle.nameI18n, lang) ||
+    pickI18n(vehicle.model, vehicle.modelI18n, lang);
+  const description = pickI18n(vehicle.description, vehicle.descriptionI18n, lang);
+  const features = pickLocaleArray(vehicle.features, lang);
 
   const statusLabel = vehicle.status === "available" ? t("fleet.status.available")
     : vehicle.status === "reserved" ? t("fleet.status.reserved")
@@ -186,7 +191,7 @@ export function VehicleDetailPage() {
               <span className="text-gray-500 text-sm font-light">{vehicle.year}</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">{displayName}</h1>
-            <p className="text-gray-300 font-light leading-relaxed text-lg mb-10">{vehicle.description}</p>
+            <p className="text-gray-300 font-light leading-relaxed text-lg mb-10">{description}</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
               {[

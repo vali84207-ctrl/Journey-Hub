@@ -86,6 +86,72 @@ export interface TourBookingInput {
   tourTitle: string;
 }
 
+/**
+ * Optional translations keyed by language code (en uses the base column).
+ */
+export interface LangMap {
+  ru?: string;
+  tj?: string;
+  uz?: string;
+}
+
+/**
+ * Either a plain string (legacy / EN-only) or a per-language object.
+ */
+export type LocalizedString =
+  | string
+  | {
+      en?: string;
+      ru?: string;
+      tj?: string;
+      uz?: string;
+      [key: string]: unknown;
+    };
+
+export interface SiteSettings {
+  id: number;
+  heroEyebrow: string;
+  heroEyebrowI18n?: LangMap;
+  heroTitleLine1: string;
+  heroTitleLine1I18n?: LangMap;
+  heroTitleLine2: string;
+  heroTitleLine2I18n?: LangMap;
+  heroSubtitle: string;
+  heroSubtitleI18n?: LangMap;
+  heroBackgroundImage: string;
+  contactPhone: string;
+  contactWhatsapp: string;
+  contactTelegram: string;
+  contactEmail: string;
+  contactAddress: string;
+  contactAddressI18n?: LangMap;
+  contactMapsUrl: string;
+  footerTagline: string;
+  footerTaglineI18n?: LangMap;
+  updatedAt: string;
+}
+
+export interface SiteSettingsInput {
+  heroEyebrow?: string;
+  heroEyebrowI18n?: LangMap;
+  heroTitleLine1?: string;
+  heroTitleLine1I18n?: LangMap;
+  heroTitleLine2?: string;
+  heroTitleLine2I18n?: LangMap;
+  heroSubtitle?: string;
+  heroSubtitleI18n?: LangMap;
+  heroBackgroundImage?: string;
+  contactPhone?: string;
+  contactWhatsapp?: string;
+  contactTelegram?: string;
+  contactEmail?: string;
+  contactAddress?: string;
+  contactAddressI18n?: LangMap;
+  contactMapsUrl?: string;
+  footerTagline?: string;
+  footerTaglineI18n?: LangMap;
+}
+
 export type VehicleStatus = (typeof VehicleStatus)[keyof typeof VehicleStatus];
 
 export const VehicleStatus = {
@@ -105,12 +171,16 @@ export interface Vehicle {
   pax: number;
   pricePerDay: number;
   description: string;
-  features: string[];
+  features: LocalizedString[];
   mainImage: string;
   gallery: string[];
   bookingVisible: boolean;
   sortOrder: number;
   status: VehicleStatus;
+  nameI18n?: LangMap;
+  modelI18n?: LangMap;
+  typeI18n?: LangMap;
+  descriptionI18n?: LangMap;
   createdAt: string;
   updatedAt: string;
 }
@@ -136,12 +206,16 @@ export interface VehicleInput {
   /** @minimum 0 */
   pricePerDay?: number;
   description?: string;
-  features?: string[];
+  features?: LocalizedString[];
   mainImage?: string;
   gallery?: string[];
   bookingVisible?: boolean;
   sortOrder?: number;
   status?: VehicleStatus;
+  nameI18n?: LangMap;
+  modelI18n?: LangMap;
+  typeI18n?: LangMap;
+  descriptionI18n?: LangMap;
 }
 
 export interface VehicleStatusUpdate {
@@ -160,9 +234,9 @@ export const BlogContentBlockType = {
 
 export interface BlogContentBlock {
   type: BlogContentBlockType;
-  text?: string;
+  text?: LocalizedString;
   src?: string;
-  caption?: string;
+  caption?: LocalizedString;
 }
 
 export interface BlogPost {
@@ -179,6 +253,12 @@ export interface BlogPost {
   category: string;
   content: BlogContentBlock[];
   published: boolean;
+  titleI18n?: LangMap;
+  excerptI18n?: LangMap;
+  locationI18n?: LangMap;
+  readTimeI18n?: LangMap;
+  authorI18n?: LangMap;
+  categoryI18n?: LangMap;
   createdAt: string;
   updatedAt: string;
 }
@@ -198,17 +278,27 @@ export interface BlogPostInput {
   category?: string;
   content?: BlogContentBlock[];
   published?: boolean;
+  titleI18n?: LangMap;
+  excerptI18n?: LangMap;
+  locationI18n?: LangMap;
+  readTimeI18n?: LangMap;
+  authorI18n?: LangMap;
+  categoryI18n?: LangMap;
 }
 
 export interface TourHighlight {
-  title: string;
-  body: string;
+  title: LocalizedString;
+  body: LocalizedString;
 }
 
 export interface TourItineraryDay {
   day: number;
-  title: string;
-  body: string;
+  title: LocalizedString;
+  body: LocalizedString;
+  locations?: LocalizedString[];
+  activities?: LocalizedString[];
+  overnightLocation?: LocalizedString;
+  images?: string[];
 }
 
 export interface Tour {
@@ -224,10 +314,15 @@ export interface Tour {
   gallery: string[];
   highlights: TourHighlight[];
   itinerary: TourItineraryDay[];
-  included: string[];
+  included: LocalizedString[];
   featured: boolean;
   hidden: boolean;
   sortOrder: number;
+  titleI18n?: LangMap;
+  shortDescriptionI18n?: LangMap;
+  descriptionI18n?: LangMap;
+  durationI18n?: LangMap;
+  routeI18n?: LangMap;
   createdAt: string;
   updatedAt: string;
 }
@@ -247,10 +342,15 @@ export interface TourInput {
   gallery?: string[];
   highlights?: TourHighlight[];
   itinerary?: TourItineraryDay[];
-  included?: string[];
+  included?: LocalizedString[];
   featured?: boolean;
   hidden?: boolean;
   sortOrder?: number;
+  titleI18n?: LangMap;
+  shortDescriptionI18n?: LangMap;
+  descriptionI18n?: LangMap;
+  durationI18n?: LangMap;
+  routeI18n?: LangMap;
 }
 
 export interface AdminLoginInput {

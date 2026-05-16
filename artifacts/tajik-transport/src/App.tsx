@@ -29,6 +29,7 @@ import { AdminFleetPage } from "./pages/admin/AdminFleetPage";
 import { AdminToursPage } from "./pages/admin/AdminToursPage";
 import { AdminBlogPage } from "./pages/admin/AdminBlogPage";
 import { AdminBookingsPage } from "./pages/admin/AdminBookingsPage";
+import { AdminSiteSettingsPage } from "./pages/admin/AdminSiteSettingsPage";
 
 setAuthTokenGetter(() => getAdminToken());
 setUploadAuthTokenGetter(() => getAdminToken());
@@ -66,6 +67,7 @@ function Router() {
       <Route path="/admin/tours">{() => <ProtectedRoute component={AdminToursPage} />}</Route>
       <Route path="/admin/blog">{() => <ProtectedRoute component={AdminBlogPage} />}</Route>
       <Route path="/admin/bookings">{() => <ProtectedRoute component={AdminBookingsPage} />}</Route>
+      <Route path="/admin/site">{() => <ProtectedRoute component={AdminSiteSettingsPage} />}</Route>
       <Route component={NotFound} />
     </Switch>
   );

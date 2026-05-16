@@ -3,9 +3,11 @@ import { Users, ArrowRight, Wifi, Wind } from "lucide-react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useListVehicles } from "@workspace/api-client-react";
+import { pickI18n, useActiveLang } from "@/lib/locale";
 
 export function Fleet() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = useActiveLang(i18n.language);
   const { data: vehicles } = useListVehicles();
   const visible = (vehicles ?? [])
     .filter((v) => v.status !== "hidden")
@@ -57,7 +59,11 @@ export function Fleet() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "rgba(255,255,255,0.05)" }}>
-          {visible.map((car, index) => (
+          {visible.map((car, index) => {
+            const carName =
+              pickI18n(car.name, car.nameI18n, lang) ||
+              pickI18n(car.model, car.modelI18n, lang);
+            return (
             <motion.div
               key={car.id}
               initial={{ opacity: 0, y: 24 }}
@@ -70,7 +76,7 @@ export function Fleet() {
                 <div className="relative h-52 overflow-hidden">
                   <img
                     src={car.mainImage || "/lc-hero.png"}
-                    alt={car.name || car.model}
+                    alt={carName}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/35 group-hover:bg-black/15 transition-colors duration-500" />
@@ -89,7 +95,7 @@ export function Fleet() {
 
                 <div className="p-6 border-t border-white/5 group-hover:border-primary/20 transition-colors duration-400">
                   <p className="text-primary/60 text-[9px] uppercase tracking-[0.3em] mb-1">{car.year} · {car.type}</p>
-                  <h3 className="text-white font-sans font-bold text-lg uppercase tracking-tight mb-4">{car.name || car.model}</h3>
+                  <h3 className="text-white font-sans font-bold text-lg uppercase tracking-tight mb-4">{carName}</h3>
 
                   <div className="flex items-center gap-5 text-white/40 text-xs mb-5">
                     <span className="flex items-center gap-1.5"><Users size={11} className="text-primary/50" />{car.pax} {t("fleet.pax")}</span>
@@ -110,7 +116,8 @@ export function Fleet() {
                 </div>
               </Link>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-12 flex justify-center">

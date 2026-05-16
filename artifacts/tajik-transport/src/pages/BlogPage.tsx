@@ -5,9 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Navbar } from "../components/home/Navbar";
 import { Footer } from "../components/footer";
 import { useListBlogPosts } from "@workspace/api-client-react";
+import { pickI18n, useActiveLang } from "@/lib/locale";
 
 export function BlogPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = useActiveLang(i18n.language);
   const { data, isLoading } = useListBlogPosts();
   const all = (data ?? []).filter((p) => p.published);
   const featured = all[0];
@@ -54,7 +56,13 @@ export function BlogPage() {
         </section>
       ) : (
         <>
-          {featured && (
+          {featured && (() => {
+            const fTitle = pickI18n(featured.title, featured.titleI18n, lang);
+            const fExcerpt = pickI18n(featured.excerpt, featured.excerptI18n, lang);
+            const fCategory = pickI18n(featured.category, featured.categoryI18n, lang);
+            const fLocation = pickI18n(featured.location, featured.locationI18n, lang);
+            const fReadTime = pickI18n(featured.readTime, featured.readTimeI18n, lang);
+            return (
             <section className="py-12" style={{ background: "#0a0a0a" }}>
               <div className="container mx-auto px-6 max-w-7xl">
                 <Link href={`/blog/${featured.slug}`}>
@@ -66,22 +74,22 @@ export function BlogPage() {
                     className="group grid grid-cols-1 lg:grid-cols-2 gap-10 cursor-pointer"
                   >
                     <div className="relative overflow-hidden h-72 lg:h-[480px]">
-                      <img src={featured.cover} alt={featured.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                      <img src={featured.cover} alt={fTitle} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                       <div className="absolute top-5 left-5 bg-primary text-black text-[10px] tracking-[0.25em] uppercase font-bold px-3 py-1.5">{t("blog.featured")}</div>
-                      <div className="absolute bottom-5 left-5 text-[10px] uppercase tracking-widest text-white/85 bg-black/60 backdrop-blur-sm px-3 py-1.5 border border-white/10">{featured.category}</div>
+                      <div className="absolute bottom-5 left-5 text-[10px] uppercase tracking-widest text-white/85 bg-black/60 backdrop-blur-sm px-3 py-1.5 border border-white/10">{fCategory}</div>
                     </div>
 
                     <div className="flex flex-col justify-center">
                       <div className="flex items-center gap-5 text-white/45 text-[11px] tracking-widest uppercase mb-5">
-                        <span className="flex items-center gap-1.5"><MapPin size={11} className="text-primary/70" />{featured.location}</span>
+                        <span className="flex items-center gap-1.5"><MapPin size={11} className="text-primary/70" />{fLocation}</span>
                         <span className="flex items-center gap-1.5"><Calendar size={11} className="text-primary/70" />{featured.date}</span>
-                        <span className="flex items-center gap-1.5"><Clock size={11} className="text-primary/70" />{featured.readTime}</span>
+                        <span className="flex items-center gap-1.5"><Clock size={11} className="text-primary/70" />{fReadTime}</span>
                       </div>
                       <h2 className="font-sans font-bold text-white text-3xl lg:text-4xl xl:text-5xl leading-[1.05] mb-5 group-hover:text-primary transition-colors duration-400">
-                        {featured.title}
+                        {fTitle}
                       </h2>
-                      <p className="text-white/65 text-base font-light leading-relaxed mb-8 max-w-xl">{featured.excerpt}</p>
+                      <p className="text-white/65 text-base font-light leading-relaxed mb-8 max-w-xl">{fExcerpt}</p>
                       <div className="flex items-center gap-3 text-primary text-xs tracking-[0.25em] uppercase font-semibold">
                         {t("blog.readStory")} <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform duration-400" />
                       </div>
@@ -90,7 +98,8 @@ export function BlogPage() {
                 </Link>
               </div>
             </section>
-          )}
+            );
+          })()}
 
           <div className="container mx-auto px-6 max-w-7xl"><div className="gold-divider opacity-60" /></div>
 
@@ -108,7 +117,13 @@ export function BlogPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "rgba(255,255,255,0.05)" }}>
-                  {rest.map((post, i) => (
+                  {rest.map((post, i) => {
+                    const pTitle = pickI18n(post.title, post.titleI18n, lang);
+                    const pExcerpt = pickI18n(post.excerpt, post.excerptI18n, lang);
+                    const pCategory = pickI18n(post.category, post.categoryI18n, lang);
+                    const pLocation = pickI18n(post.location, post.locationI18n, lang);
+                    const pReadTime = pickI18n(post.readTime, post.readTimeI18n, lang);
+                    return (
                     <motion.article
                       key={post.slug}
                       initial={{ opacity: 0, y: 24 }}
@@ -119,24 +134,24 @@ export function BlogPage() {
                     >
                       <Link href={`/blog/${post.slug}`} className="group block h-full">
                         <div className="relative overflow-hidden h-64">
-                          <img src={post.cover} alt={post.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                          <img src={post.cover} alt={pTitle} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                           <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition-colors duration-500" />
                           <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                          <div className="absolute top-4 left-4 text-[9px] uppercase tracking-widest text-primary/90 bg-black/70 backdrop-blur-sm px-2.5 py-1 border border-primary/20">{post.category}</div>
+                          <div className="absolute top-4 left-4 text-[9px] uppercase tracking-widest text-primary/90 bg-black/70 backdrop-blur-sm px-2.5 py-1 border border-primary/20">{pCategory}</div>
                         </div>
 
                         <div className="p-7 border-t border-white/5 group-hover:border-primary/25 transition-colors duration-400">
                           <div className="flex items-center gap-4 text-white/40 text-[10px] tracking-widest uppercase mb-3">
-                            <span className="flex items-center gap-1.5"><MapPin size={10} className="text-primary/60" />{post.location}</span>
+                            <span className="flex items-center gap-1.5"><MapPin size={10} className="text-primary/60" />{pLocation}</span>
                             <span className="flex items-center gap-1.5"><Calendar size={10} className="text-primary/60" />{post.date}</span>
                           </div>
                           <h4 className="font-sans font-bold text-white text-lg leading-tight mb-3 group-hover:text-primary transition-colors duration-400 min-h-[3.5rem]">
-                            {post.title}
+                            {pTitle}
                           </h4>
-                          <p className="text-white/55 text-sm font-light leading-relaxed mb-5 line-clamp-3">{post.excerpt}</p>
+                          <p className="text-white/55 text-sm font-light leading-relaxed mb-5 line-clamp-3">{pExcerpt}</p>
                           <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                             <span className="text-white/35 text-[10px] uppercase tracking-widest flex items-center gap-1.5">
-                              <Clock size={10} className="text-primary/50" />{post.readTime}
+                              <Clock size={10} className="text-primary/50" />{pReadTime}
                             </span>
                             <div className="flex items-center gap-2 text-primary text-[10px] tracking-widest uppercase font-semibold">
                               {t("blog.readMore")} <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -145,7 +160,8 @@ export function BlogPage() {
                         </div>
                       </Link>
                     </motion.article>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </section>

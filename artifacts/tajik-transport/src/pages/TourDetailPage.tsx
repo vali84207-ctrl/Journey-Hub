@@ -17,9 +17,11 @@ import { Navbar } from "@/components/home/Navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { TourBookingForm } from "@/components/TourBookingForm";
+import { pickI18n, pickLocale, pickLocaleArray, useActiveLang } from "@/lib/locale";
 
 export function TourDetailPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = useActiveLang(i18n.language);
   const { slug } = useParams();
   const { data: tour, isLoading, error } = useGetTourBySlug(slug ?? "");
   const [activeImg, setActiveImg] = useState(0);
@@ -53,8 +55,13 @@ export function TourDetailPage() {
     tour.gallery && tour.gallery.length > 0
       ? tour.gallery
       : [tour.mainImage || "/lc-hero.png"];
+  const title = pickI18n(tour.title, tour.titleI18n, lang);
+  const description = pickI18n(tour.description, tour.descriptionI18n, lang);
+  const duration = pickI18n(tour.duration, tour.durationI18n, lang);
+  const route = pickI18n(tour.route, tour.routeI18n, lang);
+  const includedItems = pickLocaleArray(tour.included, lang);
   const inquiryText = encodeURIComponent(
-    `${t("tourDetail.inquiryPrefix")} ${tour.title} —`,
+    `${t("tourDetail.inquiryPrefix")} ${title} —`,
   );
 
   return (
@@ -67,7 +74,7 @@ export function TourDetailPage() {
             <motion.img
               key={activeImg}
               src={gallery[activeImg]}
-              alt={tour.title}
+              alt={title}
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
@@ -110,23 +117,23 @@ export function TourDetailPage() {
             {/* Main column */}
             <div className="lg:col-span-3">
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                {tour.duration && (
+                {duration && (
                   <span className="inline-flex items-center gap-1.5 bg-black border border-primary/30 text-primary px-3 py-1 text-xs uppercase tracking-widest">
-                    <Clock className="w-3 h-3" /> {tour.duration}
+                    <Clock className="w-3 h-3" /> {duration}
                   </span>
                 )}
-                {tour.route && (
+                {route && (
                   <span className="inline-flex items-center gap-1.5 bg-black border border-white/15 text-white/70 px-3 py-1 text-xs uppercase tracking-widest">
-                    <MapPin className="w-3 h-3" /> {tour.route}
+                    <MapPin className="w-3 h-3" /> {route}
                   </span>
                 )}
               </div>
 
               <h1 className="text-4xl md:text-5xl font-serif text-primary mb-6">
-                {tour.title}
+                {title}
               </h1>
               <p className="text-gray-300 font-light leading-relaxed text-lg mb-12">
-                {tour.description || tour.shortDescription}
+                {description || pickI18n(tour.shortDescription, tour.shortDescriptionI18n, lang)}
               </p>
 
               {tour.highlights && tour.highlights.length > 0 && (
@@ -141,10 +148,10 @@ export function TourDetailPage() {
                         className="bg-white/3 border border-white/5 p-5 hover:border-primary/30 transition-colors"
                       >
                         <h3 className="text-primary font-serif text-base mb-1.5">
-                          {h.title}
+                          {pickLocale(h.title, lang)}
                         </h3>
                         <p className="text-gray-400 text-sm font-light leading-relaxed">
-                          {h.body}
+                          {pickLocale(h.body, lang)}
                         </p>
                       </div>
                     ))}
@@ -157,31 +164,65 @@ export function TourDetailPage() {
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.itinerary")}
                   </h2>
-                  <div className="space-y-5">
-                    {tour.itinerary.map((d) => (
-                      <div key={d.day} className="flex gap-4">
-                        <div className="w-12 h-12 flex-shrink-0 border border-primary/40 text-primary font-serif text-lg flex items-center justify-center">
-                          {d.day}
+                  <div className="space-y-6">
+                    {tour.itinerary.map((d) => {
+                      const locs = pickLocaleArray(d.locations, lang);
+                      const acts = pickLocaleArray(d.activities, lang);
+                      const overnight = pickLocale(d.overnightLocation, lang);
+                      return (
+                        <div key={d.day} className="flex gap-4">
+                          <div className="w-12 h-12 flex-shrink-0 border border-primary/40 text-primary font-serif text-lg flex items-center justify-center">
+                            {d.day}
+                          </div>
+                          <div className="flex-1 space-y-2">
+                            <h3 className="text-white font-serif">{pickLocale(d.title, lang)}</h3>
+                            <p className="text-gray-400 text-sm font-light leading-relaxed">
+                              {pickLocale(d.body, lang)}
+                            </p>
+                            {locs.length > 0 && (
+                              <p className="text-xs text-primary/80 uppercase tracking-wider">
+                                {locs.join(" · ")}
+                              </p>
+                            )}
+                            {acts.length > 0 && (
+                              <ul className="text-xs text-gray-500 space-y-0.5 list-disc list-inside">
+                                {acts.map((a, ai) => (
+                                  <li key={ai}>{a}</li>
+                                ))}
+                              </ul>
+                            )}
+                            {overnight && (
+                              <p className="text-[10px] uppercase tracking-wider text-gray-500">
+                                Overnight: {overnight}
+                              </p>
+                            )}
+                            {d.images && d.images.length > 0 && (
+                              <div className="flex gap-2 overflow-x-auto pt-2">
+                                {d.images.map((src, ii) => (
+                                  <img
+                                    key={ii}
+                                    src={src}
+                                    alt=""
+                                    className="h-20 w-32 object-cover flex-shrink-0 border border-white/10"
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-white font-serif mb-1">{d.title}</h3>
-                          <p className="text-gray-400 text-sm font-light leading-relaxed">
-                            {d.body}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </section>
               )}
 
-              {tour.included && tour.included.length > 0 && (
+              {includedItems.length > 0 && (
                 <section className="mb-14">
                   <h2 className="text-xl font-serif text-white mb-5 border-b border-white/10 pb-4">
                     {t("tourDetail.included")}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {tour.included.map((item, i) => (
+                    {includedItems.map((item, i) => (
                       <div key={i} className="flex items-center gap-3">
                         <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
                         <span className="text-gray-300 font-light text-sm">{item}</span>
@@ -191,7 +232,7 @@ export function TourDetailPage() {
                 </section>
               )}
 
-              <TourBookingForm tourSlug={tour.slug} tourTitle={tour.title} />
+              <TourBookingForm tourSlug={tour.slug} tourTitle={title} />
             </div>
 
             {/* Sticky booking sidebar */}

@@ -13,6 +13,8 @@ import { Plus, Pencil, Trash2, EyeOff, Eye } from "lucide-react";
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
+import { I18nField } from "@/components/admin/I18nField";
+import { pickLocaleArray } from "@/lib/locale";
 
 const STATUS_STYLES: Record<string, string> = {
   available: "bg-green-500/15 border-green-500/40 text-green-400",
@@ -36,6 +38,10 @@ const EMPTY: VehicleInput = {
   bookingVisible: true,
   sortOrder: 0,
   status: "available",
+  nameI18n: {},
+  modelI18n: {},
+  typeI18n: {},
+  descriptionI18n: {},
 };
 
 function toLines(arr?: string[] | null) {
@@ -57,12 +63,14 @@ function VehicleForm({
   onCancel: () => void;
 }) {
   const [data, setData] = useState<VehicleInput>(initial);
-  const [featuresText, setFeaturesText] = useState(toLines(initial.features));
+  const [featuresText, setFeaturesText] = useState(
+    toLines(pickLocaleArray(initial.features, "en")),
+  );
   const [galleryText, setGalleryText] = useState(toLines(initial.gallery));
 
   useEffect(() => {
     setData(initial);
-    setFeaturesText(toLines(initial.features));
+    setFeaturesText(toLines(pickLocaleArray(initial.features, "en")));
     setGalleryText(toLines(initial.gallery));
   }, [initial]);
 
@@ -101,6 +109,11 @@ function VehicleForm({
             className={inputCls}
             placeholder="Land Cruiser 300"
           />
+          <I18nField
+            value={data.nameI18n}
+            onChange={(v) => setData({ ...data, nameI18n: v })}
+            enPreview={data.name ?? ""}
+          />
         </div>
         <div>
           <label className={labelCls}>Model *</label>
@@ -111,6 +124,11 @@ function VehicleForm({
             className={inputCls}
             placeholder="Toyota Land Cruiser 300"
           />
+          <I18nField
+            value={data.modelI18n}
+            onChange={(v) => setData({ ...data, modelI18n: v })}
+            enPreview={data.model}
+          />
         </div>
         <div>
           <label className={labelCls}>Type *</label>
@@ -120,6 +138,11 @@ function VehicleForm({
             onChange={(e) => setData({ ...data, type: e.target.value })}
             className={inputCls}
             placeholder="LC300"
+          />
+          <I18nField
+            value={data.typeI18n}
+            onChange={(v) => setData({ ...data, typeI18n: v })}
+            enPreview={data.type}
           />
         </div>
         <div>
@@ -197,6 +220,13 @@ function VehicleForm({
           className={inputCls}
           placeholder="Short description shown on fleet pages…"
         />
+        <I18nField
+          multiline
+          rows={3}
+          value={data.descriptionI18n}
+          onChange={(v) => setData({ ...data, descriptionI18n: v })}
+          enPreview={data.description ?? ""}
+        />
       </div>
 
       <ImageUploadField
@@ -215,7 +245,7 @@ function VehicleForm({
       />
 
       <div>
-        <label className={labelCls}>Features (one per line)</label>
+        <label className={labelCls}>Features (one per line — EN; not yet translated)</label>
         <textarea
           value={featuresText}
           onChange={(e) => setFeaturesText(e.target.value)}
@@ -270,7 +300,7 @@ export function AdminFleetPage() {
           setAdding(false);
         },
         onError: (e) => setError((e as Error).message ?? "Failed to create"),
-      }
+      },
     );
   };
 
@@ -285,7 +315,7 @@ export function AdminFleetPage() {
           setEditing(null);
         },
         onError: (e) => setError((e as Error).message ?? "Failed to update"),
-      }
+      },
     );
   };
 
@@ -298,7 +328,7 @@ export function AdminFleetPage() {
           refresh();
           setConfirmDel(null);
         },
-      }
+      },
     );
   };
 
@@ -318,6 +348,10 @@ export function AdminFleetPage() {
         bookingVisible: editing.bookingVisible,
         sortOrder: editing.sortOrder,
         status: editing.status,
+        nameI18n: editing.nameI18n,
+        modelI18n: editing.modelI18n,
+        typeI18n: editing.typeI18n,
+        descriptionI18n: editing.descriptionI18n,
       }
     : null;
 

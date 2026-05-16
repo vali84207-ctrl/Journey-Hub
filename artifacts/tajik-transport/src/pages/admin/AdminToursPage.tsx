@@ -8,11 +8,16 @@ import {
   useDeleteTour,
   type Tour,
   type TourInput,
+  type TourHighlight,
+  type TourItineraryDay,
 } from "@workspace/api-client-react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Star } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Star, X, ArrowUp, ArrowDown } from "lucide-react";
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
+import { I18nField } from "@/components/admin/I18nField";
+import { LocalizedField } from "@/components/admin/LocalizedField";
+import { pickLocale, type LocalizedString } from "@/lib/locale";
 
 const EMPTY: TourInput = {
   slug: "",
@@ -30,6 +35,11 @@ const EMPTY: TourInput = {
   featured: true,
   hidden: false,
   sortOrder: 0,
+  titleI18n: {},
+  shortDescriptionI18n: {},
+  descriptionI18n: {},
+  durationI18n: {},
+  routeI18n: {},
 };
 
 const inputCls =
@@ -42,39 +52,228 @@ function toLines(arr?: string[] | null) {
 function fromLines(text: string): string[] {
   return text.split("\n").map((s) => s.trim()).filter(Boolean);
 }
-type Highlight = { title: string; body: string };
-type ItineraryDay = { day: number; title: string; body: string };
 
-function highlightsToText(arr?: Highlight[] | null): string {
-  return (arr ?? []).map((h) => `${h.title} | ${h.body}`).join("\n");
+function HighlightsEditor({
+  value,
+  onChange,
+}: {
+  value: TourHighlight[];
+  onChange: (v: TourHighlight[]) => void;
+}) {
+  const update = (i: number, patch: Partial<TourHighlight>) =>
+    onChange(value.map((h, idx) => (idx === i ? { ...h, ...patch } : h)));
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= value.length) return;
+    const c = [...value];
+    [c[i], c[j]] = [c[j], c[i]];
+    onChange(c);
+  };
+  return (
+    <div className="space-y-3">
+      {value.map((h, i) => (
+        <div key={i} className="border border-white/10 bg-black/40 p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-wider text-primary">
+              Highlight #{i + 1}
+            </span>
+            <div className="flex gap-1">
+              <button type="button" onClick={() => move(i, -1)} className="p-1 text-gray-500 hover:text-white">
+                <ArrowUp className="w-3 h-3" />
+              </button>
+              <button type="button" onClick={() => move(i, 1)} className="p-1 text-gray-500 hover:text-white">
+                <ArrowDown className="w-3 h-3" />
+              </button>
+              <button type="button" onClick={() => remove(i)} className="p-1 text-red-500 hover:text-red-400">
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+          <LocalizedField
+            label="Title"
+            value={h.title}
+            onChange={(v) => update(i, { title: v })}
+            placeholder="e.g. Wakhan Corridor"
+            required
+          />
+          <LocalizedField
+            label="Body"
+            value={h.body}
+            onChange={(v) => update(i, { body: v })}
+            multiline
+            rows={2}
+            placeholder="Two unhurried days through the Wakhan."
+            required
+          />
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => onChange([...value, { title: "", body: "" }])}
+        className="px-3 py-1.5 border border-white/15 text-[10px] uppercase tracking-wider text-gray-300 hover:border-primary hover:text-primary"
+      >
+        + Add Highlight
+      </button>
+    </div>
+  );
 }
-function highlightsFromText(t: string): Highlight[] {
-  return t
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [title, ...rest] = line.split("|");
-      return { title: (title ?? "").trim(), body: rest.join("|").trim() };
-    })
-    .filter((h) => h.title);
+
+function LocalizedListEditor({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: LocalizedString[];
+  onChange: (v: LocalizedString[]) => void;
+  placeholder?: string;
+}) {
+  const update = (i: number, v: LocalizedString) =>
+    onChange(value.map((x, idx) => (idx === i ? v : x)));
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+  return (
+    <div className="space-y-2">
+      {value.map((item, i) => (
+        <div key={i} className="flex gap-2 items-start">
+          <div className="flex-1">
+            <LocalizedField
+              compact
+              value={item}
+              onChange={(v) => update(i, v)}
+              placeholder={placeholder}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => remove(i)}
+            className="p-2 text-red-500 hover:text-red-400 mt-1"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => onChange([...value, ""])}
+        className="px-3 py-1.5 border border-white/15 text-[10px] uppercase tracking-wider text-gray-300 hover:border-primary hover:text-primary"
+      >
+        + Add Item
+      </button>
+    </div>
+  );
 }
-function itineraryToText(arr?: ItineraryDay[] | null): string {
-  return (arr ?? []).map((d) => `${d.day} | ${d.title} | ${d.body}`).join("\n");
-}
-function itineraryFromText(t: string): ItineraryDay[] {
-  return t
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const parts = line.split("|").map((s) => s.trim());
-      const day = parseInt(parts[0] ?? "0", 10) || 0;
-      const title = parts[1] ?? "";
-      const body = parts.slice(2).join("|").trim();
-      return { day, title, body };
-    })
-    .filter((d) => d.title);
+
+function ItineraryEditor({
+  value,
+  onChange,
+}: {
+  value: TourItineraryDay[];
+  onChange: (v: TourItineraryDay[]) => void;
+}) {
+  const update = (i: number, patch: Partial<TourItineraryDay>) =>
+    onChange(value.map((d, idx) => (idx === i ? { ...d, ...patch } : d)));
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= value.length) return;
+    const c = [...value];
+    [c[i], c[j]] = [c[j], c[i]];
+    onChange(c);
+  };
+  return (
+    <div className="space-y-4">
+      {value.map((d, i) => (
+        <div key={i} className="border border-white/10 bg-black/40 p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-primary font-serif text-lg">Day</span>
+              <input
+                type="number"
+                value={d.day}
+                onChange={(e) => update(i, { day: parseInt(e.target.value, 10) || 1 })}
+                className="w-16 bg-black border border-white/10 px-2 py-1 text-white text-sm"
+              />
+            </div>
+            <div className="flex gap-1">
+              <button type="button" onClick={() => move(i, -1)} className="p-1 text-gray-500 hover:text-white">
+                <ArrowUp className="w-3 h-3" />
+              </button>
+              <button type="button" onClick={() => move(i, 1)} className="p-1 text-gray-500 hover:text-white">
+                <ArrowDown className="w-3 h-3" />
+              </button>
+              <button type="button" onClick={() => remove(i)} className="p-1 text-red-500 hover:text-red-400">
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+          <LocalizedField
+            label="Title"
+            value={d.title}
+            onChange={(v) => update(i, { title: v })}
+            placeholder="Dushanbe → Kalaikhum"
+            required
+          />
+          <LocalizedField
+            label="Body / Description"
+            value={d.body}
+            onChange={(v) => update(i, { body: v })}
+            multiline
+            rows={3}
+            placeholder="Airport pickup, scenic drive east..."
+            required
+          />
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-gray-400 mb-1.5">
+              Locations visited
+            </div>
+            <LocalizedListEditor
+              value={d.locations ?? []}
+              onChange={(v) => update(i, { locations: v })}
+              placeholder="e.g. Kalaikhum"
+            />
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-gray-400 mb-1.5">
+              Activities
+            </div>
+            <LocalizedListEditor
+              value={d.activities ?? []}
+              onChange={(v) => update(i, { activities: v })}
+              placeholder="e.g. River walk, traditional dinner"
+            />
+          </div>
+          <LocalizedField
+            label="Overnight"
+            value={d.overnightLocation}
+            onChange={(v) => update(i, { overnightLocation: v })}
+            placeholder="e.g. Karon Palace, Kalaikhum"
+          />
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-gray-400 mb-1.5">
+              Day images
+            </div>
+            <GalleryUploadField
+              label=""
+              value={d.images ?? []}
+              onChange={(arr) => update(i, { images: arr })}
+            />
+          </div>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() =>
+          onChange([
+            ...value,
+            { day: value.length + 1, title: "", body: "", locations: [], activities: [], images: [] },
+          ])
+        }
+        className="px-4 py-2 border border-white/15 text-[10px] uppercase tracking-wider text-gray-300 hover:border-primary hover:text-primary"
+      >
+        + Add Day
+      </button>
+    </div>
+  );
 }
 
 function TourForm({
@@ -90,16 +289,16 @@ function TourForm({
 }) {
   const [data, setData] = useState<TourInput>(initial);
   const [galleryText, setGalleryText] = useState(toLines(initial.gallery));
-  const [includedText, setIncludedText] = useState(toLines(initial.included));
-  const [highlightsText, setHighlightsText] = useState(highlightsToText(initial.highlights));
-  const [itineraryText, setItineraryText] = useState(itineraryToText(initial.itinerary));
+  const [included, setIncluded] = useState<LocalizedString[]>(initial.included ?? []);
+  const [highlights, setHighlights] = useState<TourHighlight[]>(initial.highlights ?? []);
+  const [itinerary, setItinerary] = useState<TourItineraryDay[]>(initial.itinerary ?? []);
 
   useEffect(() => {
     setData(initial);
     setGalleryText(toLines(initial.gallery));
-    setIncludedText(toLines(initial.included));
-    setHighlightsText(highlightsToText(initial.highlights));
-    setItineraryText(itineraryToText(initial.itinerary));
+    setIncluded(initial.included ?? []);
+    setHighlights(initial.highlights ?? []);
+    setItinerary(initial.itinerary ?? []);
   }, [initial]);
 
   return (
@@ -109,9 +308,9 @@ function TourForm({
         onSubmit({
           ...data,
           gallery: fromLines(galleryText),
-          included: fromLines(includedText),
-          highlights: highlightsFromText(highlightsText),
-          itinerary: itineraryFromText(itineraryText),
+          included,
+          highlights,
+          itinerary,
         });
       }}
       className="space-y-5"
@@ -136,6 +335,11 @@ function TourForm({
             className={inputCls}
             placeholder="Dushanbe → Pamir Tour"
           />
+          <I18nField
+            value={data.titleI18n}
+            onChange={(v) => setData({ ...data, titleI18n: v })}
+            enPreview={data.title}
+          />
         </div>
         <div>
           <label className={labelCls}>Duration</label>
@@ -144,6 +348,11 @@ function TourForm({
             onChange={(e) => setData({ ...data, duration: e.target.value })}
             className={inputCls}
             placeholder="7 Days · 6 Nights"
+          />
+          <I18nField
+            value={data.durationI18n}
+            onChange={(v) => setData({ ...data, durationI18n: v })}
+            enPreview={data.duration ?? ""}
           />
         </div>
         <div>
@@ -164,6 +373,11 @@ function TourForm({
             onChange={(e) => setData({ ...data, route: e.target.value })}
             className={inputCls}
             placeholder="Dushanbe → Khorog → Murghab"
+          />
+          <I18nField
+            value={data.routeI18n}
+            onChange={(v) => setData({ ...data, routeI18n: v })}
+            enPreview={data.route ?? ""}
           />
         </div>
         <div>
@@ -208,6 +422,13 @@ function TourForm({
           className={inputCls}
           placeholder="One-sentence teaser shown on the homepage card."
         />
+        <I18nField
+          multiline
+          rows={2}
+          value={data.shortDescriptionI18n}
+          onChange={(v) => setData({ ...data, shortDescriptionI18n: v })}
+          enPreview={data.shortDescription ?? ""}
+        />
       </div>
 
       <div>
@@ -217,6 +438,13 @@ function TourForm({
           onChange={(e) => setData({ ...data, description: e.target.value })}
           rows={4}
           className={inputCls}
+        />
+        <I18nField
+          multiline
+          rows={4}
+          value={data.descriptionI18n}
+          onChange={(v) => setData({ ...data, descriptionI18n: v })}
+          enPreview={data.description ?? ""}
         />
       </div>
 
@@ -233,39 +461,21 @@ function TourForm({
       />
 
       <div>
-        <label className={labelCls}>
-          Highlights (one per line, format: <code>Title | Body</code>)
-        </label>
-        <textarea
-          value={highlightsText}
-          onChange={(e) => setHighlightsText(e.target.value)}
-          rows={3}
-          className={inputCls}
-          placeholder={"Wakhan Corridor | Two unhurried days through the Wakhan."}
-        />
+        <h3 className="font-serif text-base text-primary mb-3">Tour Highlights</h3>
+        <HighlightsEditor value={highlights} onChange={setHighlights} />
       </div>
 
       <div>
-        <label className={labelCls}>
-          Itinerary (one day per line, format: <code>day | Title | Body</code>)
-        </label>
-        <textarea
-          value={itineraryText}
-          onChange={(e) => setItineraryText(e.target.value)}
-          rows={5}
-          className={inputCls}
-          placeholder={"1 | Dushanbe → Kalaikhum | Airport pickup, scenic drive east."}
-        />
+        <h3 className="font-serif text-base text-primary mb-3">Day-by-Day Itinerary</h3>
+        <ItineraryEditor value={itinerary} onChange={setItinerary} />
       </div>
 
       <div>
-        <label className={labelCls}>What's included (one per line)</label>
-        <textarea
-          value={includedText}
-          onChange={(e) => setIncludedText(e.target.value)}
-          rows={4}
-          className={inputCls}
-          placeholder={"Private Land Cruiser 300 + VIP chauffeur\nAll fuel and road permits"}
+        <h3 className="font-serif text-base text-primary mb-3">What's Included</h3>
+        <LocalizedListEditor
+          value={included}
+          onChange={setIncluded}
+          placeholder="e.g. Private Land Cruiser 300 + chauffeur"
         />
       </div>
 
@@ -363,6 +573,11 @@ export function AdminToursPage() {
         featured: editing.featured,
         hidden: editing.hidden,
         sortOrder: editing.sortOrder,
+        titleI18n: editing.titleI18n,
+        shortDescriptionI18n: editing.shortDescriptionI18n,
+        descriptionI18n: editing.descriptionI18n,
+        durationI18n: editing.durationI18n,
+        routeI18n: editing.routeI18n,
       }
     : null;
 
@@ -397,11 +612,7 @@ export function AdminToursPage() {
               >
                 <div className="relative h-40 bg-black">
                   {tour.mainImage ? (
-                    <img
-                      src={tour.mainImage}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={tour.mainImage} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-700 text-xs uppercase">
                       No image
@@ -430,9 +641,7 @@ export function AdminToursPage() {
                       ${tour.startingPrice}
                     </span>
                   </div>
-                  <div className="text-gray-500 text-xs mb-3">
-                    {tour.duration || "—"}
-                  </div>
+                  <div className="text-gray-500 text-xs mb-3">{tour.duration || "—"}</div>
                   <p className="text-gray-400 text-xs font-light line-clamp-2 mb-4 flex-1">
                     {tour.shortDescription || "No description."}
                   </p>
@@ -445,6 +654,9 @@ export function AdminToursPage() {
                       <span className="flex items-center gap-1 text-green-400/80">
                         <Eye className="w-3 h-3" /> Visible
                       </span>
+                    )}
+                    {(tour.itinerary?.length ?? 0) > 0 && (
+                      <span>· {tour.itinerary?.length ?? 0} day itinerary</span>
                     )}
                   </div>
                   <div className="flex gap-2">
@@ -509,7 +721,7 @@ export function AdminToursPage() {
       <ConfirmDialog
         open={!!confirmDel}
         title="Delete tour?"
-        message={`This will permanently remove "${confirmDel?.title ?? ""}" from the homepage. This action cannot be undone.`}
+        message={`This will permanently remove "${pickLocale(confirmDel?.title ?? "", "en")}" from the homepage. This action cannot be undone.`}
         onClose={() => setConfirmDel(null)}
         onConfirm={handleDelete}
         pending={deleteT.isPending}

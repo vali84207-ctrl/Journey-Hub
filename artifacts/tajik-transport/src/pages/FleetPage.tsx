@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { useListVehicles } from "@workspace/api-client-react";
+import { pickI18n, useActiveLang } from "@/lib/locale";
 
 const STATUS_STYLES: Record<string, string> = {
   available: "bg-green-500/10 border-green-500/30 text-green-400",
@@ -12,8 +13,11 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export function FleetPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = useActiveLang(i18n.language);
   const { data: vehicles, isLoading } = useListVehicles();
+  const vName = (v: { name?: string | null; model?: string | null; nameI18n?: any; modelI18n?: any }) =>
+    pickI18n(v.name, v.nameI18n, lang) || pickI18n(v.model, v.modelI18n, lang);
 
   const visible = (vehicles ?? []).filter((v) => v.status !== "hidden");
   const grouped = visible.reduce<Record<string, typeof visible>>((acc, v) => {
@@ -76,7 +80,7 @@ export function FleetPage() {
               return (
                 <div key={type} className="mb-16">
                   <div className="flex items-center gap-4 mb-8">
-                    <h2 className="text-2xl font-serif text-white">{first.name || first.model}</h2>
+                    <h2 className="text-2xl font-serif text-white">{vName(first)}</h2>
                     <span className="text-gray-500 font-light text-sm">{first.year} · {first.pax} {t("fleet.passengersWord")} · ${first.pricePerDay}{t("fleet.perDay")}</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -97,7 +101,7 @@ export function FleetPage() {
                               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500 z-10" />
                               <img
                                 src={vehicle.mainImage || "/lc-hero.png"}
-                                alt={vehicle.name || vehicle.model}
+                                alt={vName(vehicle)}
                                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                 loading="lazy"
                               />
@@ -114,8 +118,8 @@ export function FleetPage() {
                             </div>
 
                             <div className="p-6 flex-1 flex flex-col">
-                              <h3 className="text-xl font-serif text-primary mb-2">{vehicle.name || vehicle.model}</h3>
-                              <p className="text-gray-500 text-sm font-light mb-5 leading-relaxed flex-1">{vehicle.description}</p>
+                              <h3 className="text-xl font-serif text-primary mb-2">{vName(vehicle)}</h3>
+                              <p className="text-gray-500 text-sm font-light mb-5 leading-relaxed flex-1">{pickI18n(vehicle.description, vehicle.descriptionI18n, lang)}</p>
 
                               <div className="flex items-center gap-5 mb-5 text-sm text-gray-400">
                                 <div className="flex items-center gap-1.5">

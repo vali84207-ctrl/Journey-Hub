@@ -44,6 +44,241 @@ export const GetStorageObjectParams = zod.object({
 });
 
 /**
+ * @summary Get global site settings
+ */
+export const GetSiteSettingsResponse = zod.object({
+  id: zod.number(),
+  heroEyebrow: zod.string(),
+  heroEyebrowI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine1: zod.string(),
+  heroTitleLine1I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine2: zod.string(),
+  heroTitleLine2I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroSubtitle: zod.string(),
+  heroSubtitleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroBackgroundImage: zod.string(),
+  contactPhone: zod.string(),
+  contactWhatsapp: zod.string(),
+  contactTelegram: zod.string(),
+  contactEmail: zod.string(),
+  contactAddress: zod.string(),
+  contactAddressI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  contactMapsUrl: zod.string(),
+  footerTagline: zod.string(),
+  footerTaglineI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update global site settings (admin)
+ */
+export const UpdateSiteSettingsBody = zod.object({
+  heroEyebrow: zod.string().optional(),
+  heroEyebrowI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine1: zod.string().optional(),
+  heroTitleLine1I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine2: zod.string().optional(),
+  heroTitleLine2I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroSubtitle: zod.string().optional(),
+  heroSubtitleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroBackgroundImage: zod.string().optional(),
+  contactPhone: zod.string().optional(),
+  contactWhatsapp: zod.string().optional(),
+  contactTelegram: zod.string().optional(),
+  contactEmail: zod.string().optional(),
+  contactAddress: zod.string().optional(),
+  contactAddressI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  contactMapsUrl: zod.string().optional(),
+  footerTagline: zod.string().optional(),
+  footerTaglineI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+});
+
+export const UpdateSiteSettingsResponse = zod.object({
+  id: zod.number(),
+  heroEyebrow: zod.string(),
+  heroEyebrowI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine1: zod.string(),
+  heroTitleLine1I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroTitleLine2: zod.string(),
+  heroTitleLine2I18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroSubtitle: zod.string(),
+  heroSubtitleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  heroBackgroundImage: zod.string(),
+  contactPhone: zod.string(),
+  contactWhatsapp: zod.string(),
+  contactTelegram: zod.string(),
+  contactEmail: zod.string(),
+  contactAddress: zod.string(),
+  contactAddressI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  contactMapsUrl: zod.string(),
+  footerTagline: zod.string(),
+  footerTaglineI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  updatedAt: zod.string(),
+});
+
+/**
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -109,12 +344,66 @@ export const ListVehiclesResponseItem = zod.object({
   pax: zod.number(),
   pricePerDay: zod.number(),
   description: zod.string(),
-  features: zod.array(zod.string()),
+  features: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   mainImage: zod.string(),
   gallery: zod.array(zod.string()),
   bookingVisible: zod.boolean(),
   sortOrder: zod.number(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -144,12 +433,68 @@ export const CreateVehicleBody = zod.object({
   pax: zod.number().min(1).max(createVehicleBodyPaxMax).optional(),
   pricePerDay: zod.number().min(createVehicleBodyPricePerDayMin).optional(),
   description: zod.string().optional(),
-  features: zod.array(zod.string()).optional(),
+  features: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
   mainImage: zod.string().optional(),
   gallery: zod.array(zod.string()).optional(),
   bookingVisible: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]).optional(),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 /**
@@ -169,12 +514,66 @@ export const GetVehicleResponse = zod.object({
   pax: zod.number(),
   pricePerDay: zod.number(),
   description: zod.string(),
-  features: zod.array(zod.string()),
+  features: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   mainImage: zod.string(),
   gallery: zod.array(zod.string()),
   bookingVisible: zod.boolean(),
   sortOrder: zod.number(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -206,12 +605,68 @@ export const UpdateVehicleBody = zod.object({
   pax: zod.number().min(1).max(updateVehicleBodyPaxMax).optional(),
   pricePerDay: zod.number().min(updateVehicleBodyPricePerDayMin).optional(),
   description: zod.string().optional(),
-  features: zod.array(zod.string()).optional(),
+  features: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
   mainImage: zod.string().optional(),
   gallery: zod.array(zod.string()).optional(),
   bookingVisible: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]).optional(),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 export const UpdateVehicleResponse = zod.object({
@@ -224,12 +679,66 @@ export const UpdateVehicleResponse = zod.object({
   pax: zod.number(),
   pricePerDay: zod.number(),
   description: zod.string(),
-  features: zod.array(zod.string()),
+  features: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   mainImage: zod.string(),
   gallery: zod.array(zod.string()),
   bookingVisible: zod.boolean(),
   sortOrder: zod.number(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -262,12 +771,66 @@ export const UpdateVehicleStatusResponse = zod.object({
   pax: zod.number(),
   pricePerDay: zod.number(),
   description: zod.string(),
-  features: zod.array(zod.string()),
+  features: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   mainImage: zod.string(),
   gallery: zod.array(zod.string()),
   bookingVisible: zod.boolean(),
   sortOrder: zod.number(),
   status: zod.enum(["available", "reserved", "busy", "hidden"]),
+  nameI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  modelI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  typeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -290,12 +853,98 @@ export const ListBlogPostsResponseItem = zod.object({
   content: zod.array(
     zod.object({
       type: zod.enum(["paragraph", "heading", "quote", "image"]),
-      text: zod.string().optional(),
+      text: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
       src: zod.string().optional(),
-      caption: zod.string().optional(),
+      caption: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   published: zod.boolean(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  excerptI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  locationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  readTimeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  authorI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  categoryI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -320,13 +969,99 @@ export const CreateBlogPostBody = zod.object({
     .array(
       zod.object({
         type: zod.enum(["paragraph", "heading", "quote", "image"]),
-        text: zod.string().optional(),
+        text: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
         src: zod.string().optional(),
-        caption: zod.string().optional(),
+        caption: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
       }),
     )
     .optional(),
   published: zod.boolean().optional(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  excerptI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  locationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  readTimeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  authorI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  categoryI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 /**
@@ -351,12 +1086,98 @@ export const GetBlogPostBySlugResponse = zod.object({
   content: zod.array(
     zod.object({
       type: zod.enum(["paragraph", "heading", "quote", "image"]),
-      text: zod.string().optional(),
+      text: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
       src: zod.string().optional(),
-      caption: zod.string().optional(),
+      caption: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   published: zod.boolean(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  excerptI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  locationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  readTimeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  authorI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  categoryI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -383,13 +1204,99 @@ export const UpdateBlogPostBody = zod.object({
     .array(
       zod.object({
         type: zod.enum(["paragraph", "heading", "quote", "image"]),
-        text: zod.string().optional(),
+        text: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
         src: zod.string().optional(),
-        caption: zod.string().optional(),
+        caption: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
       }),
     )
     .optional(),
   published: zod.boolean().optional(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  excerptI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  locationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  readTimeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  authorI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  categoryI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 export const UpdateBlogPostResponse = zod.object({
@@ -407,12 +1314,98 @@ export const UpdateBlogPostResponse = zod.object({
   content: zod.array(
     zod.object({
       type: zod.enum(["paragraph", "heading", "quote", "image"]),
-      text: zod.string().optional(),
+      text: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
       src: zod.string().optional(),
-      caption: zod.string().optional(),
+      caption: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   published: zod.boolean(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  excerptI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  locationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  readTimeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  authorI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  categoryI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -460,21 +1453,182 @@ export const ListToursResponseItem = zod.object({
   gallery: zod.array(zod.string()),
   highlights: zod.array(
     zod.object({
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   itinerary: zod.array(
     zod.object({
       day: zod.number(),
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      locations: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      activities: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      overnightLocation: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      images: zod.array(zod.string()).optional(),
     }),
   ),
-  included: zod.array(zod.string()),
+  included: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  durationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -499,8 +1653,32 @@ export const CreateTourBody = zod.object({
   highlights: zod
     .array(
       zod.object({
-        title: zod.string(),
-        body: zod.string(),
+        title: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
       }),
     )
     .optional(),
@@ -508,15 +1686,154 @@ export const CreateTourBody = zod.object({
     .array(
       zod.object({
         day: zod.number(),
-        title: zod.string(),
-        body: zod.string(),
+        title: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        locations: zod
+          .array(
+            zod
+              .union([
+                zod.string(),
+                zod.object({
+                  en: zod.string().optional(),
+                  ru: zod.string().optional(),
+                  tj: zod.string().optional(),
+                  uz: zod.string().optional(),
+                }),
+              ])
+              .describe(
+                "Either a plain string (legacy \/ EN-only) or a per-language object.",
+              ),
+          )
+          .optional(),
+        activities: zod
+          .array(
+            zod
+              .union([
+                zod.string(),
+                zod.object({
+                  en: zod.string().optional(),
+                  ru: zod.string().optional(),
+                  tj: zod.string().optional(),
+                  uz: zod.string().optional(),
+                }),
+              ])
+              .describe(
+                "Either a plain string (legacy \/ EN-only) or a per-language object.",
+              ),
+          )
+          .optional(),
+        overnightLocation: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        images: zod.array(zod.string()).optional(),
       }),
     )
     .optional(),
-  included: zod.array(zod.string()).optional(),
+  included: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
   featured: zod.boolean().optional(),
   hidden: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  durationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 /**
@@ -539,21 +1856,182 @@ export const GetTourBySlugResponse = zod.object({
   gallery: zod.array(zod.string()),
   highlights: zod.array(
     zod.object({
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   itinerary: zod.array(
     zod.object({
       day: zod.number(),
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      locations: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      activities: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      overnightLocation: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      images: zod.array(zod.string()).optional(),
     }),
   ),
-  included: zod.array(zod.string()),
+  included: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  durationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -580,8 +2058,32 @@ export const UpdateTourBody = zod.object({
   highlights: zod
     .array(
       zod.object({
-        title: zod.string(),
-        body: zod.string(),
+        title: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
       }),
     )
     .optional(),
@@ -589,15 +2091,154 @@ export const UpdateTourBody = zod.object({
     .array(
       zod.object({
         day: zod.number(),
-        title: zod.string(),
-        body: zod.string(),
+        title: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        locations: zod
+          .array(
+            zod
+              .union([
+                zod.string(),
+                zod.object({
+                  en: zod.string().optional(),
+                  ru: zod.string().optional(),
+                  tj: zod.string().optional(),
+                  uz: zod.string().optional(),
+                }),
+              ])
+              .describe(
+                "Either a plain string (legacy \/ EN-only) or a per-language object.",
+              ),
+          )
+          .optional(),
+        activities: zod
+          .array(
+            zod
+              .union([
+                zod.string(),
+                zod.object({
+                  en: zod.string().optional(),
+                  ru: zod.string().optional(),
+                  tj: zod.string().optional(),
+                  uz: zod.string().optional(),
+                }),
+              ])
+              .describe(
+                "Either a plain string (legacy \/ EN-only) or a per-language object.",
+              ),
+          )
+          .optional(),
+        overnightLocation: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        images: zod.array(zod.string()).optional(),
       }),
     )
     .optional(),
-  included: zod.array(zod.string()).optional(),
+  included: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
   featured: zod.boolean().optional(),
   hidden: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  durationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 export const UpdateTourResponse = zod.object({
@@ -613,21 +2254,182 @@ export const UpdateTourResponse = zod.object({
   gallery: zod.array(zod.string()),
   highlights: zod.array(
     zod.object({
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
     }),
   ),
   itinerary: zod.array(
     zod.object({
       day: zod.number(),
-      title: zod.string(),
-      body: zod.string(),
+      title: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      locations: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      activities: zod
+        .array(
+          zod
+            .union([
+              zod.string(),
+              zod.object({
+                en: zod.string().optional(),
+                ru: zod.string().optional(),
+                tj: zod.string().optional(),
+                uz: zod.string().optional(),
+              }),
+            ])
+            .describe(
+              "Either a plain string (legacy \/ EN-only) or a per-language object.",
+            ),
+        )
+        .optional(),
+      overnightLocation: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      images: zod.array(zod.string()).optional(),
     }),
   ),
-  included: zod.array(zod.string()),
+  included: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  durationI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
