@@ -30,6 +30,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
 import { AdminFleetPage } from "./pages/admin/AdminFleetPage";
 import { AdminToursPage } from "./pages/admin/AdminToursPage";
+import { AdminServicesPage } from "./pages/admin/AdminServicesPage";
 import { AdminBlogPage } from "./pages/admin/AdminBlogPage";
 import { AdminBookingsPage } from "./pages/admin/AdminBookingsPage";
 import { AdminSiteSettingsPage } from "./pages/admin/AdminSiteSettingsPage";
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/admin">{() => <ProtectedRoute component={AdminDashboardPage} />}</Route>
       <Route path="/admin/fleet">{() => <ProtectedRoute component={AdminFleetPage} />}</Route>
       <Route path="/admin/tours">{() => <ProtectedRoute component={AdminToursPage} />}</Route>
+      <Route path="/admin/services">{() => <ProtectedRoute component={AdminServicesPage} />}</Route>
       <Route path="/admin/blog">{() => <ProtectedRoute component={AdminBlogPage} />}</Route>
       <Route path="/admin/bookings">{() => <ProtectedRoute component={AdminBookingsPage} />}</Route>
       <Route path="/admin/site">{() => <ProtectedRoute component={AdminSiteSettingsPage} />}</Route>

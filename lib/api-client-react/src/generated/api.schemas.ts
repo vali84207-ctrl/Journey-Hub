@@ -404,6 +404,43 @@ export interface TourInput {
   groupSizeI18n?: LangMap;
 }
 
+export interface Service {
+  id: number;
+  slug: string;
+  iconName: string;
+  image: string;
+  title: string;
+  titleI18n?: LangMap;
+  shortDescription: string;
+  shortDescriptionI18n?: LangMap;
+  description: string;
+  descriptionI18n?: LangMap;
+  bullets: LocalizedString[];
+  isVisaSupport: boolean;
+  hidden: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ServiceInput {
+  /** @minLength 1 */
+  slug: string;
+  iconName?: string;
+  image?: string;
+  /** @minLength 1 */
+  title: string;
+  titleI18n?: LangMap;
+  shortDescription?: string;
+  shortDescriptionI18n?: LangMap;
+  description?: string;
+  descriptionI18n?: LangMap;
+  bullets?: LocalizedString[];
+  isVisaSupport?: boolean;
+  hidden?: boolean;
+  sortOrder?: number;
+}
+
 export interface AdminLoginInput {
   username: string;
   password: string;

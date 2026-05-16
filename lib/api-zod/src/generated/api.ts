@@ -3205,6 +3205,333 @@ export const AutoGenerateTourDeparturesResponse = zod.object({
 });
 
 /**
+ * @summary List all services
+ */
+export const ListServicesResponseItem = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  iconName: zod.string(),
+  image: zod.string(),
+  title: zod.string(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescription: zod.string(),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  description: zod.string(),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  bullets: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
+  isVisaSupport: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListServicesResponse = zod.array(ListServicesResponseItem);
+
+/**
+ * @summary Create a service (admin)
+ */
+
+export const CreateServiceBody = zod.object({
+  slug: zod.string().min(1),
+  iconName: zod.string().optional(),
+  image: zod.string().optional(),
+  title: zod.string().min(1),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescription: zod.string().optional(),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  description: zod.string().optional(),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  bullets: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
+  isVisaSupport: zod.boolean().optional(),
+  hidden: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Get service by slug
+ */
+export const GetServiceBySlugParams = zod.object({
+  slug: zod.coerce.string(),
+});
+
+export const GetServiceBySlugResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  iconName: zod.string(),
+  image: zod.string(),
+  title: zod.string(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescription: zod.string(),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  description: zod.string(),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  bullets: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
+  isVisaSupport: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Update a service (admin)
+ */
+export const UpdateServiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateServiceBody = zod.object({
+  slug: zod.string().min(1),
+  iconName: zod.string().optional(),
+  image: zod.string().optional(),
+  title: zod.string().min(1),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescription: zod.string().optional(),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  description: zod.string().optional(),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  bullets: zod
+    .array(
+      zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    )
+    .optional(),
+  isVisaSupport: zod.boolean().optional(),
+  hidden: zod.boolean().optional(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateServiceResponse = zod.object({
+  id: zod.number(),
+  slug: zod.string(),
+  iconName: zod.string(),
+  image: zod.string(),
+  title: zod.string(),
+  titleI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  shortDescription: zod.string(),
+  shortDescriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  description: zod.string(),
+  descriptionI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  bullets: zod.array(
+    zod
+      .union([
+        zod.string(),
+        zod.object({
+          en: zod.string().optional(),
+          ru: zod.string().optional(),
+          tj: zod.string().optional(),
+          uz: zod.string().optional(),
+        }),
+      ])
+      .describe(
+        "Either a plain string (legacy \/ EN-only) or a per-language object.",
+      ),
+  ),
+  isVisaSupport: zod.boolean(),
+  hidden: zod.boolean(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+/**
+ * @summary Delete a service (admin)
+ */
+export const DeleteServiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
  * @summary Admin login
  */
 export const AdminLoginBody = zod.object({

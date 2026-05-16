@@ -3,9 +3,12 @@ import {
   vehiclesTable,
   blogPostsTable,
   toursTable,
+  servicesTable,
   type BlogContentBlock,
   type TourHighlight,
   type TourItineraryDay,
+  type LangMap,
+  type LocalizedString,
 } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 
@@ -307,6 +310,267 @@ const TOURS: SeedTour[] = [
   },
 ];
 
+type SeedService = {
+  slug: string;
+  iconName: string;
+  image: string;
+  title: string;
+  titleI18n: LangMap;
+  shortDescription: string;
+  shortDescriptionI18n: LangMap;
+  description: string;
+  descriptionI18n: LangMap;
+  bullets: LocalizedString[];
+  isVisaSupport: boolean;
+  sortOrder: number;
+};
+
+const SERVICES: SeedService[] = [
+  {
+    slug: "visa-support",
+    iconName: "FileCheck",
+    image: "https://images.unsplash.com/photo-1569949381669-ecf31ae8e613?auto=format&fit=crop&w=1400&q=80",
+    title: "Visa Support",
+    titleI18n: { ru: "Визовая поддержка", tj: "Дастгирии раводид", uz: "Viza yordami" },
+    shortDescription: "Guidance and assistance with Tajikistan e-visas, invitation letters and GBAO permits.",
+    shortDescriptionI18n: {
+      ru: "Помощь с электронными визами Таджикистана, письмами-приглашениями и разрешениями ГБАО.",
+      tj: "Кӯмак дар гирифтани раводиди электронӣ, мактуби даъват ва иҷозатномаи ВМКБ.",
+      uz: "Tojikiston e-vizalari, taklifnomalar va GBAO ruxsatnomalari bo'yicha yordam.",
+    },
+    description: "We help international guests navigate Tajikistan's entry requirements with confidence — from selecting the right visa category to securing the GBAO permit for Pamir travel.",
+    descriptionI18n: {
+      ru: "Мы помогаем иностранным гостям уверенно пройти процедуру въезда в Таджикистан — от выбора правильной категории визы до получения разрешения ГБАО для путешествий по Памиру.",
+      tj: "Мо ба меҳмонони хориҷӣ дар роҳ кардани талаботи воридшавӣ ба Тоҷикистон кӯмак мерасонем — аз интихоби категорияи дурусти раводид то гирифтани иҷозатномаи ВМКБ барои сафар ба Помир.",
+      uz: "Biz xalqaro mehmonlarga Tojikistonga kirish talablarini ishonch bilan bajarishda yordam beramiz — to'g'ri viza turini tanlashdan tortib Pomir sayohati uchun GBAO ruxsatnomasini olishgacha.",
+    },
+    bullets: [
+      { en: "E-visa application guidance and document review", ru: "Помощь с подачей заявки на электронную визу и проверка документов", tj: "Дастгирӣ дар пешниҳоди раводиди электронӣ ва тафтиши ҳуҷҷатҳо", uz: "E-viza arizasi bo'yicha yordam va hujjatlarni tekshirish" },
+      { en: "Invitation letter coordination where required", ru: "Координация писем-приглашений при необходимости", tj: "Ҳамоҳангсозии мактуби даъват дар ҳолати зарурӣ", uz: "Zarur bo'lganda taklifnoma muvofiqlashtirish" },
+      { en: "GBAO permit assistance for Pamir routes", ru: "Помощь с разрешением ГБАО для маршрутов по Памиру", tj: "Кӯмак барои гирифтани иҷозатномаи ВМКБ", uz: "Pomir yo'nalishlari uchun GBAO ruxsatnomasi yordami" },
+      { en: "Pre-arrival briefing and timeline planning", ru: "Брифинг до прибытия и планирование сроков", tj: "Машварати пеш аз омадан ва банақшагирии муҳлат", uz: "Kelishdan oldin brifing va vaqt rejalashtirish" },
+    ],
+    isVisaSupport: true,
+    sortOrder: 1,
+  },
+  {
+    slug: "airport-transfers",
+    iconName: "Plane",
+    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=80",
+    title: "Airport Transfers",
+    titleI18n: { ru: "Трансфер из аэропорта", tj: "Интиқол аз фурудгоҳ", uz: "Aeroport transferi" },
+    shortDescription: "Premium meet-and-greet transfers from Dushanbe International Airport and regional airfields.",
+    shortDescriptionI18n: {
+      ru: "Премиум-встреча и трансфер из международного аэропорта Душанбе и региональных аэродромов.",
+      tj: "Пешвоз ва интиқоли премиум аз фурудгоҳи байналмилалии Душанбе ва фурудгоҳҳои минтақавӣ.",
+      uz: "Dushanbe Xalqaro aeroporti va mintaqaviy aerodromlardan premium kutib olish va transfer.",
+    },
+    description: "Begin your journey the moment you land. Our chauffeurs greet you at the gate, assist with luggage and escort you to a sanitised luxury vehicle.",
+    descriptionI18n: {
+      ru: "Начните путешествие в момент посадки. Наши водители встречают вас у выхода, помогают с багажом и сопровождают к продезинфицированному автомобилю премиум-класса.",
+      tj: "Сафари худро аз лаҳзаи фуруд омадан оғоз кунед. Ронандагони мо шуморо дар хуруҷ пешвоз мегиранд, бо бағоҷ кӯмак мекунанд ва то мошини боҳашамат ҳамроҳӣ мекунанд.",
+      uz: "Sayohatingizni qo'nish paytidan boshlang. Haydovchilarimiz sizni darvozada kutib oladi, yuk bilan yordam beradi va dezinfeksiya qilingan hashamatli avtomobilga kuzatib boradi.",
+    },
+    bullets: [
+      { en: "Meet-and-greet at the gate with name board", ru: "Встреча у выхода с табличкой с именем", tj: "Пешвоз дар хуруҷ бо лавҳаи ном", uz: "Darvozada ism yozuvi bilan kutib olish" },
+      { en: "Flight tracking and complimentary wait time", ru: "Отслеживание рейса и бесплатное время ожидания", tj: "Пайгирии парвоз ва вақти интизории ройгон", uz: "Reysni kuzatish va bepul kutish vaqti" },
+      { en: "Premium SUVs and sedans, refreshments included", ru: "Премиум-внедорожники и седаны, напитки включены", tj: "Мошинҳои боҳашамат, нӯшокиҳо дохил карда шудаанд", uz: "Premium SUV va sedanlar, ichimliklar bilan" },
+      { en: "Available 24/7 across Tajikistan's airports", ru: "Доступно 24/7 во всех аэропортах Таджикистана", tj: "24/7 дар ҳамаи фурудгоҳҳои Тоҷикистон дастрас", uz: "Tojikiston aeroportlarida 24/7 mavjud" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 2,
+  },
+  {
+    slug: "private-chauffeur",
+    iconName: "UserSquare",
+    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1400&q=80",
+    title: "Private Chauffeur Service",
+    titleI18n: { ru: "Личный водитель", tj: "Хидмати ронандаи шахсӣ", uz: "Shaxsiy haydovchi xizmati" },
+    shortDescription: "Hourly or daily chauffeured transport with a multilingual professional driver.",
+    shortDescriptionI18n: {
+      ru: "Почасовой или посуточный транспорт с многоязычным профессиональным водителем.",
+      tj: "Нақлиёт бо ронандаи касбии бисёрзабона дар асоси соатона ё рӯзона.",
+      uz: "Soatlik yoki kunlik ko'p tilli professional haydovchi bilan transport.",
+    },
+    description: "Travel on your own schedule with a discreet, English-speaking chauffeur and a vehicle reserved exclusively for you.",
+    descriptionI18n: {
+      ru: "Путешествуйте по собственному расписанию с тактичным англоговорящим водителем и автомобилем, зарезервированным исключительно для вас.",
+      tj: "Бо ҷадвали худатон бо ронандаи мулоими англисизабон ва мошине, ки танҳо барои шумо банд карда шудааст, сафар кунед.",
+      uz: "O'z jadvalingizda nazokatli, ingliz tilida so'zlashadigan haydovchi va faqat siz uchun ajratilgan avtomobil bilan sayohat qiling.",
+    },
+    bullets: [
+      { en: "Hourly, half-day or full-day bookings", ru: "Бронирование на час, полдня или целый день", tj: "Брони барои соат, ним рӯз ё як рӯз", uz: "Soatlik, yarim kun yoki kunlik buyurtma" },
+      { en: "Multilingual chauffeurs (EN / RU / TJ / UZ)", ru: "Многоязычные водители (EN / RU / TJ / UZ)", tj: "Ронандагони бисёрзабон (EN / RU / TJ / UZ)", uz: "Ko'p tilli haydovchilar (EN / RU / TJ / UZ)" },
+      { en: "Top-spec Toyota Land Cruiser fleet", ru: "Парк Toyota Land Cruiser в топовой комплектации", tj: "Парки Toyota Land Cruiser-и сатҳи баланд", uz: "Yuqori darajadagi Toyota Land Cruiser parki" },
+      { en: "Personal itinerary and on-route changes", ru: "Личный маршрут и изменения по пути", tj: "Маршрути шахсӣ ва тағйирот дар роҳ", uz: "Shaxsiy yo'nalish va yo'l davomida o'zgarishlar" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 3,
+  },
+  {
+    slug: "hotel-booking",
+    iconName: "Hotel",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=80",
+    title: "Hotel & Apartment Booking",
+    titleI18n: { ru: "Бронирование отелей и апартаментов", tj: "Брон кардани меҳмонхона ва манзил", uz: "Mehmonxona va kvartira buyurtmasi" },
+    shortDescription: "Curated stays at premium hotels and serviced apartments across Tajikistan.",
+    shortDescriptionI18n: {
+      ru: "Подобранное проживание в премиум-отелях и сервисных апартаментах по всему Таджикистану.",
+      tj: "Манзилҳои интихобшуда дар меҳмонхонаҳои боҳашамат ва манзилҳои хидматрасон дар саросари Тоҷикистон.",
+      uz: "Tojikiston bo'ylab premium mehmonxonalar va xizmat ko'rsatuvchi kvartiralarda saralangan turar joy.",
+    },
+    description: "Skip the search. We secure verified premium accommodation in Dushanbe, Khujand, Khorog and the regions, negotiated at the best available rate.",
+    descriptionI18n: {
+      ru: "Не тратьте время на поиск. Мы подберём проверенное премиум-жильё в Душанбе, Худжанде, Хороге и регионах по лучшим ценам.",
+      tj: "Вақтро барои ҷустуҷӯ сарф накунед. Мо манзили боэътимоди боҳашамат дар Душанбе, Хуҷанд, Хоруғ ва минтақаҳо бо беҳтарин нархҳо пешниҳод мекунем.",
+      uz: "Qidiruvga vaqt sarflamang. Biz Dushanbe, Xo'jand, Xorug' va viloyatlarda tekshirilgan premium turar joyni eng yaxshi narxlarda taqdim etamiz.",
+    },
+    bullets: [
+      { en: "Verified 4★ and 5★ hotel partners", ru: "Проверенные партнёры 4★ и 5★ отелей", tj: "Шарикони боэътимоди меҳмонхонаҳои 4★ ва 5★", uz: "Tekshirilgan 4★ va 5★ mehmonxona hamkorlari" },
+      { en: "Serviced apartments for longer stays", ru: "Сервисные апартаменты для длительного проживания", tj: "Манзилҳои хидматрасон барои иқомати дарозмуддат", uz: "Uzoq muddat uchun xizmat ko'rsatuvchi kvartiralar" },
+      { en: "VIP check-in and category upgrades when available", ru: "VIP-заселение и повышение категории при возможности", tj: "Сабтиномии VIP ва баланд бардоштани категория", uz: "VIP ro'yxatdan o'tish va imkon bo'lsa darajani oshirish" },
+      { en: "Single point of contact throughout your stay", ru: "Единый контакт на протяжении всего пребывания", tj: "Нуқтаи ягонаи тамос дар тӯли иқомат", uz: "Sayohat davomida bitta aloqa nuqtasi" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 4,
+  },
+  {
+    slug: "tour-guides",
+    iconName: "Compass",
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80",
+    title: "Professional Tour Guides",
+    titleI18n: { ru: "Профессиональные гиды", tj: "Роҳбаладони касбӣ", uz: "Professional gidlar" },
+    shortDescription: "Licensed, multilingual guides with deep knowledge of Tajik history and culture.",
+    shortDescriptionI18n: {
+      ru: "Лицензированные многоязычные гиды с глубоким знанием истории и культуры Таджикистана.",
+      tj: "Роҳбаладони иҷозатномадор бо донишҳои амиқ дар таърих ва фарҳанги Тоҷикистон.",
+      uz: "Tojikiston tarixi va madaniyatini chuqur biladigan litsenziyalangan ko'p tilli gidlar.",
+    },
+    description: "Discover Tajikistan with a licensed local guide who brings every fortress, bazaar and mountain pass to life.",
+    descriptionI18n: {
+      ru: "Откройте для себя Таджикистан с лицензированным местным гидом, который оживит каждую крепость, базар и горный перевал.",
+      tj: "Тоҷикистонро бо роҳбалади маҳаллии иҷозатномадор кашф кунед, ки ҳар як қалъа, бозор ва ағбаро зинда мекунад.",
+      uz: "Har bir qal'a, bozor va tog' dovonini jonlantiruvchi litsenziyalangan mahalliy gid bilan Tojikistonni kashf eting.",
+    },
+    bullets: [
+      { en: "Licensed, vetted and personally interviewed", ru: "Лицензированные, проверенные и лично собеседованные", tj: "Иҷозатномадор, санҷидашуда ва шахсан мусоҳибашуда", uz: "Litsenziyalangan, tekshirilgan va shaxsan suhbatlashilgan" },
+      { en: "EN, RU, TJ, UZ — additional languages on request", ru: "EN, RU, TJ, UZ — другие языки по запросу", tj: "EN, RU, TJ, UZ — забонҳои дигар бо дархост", uz: "EN, RU, TJ, UZ — qo'shimcha tillar so'rov bo'yicha" },
+      { en: "Specialists in history, gastronomy and trekking", ru: "Специалисты по истории, гастрономии и треккингу", tj: "Мутахассисон оид ба таърих, гастрономия ва кӯҳнавардӣ", uz: "Tarix, gastronomiya va trekking bo'yicha mutaxassislar" },
+      { en: "Custom thematic and family-friendly itineraries", ru: "Тематические и семейные маршруты на заказ", tj: "Маршрутҳои мавзӯӣ ва оилавӣ ба фармоиш", uz: "Maxsus tematik va oilaviy yo'nalishlar" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 5,
+  },
+  {
+    slug: "vip-transportation",
+    iconName: "Crown",
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80",
+    title: "VIP Transportation",
+    titleI18n: { ru: "VIP-транспорт", tj: "Нақлиёти VIP", uz: "VIP transport" },
+    shortDescription: "Discreet, high-security transport for diplomats, executives and dignitaries.",
+    shortDescriptionI18n: {
+      ru: "Конфиденциальный транспорт повышенной безопасности для дипломатов, руководителей и высокопоставленных лиц.",
+      tj: "Нақлиёти махфӣ бо амнияти баланд барои дипломатҳо, роҳбарон ва шахсони расмӣ.",
+      uz: "Diplomatlar, rahbarlar va yuqori martabali shaxslar uchun maxfiy, yuqori xavfsiz transport.",
+    },
+    description: "Confidential ground transport for officials and high-profile guests, coordinated by a dedicated account manager.",
+    descriptionI18n: {
+      ru: "Конфиденциальный наземный транспорт для официальных лиц и VIP-гостей, координируемый персональным менеджером.",
+      tj: "Нақлиёти махфии заминӣ барои шахсони расмӣ ва меҳмонони сатҳи баланд, ки аз ҷониби менеҷери шахсӣ ҳамоҳанг карда мешавад.",
+      uz: "Mansabdor shaxslar va yuqori martabali mehmonlar uchun shaxsiy menejer tomonidan muvofiqlashtirilgan maxfiy transport.",
+    },
+    bullets: [
+      { en: "Convoy and lead-car options on request", ru: "Сопровождение и головная машина по запросу", tj: "Имкониятҳои конвой ва мошини пешбар бо дархост", uz: "So'rov bo'yicha konvoy va boshlovchi avtomobil" },
+      { en: "NDA-bound chauffeurs and account team", ru: "Водители и команда под NDA", tj: "Ронандагон ва дастаи ба NDA баста", uz: "NDA bilan bog'langan haydovchilar va jamoa" },
+      { en: "Coordination with personal security details", ru: "Координация с личной охраной", tj: "Ҳамоҳангӣ бо муҳофизати шахсӣ", uz: "Shaxsiy xavfsizlik bilan muvofiqlashtirish" },
+      { en: "Priority dispatch and back-up vehicles", ru: "Приоритетная подача и резервные автомобили", tj: "Фиристодани афзалиятнок ва мошинҳои захиравӣ", uz: "Ustuvor jo'natish va zaxira transportlari" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 6,
+  },
+  {
+    slug: "custom-travel",
+    iconName: "Map",
+    image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1400&q=80",
+    title: "Custom Travel Planning",
+    titleI18n: { ru: "Индивидуальное планирование путешествий", tj: "Банақшагирии сафари инфиродӣ", uz: "Individual sayohat rejalashtirish" },
+    shortDescription: "Bespoke multi-day itineraries tailored to your interests, pace and budget.",
+    shortDescriptionI18n: {
+      ru: "Индивидуальные многодневные маршруты, адаптированные под ваши интересы, темп и бюджет.",
+      tj: "Маршрутҳои бисёррӯзаи фармоишӣ, мутобиқ ба манфиатҳо, суръат ва буҷети шумо.",
+      uz: "Sizning qiziqishlaringiz, sur'atingiz va byudjetingizga moslashtirilgan ko'p kunlik yo'nalishlar.",
+    },
+    description: "From a long weekend in the Fann Mountains to a two-week Silk Road expedition — we design and operate the entire journey for you.",
+    descriptionI18n: {
+      ru: "От длинных выходных в Фанских горах до двухнедельной экспедиции по Шёлковому пути — мы спроектируем и проведём всё путешествие для вас.",
+      tj: "Аз истироҳати дарози охири ҳафта дар Кӯҳҳои Фон то экспедитсияи дуҳафтаинаи Роҳи Абрешим — мо тамоми сафарро барои шумо тарҳрезӣ ва ташкил мекунем.",
+      uz: "Fann tog'larida uzoq dam olishdan tortib, ikki haftalik Ipak Yo'li ekspeditsiyasigacha — biz butun sayohatni siz uchun tashkil etamiz.",
+    },
+    bullets: [
+      { en: "One-on-one itinerary consultation", ru: "Индивидуальная консультация по маршруту", tj: "Машварати инфиродӣ оид ба маршрут", uz: "Yo'nalish bo'yicha individual maslahat" },
+      { en: "Hotels, meals, permits and transport handled", ru: "Отели, питание, разрешения и транспорт — всё включено", tj: "Меҳмонхонаҳо, хӯрок, иҷозатнома ва нақлиёт — ҳама ҳал шудааст", uz: "Mehmonxonalar, ovqat, ruxsatnomalar va transport bilan shug'ullanamiz" },
+      { en: "Adventure, cultural and family-friendly tracks", ru: "Приключенческие, культурные и семейные маршруты", tj: "Маршрутҳои саргузаштӣ, фарҳангӣ ва оилавӣ", uz: "Sarguzasht, madaniy va oilaviy yo'nalishlar" },
+      { en: "Real-time concierge support during your trip", ru: "Поддержка консьержа в реальном времени во время поездки", tj: "Дастгирии консерж дар вақти воқеӣ ҳангоми сафар", uz: "Sayohat davomida real vaqtda konserj yordami" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 7,
+  },
+  {
+    slug: "city-tours",
+    iconName: "Building2",
+    image: "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=1400&q=80",
+    title: "City Tours",
+    titleI18n: { ru: "Городские туры", tj: "Сайёҳати шаҳр", uz: "Shahar sayohatlari" },
+    shortDescription: "Half- and full-day private tours of Dushanbe, Khujand, Istaravshan and Khorog.",
+    shortDescriptionI18n: {
+      ru: "Полу- и полнодневные частные туры по Душанбе, Худжанду, Истаравшану и Хорогу.",
+      tj: "Сайёҳатҳои хусусии ним ва пурра рӯзи Душанбе, Хуҷанд, Истаравшан ва Хоруғ.",
+      uz: "Dushanbe, Xo'jand, Istaravshan va Xorug' bo'ylab yarim va to'liq kunlik xususiy sayohatlar.",
+    },
+    description: "See the highlights — and the hidden corners — of Tajikistan's most storied cities with a private guide and chauffeur.",
+    descriptionI18n: {
+      ru: "Откройте достопримечательности — и скрытые уголки — самых известных городов Таджикистана с личным гидом и водителем.",
+      tj: "Манзараҳои асосӣ — ва кунҷҳои пинҳониро — шаҳрҳои машҳуртарини Тоҷикистонро бо роҳбалад ва ронандаи шахсӣ бубинед.",
+      uz: "Shaxsiy gid va haydovchi bilan Tojikistonning eng mashhur shaharlarining diqqatga sazovor joylarini va yashirin burchaklarini ko'ring.",
+    },
+    bullets: [
+      { en: "Private vehicle and licensed guide", ru: "Личный автомобиль и лицензированный гид", tj: "Мошини шахсӣ ва роҳбалади иҷозатномадор", uz: "Shaxsiy avtomobil va litsenziyalangan gid" },
+      { en: "Curated cultural and culinary stops", ru: "Тщательно подобранные культурные и кулинарные остановки", tj: "Истгоҳҳои интихобшудаи фарҳангӣ ва кулинарӣ", uz: "Tanlangan madaniy va kulinariya to'xtashlar" },
+      { en: "Skip-the-line entries to key museums", ru: "Вход без очереди в ключевые музеи", tj: "Вуруди беэъфоф ба осорхонаҳои асосӣ", uz: "Asosiy muzeylarga navbatsiz kirish" },
+      { en: "Flexible morning, afternoon or evening departures", ru: "Гибкие отправления утром, днём или вечером", tj: "Хатсайри субҳ, рӯз ё шом — мутобиқ ба шумо", uz: "Moslashuvchan ertalab, kunduzi yoki kechqurun jo'nashlar" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 8,
+  },
+  {
+    slug: "business-travel",
+    iconName: "Briefcase",
+    image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?auto=format&fit=crop&w=1400&q=80",
+    title: "Business Travel Assistance",
+    titleI18n: { ru: "Поддержка деловых поездок", tj: "Дастгирии сафарҳои корӣ", uz: "Biznes sayohat yordami" },
+    shortDescription: "Corporate travel, meeting logistics and concierge support for executives in Tajikistan.",
+    shortDescriptionI18n: {
+      ru: "Корпоративные поездки, логистика встреч и поддержка консьержа для руководителей в Таджикистане.",
+      tj: "Сафарҳои корпоративӣ, логистикаи вохӯриҳо ва дастгирии консерж барои роҳбарон дар Тоҷикистон.",
+      uz: "Tojikistondagi rahbarlar uchun korporativ sayohat, uchrashuv logistikasi va konserj yordami.",
+    },
+    description: "A dedicated account team manages every detail of your business trip — from arrival to boardroom — so you can focus on the meeting.",
+    descriptionI18n: {
+      ru: "Выделенная команда менеджеров управляет каждой деталью вашей деловой поездки — от прибытия до зала заседаний — чтобы вы могли сосредоточиться на встрече.",
+      tj: "Дастаи махсуси менеҷерон ҳар як ҷузъи сафари кории шуморо идора мекунад — аз омадан то утоқи маҷлис — то шумо ба вохӯрӣ диққат диҳед.",
+      uz: "Maxsus jamoa biznes sayohatingizning har bir tafsilotini boshqaradi — kelishdan tortib uchrashuv xonasigacha — siz esa uchrashuvga e'tibor qaratasiz.",
+    },
+    bullets: [
+      { en: "Dedicated account manager and 24/7 hotline", ru: "Персональный менеджер и горячая линия 24/7", tj: "Менеҷери шахсӣ ва хатти доғи 24/7", uz: "Shaxsiy menejer va 24/7 yordam liniyasi" },
+      { en: "Meeting room sourcing and translator booking", ru: "Подбор переговорных и бронирование переводчика", tj: "Ҷустуҷӯи утоқи маҷлис ва брон кардани тарҷумон", uz: "Yig'ilish xonasini topish va tarjimon buyurtma qilish" },
+      { en: "Group transport and event logistics", ru: "Групповой транспорт и логистика мероприятий", tj: "Нақлиёти гурӯҳӣ ва логистикаи чорабиниҳо", uz: "Guruh transporti va tadbirlar logistikasi" },
+      { en: "Detailed expense reporting on request", ru: "Детальные отчёты о расходах по запросу", tj: "Ҳисоботи муфассали хароҷот бо дархост", uz: "So'rov bo'yicha batafsil xarajat hisoboti" },
+    ],
+    isVisaSupport: false,
+    sortOrder: 9,
+  },
+];
+
 export async function seedAll() {
   for (const v of VEHICLES) {
     const existing = await db.select().from(vehiclesTable).where(eq(vehiclesTable.code, v.code));
@@ -342,6 +606,12 @@ export async function seedAll() {
     const existing = await db.select().from(toursTable).where(eq(toursTable.slug, t.slug));
     if (existing.length === 0) {
       await db.insert(toursTable).values({ ...t, featured: true, hidden: false });
+    }
+  }
+  for (const s of SERVICES) {
+    const existing = await db.select().from(servicesTable).where(eq(servicesTable.slug, s.slug));
+    if (existing.length === 0) {
+      await db.insert(servicesTable).values({ ...s, hidden: false });
     }
   }
 }

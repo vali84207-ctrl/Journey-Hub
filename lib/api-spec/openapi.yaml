@@ -613,6 +613,119 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /services:
+    get:
+      operationId: listServices
+      tags: [services]
+      summary: List all services
+      responses:
+        "200":
+          description: List of services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Service"
+    post:
+      operationId: createService
+      tags: [services]
+      summary: Create a service (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceInput"
+      responses:
+        "201":
+          description: Service created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /services/by-slug/{slug}:
+    get:
+      operationId: getServiceBySlug
+      tags: [services]
+      summary: Get service by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /services/{id}:
+    put:
+      operationId: updateService
+      tags: [services]
+      summary: Update a service (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceInput"
+      responses:
+        "200":
+          description: Updated service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteService
+      tags: [services]
+      summary: Delete a service (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /admin/login:
     post:
       operationId: adminLogin
@@ -1338,6 +1451,68 @@ components:
         durationI18n: { $ref: "#/components/schemas/LangMap" }
         routeI18n: { $ref: "#/components/schemas/LangMap" }
         groupSizeI18n: { $ref: "#/components/schemas/LangMap" }
+
+    Service:
+      type: object
+      required:
+        - id
+        - slug
+        - iconName
+        - image
+        - title
+        - shortDescription
+        - description
+        - bullets
+        - isVisaSupport
+        - hidden
+        - sortOrder
+        - createdAt
+        - updatedAt
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        iconName: { type: string }
+        image: { type: string }
+        title: { type: string }
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        shortDescription: { type: string }
+        shortDescriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        description: { type: string }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        bullets:
+          type: array
+          items: { $ref: "#/components/schemas/LocalizedString" }
+        isVisaSupport: { type: boolean }
+        hidden: { type: boolean }
+        sortOrder: { type: integer }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    ServiceInput:
+      type: object
+      required:
+        - slug
+        - title
+      properties:
+        slug:
+          type: string
+          minLength: 1
+        iconName: { type: string }
+        image: { type: string }
+        title:
+          type: string
+          minLength: 1
+        titleI18n: { $ref: "#/components/schemas/LangMap" }
+        shortDescription: { type: string }
+        shortDescriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        description: { type: string }
+        descriptionI18n: { $ref: "#/components/schemas/LangMap" }
+        bullets:
+          type: array
+          items: { $ref: "#/components/schemas/LocalizedString" }
+        isVisaSupport: { type: boolean }
+        hidden: { type: boolean }
+        sortOrder: { type: integer }
 
     AdminLoginInput:
       type: object

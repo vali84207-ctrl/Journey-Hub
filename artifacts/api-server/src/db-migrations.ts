@@ -30,6 +30,27 @@ const COLUMNS_TO_ADD: ReadonlyArray<{ table: string; column: string; type: strin
   { table: "blog_posts", column: "category_i18n", type: "jsonb", def: "'{}'::jsonb" },
 ];
 
+const SERVICES_DDL = `
+CREATE TABLE IF NOT EXISTS services (
+  id serial PRIMARY KEY,
+  slug text NOT NULL UNIQUE,
+  icon_name text NOT NULL DEFAULT 'Sparkles',
+  image text NOT NULL DEFAULT '',
+  title text NOT NULL DEFAULT '',
+  title_i18n jsonb NOT NULL DEFAULT '{}'::jsonb,
+  short_description text NOT NULL DEFAULT '',
+  short_description_i18n jsonb NOT NULL DEFAULT '{}'::jsonb,
+  description text NOT NULL DEFAULT '',
+  description_i18n jsonb NOT NULL DEFAULT '{}'::jsonb,
+  bullets jsonb NOT NULL DEFAULT '[]'::jsonb,
+  is_visa_support boolean NOT NULL DEFAULT false,
+  hidden boolean NOT NULL DEFAULT false,
+  sort_order integer NOT NULL DEFAULT 0,
+  created_at timestamp NOT NULL DEFAULT NOW(),
+  updated_at timestamp NOT NULL DEFAULT NOW()
+)
+`;
+
 const SITE_SETTINGS_DDL = `
 CREATE TABLE IF NOT EXISTS site_settings (
   id serial PRIMARY KEY,
@@ -58,6 +79,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
 export async function runMigrations(): Promise<void> {
   try {
     await db.execute(sql.raw(SITE_SETTINGS_DDL));
+    await db.execute(sql.raw(SERVICES_DDL));
     for (const c of COLUMNS_TO_ADD) {
       // bookings.departure_id is nullable in the Drizzle schema, so add it without NOT NULL
       const nullable = c.table === "bookings" && c.column === "departure_id";
