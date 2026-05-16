@@ -4,6 +4,7 @@ export const uz: typeof en = {
   nav: {
     home: "Bosh sahifa",
     fleet: "Avtopark",
+    tours: "Turlar",
     services: "Xizmatlar",
     journal: "Jurnal",
     contact: "Aloqa",
@@ -52,6 +53,25 @@ export const uz: typeof en = {
       wedding: { title: "To'y avtomobillari", desc: "Maxsus kuningiz uchun nafis va benuqson avtomobillar." },
       chauffeur: { title: "Haydovchi xizmati", desc: "Soatlik yoki kunlik professional ko'p tilli haydovchilar." },
     },
+    comingSoon: {
+      eyebrow: "Tez orada",
+      title: "Individual xizmatlar",
+      body: "Konsyerj xizmatlari katalogi tayyorlanmoqda. Bugun nima kerakligini ayting — biz sizga shaxsiy yondashuv taklif qilamiz.",
+      cta: "Konsyerj bilan bog'lanish",
+    },
+  },
+  toursPage: {
+    eyebrow: "Maxsus sayohatlar",
+    title: "Barcha turlar",
+    subtitle: "Pamir Luxe Drive haydovchilari bilan Tojikiston bo'ylab ko'p kunlik shaxsiy sayohatlar.",
+    viewAll: "Barcha turlarni ko'rish",
+    featured: "Tavsiya etiladi",
+    loading: "Turlar yuklanmoqda…",
+    empty: "Turlar tayyorlanmoqda. Tez orada qayta tashrif buyuring.",
+    startingFrom: "Dan",
+    viewDetails: "Batafsil",
+    duration: "Davomiyligi",
+    route: "Marshrut",
   },
   tourDetail: {
     overnight: "Tunash",

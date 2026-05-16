@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Clock, MapPin } from "lucide-react";
+import { ArrowRight, Clock, MapPin, Compass } from "lucide-react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useListTours } from "@workspace/api-client-react";
@@ -24,7 +24,7 @@ export function Services() {
     .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
 
   return (
-    <section id="services" className="py-28 bg-black relative section-glow">
+    <section id="tours" className="py-28 bg-black relative section-glow">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.p
@@ -77,7 +77,7 @@ export function Services() {
             viewport={{ once: true, margin: "-80px" }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
           >
-            {visible.map((tour) => {
+            {visible.slice(0, 6).map((tour) => {
               const tTitle = pickI18n(tour.title, tour.titleI18n, lang);
               const tDuration = pickI18n(tour.duration, tour.durationI18n, lang);
               const tRoute = pickI18n(tour.route, tour.routeI18n, lang);
@@ -140,6 +140,19 @@ export function Services() {
               );
             })}
           </motion.div>
+        )}
+
+        {visible.length > 0 && (
+          <div className="mt-14 flex justify-center">
+            <Link
+              href="/tours"
+              className="group inline-flex items-center gap-3 border border-primary/60 text-primary hover:bg-primary hover:text-black transition-all duration-300 px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-medium"
+            >
+              <Compass size={14} />
+              {t("toursPage.viewAll")}
+              <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
         )}
       </div>
     </section>

@@ -19,8 +19,9 @@ export function Navbar() {
 
   const navLinks = [
     { name: t("nav.home"), href: "/", type: "route" as const },
+    { name: t("nav.tours"), href: "/tours", type: "route" as const },
     { name: t("nav.fleet"), href: "/fleet", type: "route" as const },
-    { name: t("nav.services"), href: "#services", type: "anchor" as const },
+    { name: t("nav.services"), href: "/services", type: "route" as const },
     { name: t("nav.journal"), href: "/blog", type: "route" as const },
     { name: t("nav.contact"), href: "#contact", type: "anchor" as const },
   ];

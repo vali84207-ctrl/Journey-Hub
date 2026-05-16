@@ -207,7 +207,7 @@ export function TourDetailPage() {
 
           <div className="absolute top-24 left-6 z-20">
             <Link
-              href="/#services"
+              href="/tours"
               className="inline-flex items-center gap-2 bg-black/60 backdrop-blur-sm border border-white/10 px-4 py-2 text-sm text-white hover:text-primary transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" /> {t("tourDetail.backToTours")}

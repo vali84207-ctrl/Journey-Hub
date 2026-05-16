@@ -2,6 +2,7 @@ export const en = {
   nav: {
     home: "Home",
     fleet: "Fleet",
+    tours: "Tours",
     services: "Services",
     journal: "Journal",
     contact: "Contact",
@@ -50,6 +51,25 @@ export const en = {
       wedding: { title: "Wedding Cars", desc: "Elegant and pristine vehicles to make your special day truly unforgettable." },
       chauffeur: { title: "Chauffeur Services", desc: "Professional, multi-lingual chauffeurs available for hourly or daily hire." },
     },
+    comingSoon: {
+      eyebrow: "Coming Soon",
+      title: "Bespoke Services",
+      body: "Our concierge service catalogue is being curated. Tell us what you need today and our team will tailor it personally.",
+      cta: "Contact Concierge",
+    },
+  },
+  toursPage: {
+    eyebrow: "Signature Journeys",
+    title: "All Tours",
+    subtitle: "Multi-day private journeys across Tajikistan, fully chauffeured by Pamir Luxe Drive.",
+    viewAll: "View All Tours",
+    featured: "Featured",
+    loading: "Loading tours…",
+    empty: "Tours are being prepared. Please check back soon.",
+    startingFrom: "From",
+    viewDetails: "View Details",
+    duration: "Duration",
+    route: "Route",
   },
   tourDetail: {
     notFound: "Tour not found",
