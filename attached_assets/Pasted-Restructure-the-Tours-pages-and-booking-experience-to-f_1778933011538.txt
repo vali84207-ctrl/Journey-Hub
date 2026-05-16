@@ -1,0 +1,106 @@
+Restructure the Tours pages and booking experience to feel similar to premium travel websites like Intrepid Travel, while preserving the current luxury black/gold visual identity and branding.
+
+IMPORTANT:
+- Keep the current luxury design aesthetic
+- Do NOT redesign the entire website colors/logo/theme
+- Preserve all backend functionality
+- Preserve Telegram notifications
+- Preserve multilingual support
+- Preserve admin panel functionality
+
+========================
+NEW TOUR PAGE STRUCTURE
+========================
+
+Redesign ONLY the structure/layout of tour detail pages to match a premium travel booking experience.
+
+Add sections like:
+
+1. Large cinematic hero image/gallery
+2. Tour overview
+3. Route information
+4. Duration
+5. Group size
+6. Included services
+7. Pricing section
+8. Travel itinerary/day-by-day schedule
+9. Booking/request section
+10. Reviews/testimonials
+11. FAQ section
+
+========================
+ITINERARY SECTION
+========================
+
+Create a professional itinerary layout similar to premium travel websites.
+
+Each day should include:
+- day number
+- title
+- description
+- activities
+- overnight location
+- optional images
+
+Use:
+- timeline layout
+- expandable sections
+- elegant spacing
+
+========================
+DATES & PRICES SECTION
+========================
+
+Add a professional dates/prices table for tours.
+
+Admin should be able to add:
+- start date
+- end date
+- available seats
+- pricing
+- status
+
+Statuses:
+- Available
+- Limited spots
+- Sold out
+
+========================
+ADMIN PANEL
+========================
+
+Admin must fully manage:
+- tour schedules
+- dates
+- pricing
+- itinerary
+- availability
+- images
+
+Changes should instantly appear on frontend.
+
+========================
+DESIGN
+========================
+
+Keep:
+- current black/gold luxury branding
+- current logo
+- current animations
+- current premium feel
+
+ONLY improve:
+- structure
+- layout
+- travel booking experience
+- tour presentation
+
+========================
+IMPORTANT
+========================
+
+- Preserve responsiveness
+- Preserve SEO
+- Preserve all integrations
+- Do NOT break existing booking forms
+- Do NOT touch working backend logic unnecessarily

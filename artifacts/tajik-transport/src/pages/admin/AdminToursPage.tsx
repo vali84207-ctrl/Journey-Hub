@@ -10,6 +10,9 @@ import {
   type TourInput,
   type TourHighlight,
   type TourItineraryDay,
+  type TourDeparture,
+  type TourReview,
+  type TourFaqItem,
 } from "@workspace/api-client-react";
 import { Plus, Pencil, Trash2, Eye, EyeOff, Star, X, ArrowUp, ArrowDown } from "lucide-react";
 import { AdminLayout, ModalShell, ConfirmDialog } from "@/components/admin/AdminLayout";
@@ -17,6 +20,7 @@ import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { GalleryUploadField } from "@/components/admin/GalleryUploadField";
 import { I18nField } from "@/components/admin/I18nField";
 import { LocalizedField } from "@/components/admin/LocalizedField";
+import { DeparturesEditor, ReviewsEditor, FaqEditor } from "@/components/admin/TourExtrasEditors";
 import { pickLocale, type LocalizedString } from "@/lib/locale";
 
 const EMPTY: TourInput = {
@@ -25,6 +29,7 @@ const EMPTY: TourInput = {
   shortDescription: "",
   description: "",
   duration: "",
+  groupSize: "",
   startingPrice: 0,
   route: "",
   mainImage: "",
@@ -32,6 +37,9 @@ const EMPTY: TourInput = {
   highlights: [],
   itinerary: [],
   included: [],
+  departures: [],
+  reviews: [],
+  faq: [],
   featured: true,
   hidden: false,
   sortOrder: 0,
@@ -40,6 +48,7 @@ const EMPTY: TourInput = {
   descriptionI18n: {},
   durationI18n: {},
   routeI18n: {},
+  groupSizeI18n: {},
 };
 
 const inputCls =
@@ -292,6 +301,9 @@ function TourForm({
   const [included, setIncluded] = useState<LocalizedString[]>(initial.included ?? []);
   const [highlights, setHighlights] = useState<TourHighlight[]>(initial.highlights ?? []);
   const [itinerary, setItinerary] = useState<TourItineraryDay[]>(initial.itinerary ?? []);
+  const [departures, setDepartures] = useState<TourDeparture[]>(initial.departures ?? []);
+  const [reviews, setReviews] = useState<TourReview[]>(initial.reviews ?? []);
+  const [faq, setFaq] = useState<TourFaqItem[]>(initial.faq ?? []);
 
   useEffect(() => {
     setData(initial);
@@ -299,6 +311,9 @@ function TourForm({
     setIncluded(initial.included ?? []);
     setHighlights(initial.highlights ?? []);
     setItinerary(initial.itinerary ?? []);
+    setDepartures(initial.departures ?? []);
+    setReviews(initial.reviews ?? []);
+    setFaq(initial.faq ?? []);
   }, [initial]);
 
   return (
@@ -311,6 +326,9 @@ function TourForm({
           included,
           highlights,
           itinerary,
+          departures,
+          reviews,
+          faq,
         });
       }}
       className="space-y-5"
@@ -364,6 +382,20 @@ function TourForm({
               setData({ ...data, startingPrice: parseInt(e.target.value, 10) || 0 })
             }
             className={inputCls}
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label className={labelCls}>Group size</label>
+          <input
+            value={data.groupSize ?? ""}
+            onChange={(e) => setData({ ...data, groupSize: e.target.value })}
+            className={inputCls}
+            placeholder="2 – 8 travellers"
+          />
+          <I18nField
+            value={data.groupSizeI18n}
+            onChange={(v) => setData({ ...data, groupSizeI18n: v })}
+            enPreview={data.groupSize ?? ""}
           />
         </div>
         <div className="md:col-span-2">
@@ -479,6 +511,24 @@ function TourForm({
         />
       </div>
 
+      <div>
+        <h3 className="font-serif text-base text-primary mb-3">Dates &amp; Prices</h3>
+        <p className="text-xs text-gray-500 mb-3">
+          Add scheduled departures with pricing and availability. These appear on the public tour page.
+        </p>
+        <DeparturesEditor value={departures} onChange={setDepartures} />
+      </div>
+
+      <div>
+        <h3 className="font-serif text-base text-primary mb-3">Traveller Reviews</h3>
+        <ReviewsEditor value={reviews} onChange={setReviews} />
+      </div>
+
+      <div>
+        <h3 className="font-serif text-base text-primary mb-3">FAQ</h3>
+        <FaqEditor value={faq} onChange={setFaq} />
+      </div>
+
       <div className="flex gap-3 justify-end pt-4 border-t border-white/10">
         <button
           type="button"
@@ -563,6 +613,7 @@ export function AdminToursPage() {
         shortDescription: editing.shortDescription,
         description: editing.description,
         duration: editing.duration,
+        groupSize: editing.groupSize,
         startingPrice: editing.startingPrice,
         route: editing.route,
         mainImage: editing.mainImage,
@@ -570,6 +621,9 @@ export function AdminToursPage() {
         highlights: editing.highlights,
         itinerary: editing.itinerary,
         included: editing.included,
+        departures: editing.departures,
+        reviews: editing.reviews,
+        faq: editing.faq,
         featured: editing.featured,
         hidden: editing.hidden,
         sortOrder: editing.sortOrder,
@@ -578,6 +632,7 @@ export function AdminToursPage() {
         descriptionI18n: editing.descriptionI18n,
         durationI18n: editing.durationI18n,
         routeI18n: editing.routeI18n,
+        groupSizeI18n: editing.groupSizeI18n,
       }
     : null;
 

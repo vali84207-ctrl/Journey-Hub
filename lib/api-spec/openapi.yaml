@@ -1148,6 +1148,45 @@ components:
           type: array
           items: { type: string }
 
+    TourDeparture:
+      type: object
+      required: [id, startDate, endDate, seats, price, status]
+      properties:
+        id: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        seats: { type: integer }
+        price: { type: integer }
+        status:
+          type: string
+          enum: [available, limited, soldout]
+
+    TourReview:
+      type: object
+      required: [id, author, rating, body]
+      properties:
+        id: { type: string }
+        author: { type: string }
+        location:
+          $ref: "#/components/schemas/LocalizedString"
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        date: { type: string }
+        body:
+          $ref: "#/components/schemas/LocalizedString"
+
+    TourFaqItem:
+      type: object
+      required: [id, question, answer]
+      properties:
+        id: { type: string }
+        question:
+          $ref: "#/components/schemas/LocalizedString"
+        answer:
+          $ref: "#/components/schemas/LocalizedString"
+
     Tour:
       type: object
       required:
@@ -1164,6 +1203,10 @@ components:
         - highlights
         - itinerary
         - included
+        - departures
+        - reviews
+        - faq
+        - groupSize
         - featured
         - hidden
         - sortOrder
@@ -1176,6 +1219,7 @@ components:
         shortDescription: { type: string }
         description: { type: string }
         duration: { type: string }
+        groupSize: { type: string }
         startingPrice: { type: integer }
         route: { type: string }
         mainImage: { type: string }
@@ -1191,6 +1235,15 @@ components:
         included:
           type: array
           items: { $ref: "#/components/schemas/LocalizedString" }
+        departures:
+          type: array
+          items: { $ref: "#/components/schemas/TourDeparture" }
+        reviews:
+          type: array
+          items: { $ref: "#/components/schemas/TourReview" }
+        faq:
+          type: array
+          items: { $ref: "#/components/schemas/TourFaqItem" }
         featured: { type: boolean }
         hidden: { type: boolean }
         sortOrder: { type: integer }
@@ -1199,6 +1252,7 @@ components:
         descriptionI18n: { $ref: "#/components/schemas/LangMap" }
         durationI18n: { $ref: "#/components/schemas/LangMap" }
         routeI18n: { $ref: "#/components/schemas/LangMap" }
+        groupSizeI18n: { $ref: "#/components/schemas/LangMap" }
         createdAt: { type: string }
         updatedAt: { type: string }
 
@@ -1234,6 +1288,16 @@ components:
         included:
           type: array
           items: { $ref: "#/components/schemas/LocalizedString" }
+        departures:
+          type: array
+          items: { $ref: "#/components/schemas/TourDeparture" }
+        reviews:
+          type: array
+          items: { $ref: "#/components/schemas/TourReview" }
+        faq:
+          type: array
+          items: { $ref: "#/components/schemas/TourFaqItem" }
+        groupSize: { type: string }
         featured: { type: boolean }
         hidden: { type: boolean }
         sortOrder: { type: integer }
@@ -1242,6 +1306,7 @@ components:
         descriptionI18n: { $ref: "#/components/schemas/LangMap" }
         durationI18n: { $ref: "#/components/schemas/LangMap" }
         routeI18n: { $ref: "#/components/schemas/LangMap" }
+        groupSizeI18n: { $ref: "#/components/schemas/LangMap" }
 
     AdminLoginInput:
       type: object

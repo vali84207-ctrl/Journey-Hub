@@ -301,6 +301,43 @@ export interface TourItineraryDay {
   images?: string[];
 }
 
+export type TourDepartureStatus =
+  (typeof TourDepartureStatus)[keyof typeof TourDepartureStatus];
+
+export const TourDepartureStatus = {
+  available: "available",
+  limited: "limited",
+  soldout: "soldout",
+} as const;
+
+export interface TourDeparture {
+  id: string;
+  startDate: string;
+  endDate: string;
+  seats: number;
+  price: number;
+  status: TourDepartureStatus;
+}
+
+export interface TourReview {
+  id: string;
+  author: string;
+  location?: LocalizedString;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+  date?: string;
+  body: LocalizedString;
+}
+
+export interface TourFaqItem {
+  id: string;
+  question: LocalizedString;
+  answer: LocalizedString;
+}
+
 export interface Tour {
   id: number;
   slug: string;
@@ -308,6 +345,7 @@ export interface Tour {
   shortDescription: string;
   description: string;
   duration: string;
+  groupSize: string;
   startingPrice: number;
   route: string;
   mainImage: string;
@@ -315,6 +353,9 @@ export interface Tour {
   highlights: TourHighlight[];
   itinerary: TourItineraryDay[];
   included: LocalizedString[];
+  departures: TourDeparture[];
+  reviews: TourReview[];
+  faq: TourFaqItem[];
   featured: boolean;
   hidden: boolean;
   sortOrder: number;
@@ -323,6 +364,7 @@ export interface Tour {
   descriptionI18n?: LangMap;
   durationI18n?: LangMap;
   routeI18n?: LangMap;
+  groupSizeI18n?: LangMap;
   createdAt: string;
   updatedAt: string;
 }
@@ -343,6 +385,10 @@ export interface TourInput {
   highlights?: TourHighlight[];
   itinerary?: TourItineraryDay[];
   included?: LocalizedString[];
+  departures?: TourDeparture[];
+  reviews?: TourReview[];
+  faq?: TourFaqItem[];
+  groupSize?: string;
   featured?: boolean;
   hidden?: boolean;
   sortOrder?: number;
@@ -351,6 +397,7 @@ export interface TourInput {
   descriptionI18n?: LangMap;
   durationI18n?: LangMap;
   routeI18n?: LangMap;
+  groupSizeI18n?: LangMap;
 }
 
 export interface AdminLoginInput {

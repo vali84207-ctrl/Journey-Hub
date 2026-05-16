@@ -13,6 +13,11 @@ const COLUMNS_TO_ADD: ReadonlyArray<{ table: string; column: string; type: strin
   { table: "tours", column: "description_i18n", type: "jsonb", def: "'{}'::jsonb" },
   { table: "tours", column: "duration_i18n", type: "jsonb", def: "'{}'::jsonb" },
   { table: "tours", column: "route_i18n", type: "jsonb", def: "'{}'::jsonb" },
+  { table: "tours", column: "group_size", type: "text", def: "''" },
+  { table: "tours", column: "group_size_i18n", type: "jsonb", def: "'{}'::jsonb" },
+  { table: "tours", column: "departures", type: "jsonb", def: "'[]'::jsonb" },
+  { table: "tours", column: "reviews", type: "jsonb", def: "'[]'::jsonb" },
+  { table: "tours", column: "faq", type: "jsonb", def: "'[]'::jsonb" },
 
   { table: "blog_posts", column: "title_i18n", type: "jsonb", def: "'{}'::jsonb" },
   { table: "blog_posts", column: "excerpt_i18n", type: "jsonb", def: "'{}'::jsonb" },

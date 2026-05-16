@@ -1440,6 +1440,8 @@ export const CreateTourBookingBody = zod.object({
 /**
  * @summary List all tours
  */
+export const listToursResponseReviewsItemRatingMax = 5;
+
 export const ListToursResponseItem = zod.object({
   id: zod.number(),
   slug: zod.string(),
@@ -1447,6 +1449,7 @@ export const ListToursResponseItem = zod.object({
   shortDescription: zod.string(),
   description: zod.string(),
   duration: zod.string(),
+  groupSize: zod.string(),
   startingPrice: zod.number(),
   route: zod.string(),
   mainImage: zod.string(),
@@ -1576,6 +1579,82 @@ export const ListToursResponseItem = zod.object({
         "Either a plain string (legacy \/ EN-only) or a per-language object.",
       ),
   ),
+  departures: zod.array(
+    zod.object({
+      id: zod.string(),
+      startDate: zod.string(),
+      endDate: zod.string(),
+      seats: zod.number(),
+      price: zod.number(),
+      status: zod.enum(["available", "limited", "soldout"]),
+    }),
+  ),
+  reviews: zod.array(
+    zod.object({
+      id: zod.string(),
+      author: zod.string(),
+      location: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      rating: zod.number().min(1).max(listToursResponseReviewsItemRatingMax),
+      date: zod.string().optional(),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
+  faq: zod.array(
+    zod.object({
+      id: zod.string(),
+      question: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      answer: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
@@ -1629,6 +1708,16 @@ export const ListToursResponseItem = zod.object({
     .describe(
       "Optional translations keyed by language code (en uses the base column).",
     ),
+  groupSizeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -1639,6 +1728,8 @@ export const ListToursResponse = zod.array(ListToursResponseItem);
  */
 
 export const createTourBodyStartingPriceMin = 0;
+
+export const createTourBodyReviewsItemRatingMax = 5;
 
 export const CreateTourBody = zod.object({
   slug: zod.string().min(1),
@@ -1781,6 +1872,89 @@ export const CreateTourBody = zod.object({
         ),
     )
     .optional(),
+  departures: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        startDate: zod.string(),
+        endDate: zod.string(),
+        seats: zod.number(),
+        price: zod.number(),
+        status: zod.enum(["available", "limited", "soldout"]),
+      }),
+    )
+    .optional(),
+  reviews: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        author: zod.string(),
+        location: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        rating: zod.number().min(1).max(createTourBodyReviewsItemRatingMax),
+        date: zod.string().optional(),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+      }),
+    )
+    .optional(),
+  faq: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        question: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        answer: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+      }),
+    )
+    .optional(),
+  groupSize: zod.string().optional(),
   featured: zod.boolean().optional(),
   hidden: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
@@ -1834,6 +2008,16 @@ export const CreateTourBody = zod.object({
     .describe(
       "Optional translations keyed by language code (en uses the base column).",
     ),
+  groupSizeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
 
 /**
@@ -1843,6 +2027,8 @@ export const GetTourBySlugParams = zod.object({
   slug: zod.coerce.string(),
 });
 
+export const getTourBySlugResponseReviewsItemRatingMax = 5;
+
 export const GetTourBySlugResponse = zod.object({
   id: zod.number(),
   slug: zod.string(),
@@ -1850,6 +2036,7 @@ export const GetTourBySlugResponse = zod.object({
   shortDescription: zod.string(),
   description: zod.string(),
   duration: zod.string(),
+  groupSize: zod.string(),
   startingPrice: zod.number(),
   route: zod.string(),
   mainImage: zod.string(),
@@ -1979,6 +2166,85 @@ export const GetTourBySlugResponse = zod.object({
         "Either a plain string (legacy \/ EN-only) or a per-language object.",
       ),
   ),
+  departures: zod.array(
+    zod.object({
+      id: zod.string(),
+      startDate: zod.string(),
+      endDate: zod.string(),
+      seats: zod.number(),
+      price: zod.number(),
+      status: zod.enum(["available", "limited", "soldout"]),
+    }),
+  ),
+  reviews: zod.array(
+    zod.object({
+      id: zod.string(),
+      author: zod.string(),
+      location: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      rating: zod
+        .number()
+        .min(1)
+        .max(getTourBySlugResponseReviewsItemRatingMax),
+      date: zod.string().optional(),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
+  faq: zod.array(
+    zod.object({
+      id: zod.string(),
+      question: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      answer: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
@@ -2032,6 +2298,16 @@ export const GetTourBySlugResponse = zod.object({
     .describe(
       "Optional translations keyed by language code (en uses the base column).",
     ),
+  groupSizeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -2044,6 +2320,8 @@ export const UpdateTourParams = zod.object({
 });
 
 export const updateTourBodyStartingPriceMin = 0;
+
+export const updateTourBodyReviewsItemRatingMax = 5;
 
 export const UpdateTourBody = zod.object({
   slug: zod.string().min(1),
@@ -2186,6 +2464,89 @@ export const UpdateTourBody = zod.object({
         ),
     )
     .optional(),
+  departures: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        startDate: zod.string(),
+        endDate: zod.string(),
+        seats: zod.number(),
+        price: zod.number(),
+        status: zod.enum(["available", "limited", "soldout"]),
+      }),
+    )
+    .optional(),
+  reviews: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        author: zod.string(),
+        location: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .optional()
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        rating: zod.number().min(1).max(updateTourBodyReviewsItemRatingMax),
+        date: zod.string().optional(),
+        body: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+      }),
+    )
+    .optional(),
+  faq: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        question: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+        answer: zod
+          .union([
+            zod.string(),
+            zod.object({
+              en: zod.string().optional(),
+              ru: zod.string().optional(),
+              tj: zod.string().optional(),
+              uz: zod.string().optional(),
+            }),
+          ])
+          .describe(
+            "Either a plain string (legacy \/ EN-only) or a per-language object.",
+          ),
+      }),
+    )
+    .optional(),
+  groupSize: zod.string().optional(),
   featured: zod.boolean().optional(),
   hidden: zod.boolean().optional(),
   sortOrder: zod.number().optional(),
@@ -2239,7 +2600,19 @@ export const UpdateTourBody = zod.object({
     .describe(
       "Optional translations keyed by language code (en uses the base column).",
     ),
+  groupSizeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
 });
+
+export const updateTourResponseReviewsItemRatingMax = 5;
 
 export const UpdateTourResponse = zod.object({
   id: zod.number(),
@@ -2248,6 +2621,7 @@ export const UpdateTourResponse = zod.object({
   shortDescription: zod.string(),
   description: zod.string(),
   duration: zod.string(),
+  groupSize: zod.string(),
   startingPrice: zod.number(),
   route: zod.string(),
   mainImage: zod.string(),
@@ -2377,6 +2751,82 @@ export const UpdateTourResponse = zod.object({
         "Either a plain string (legacy \/ EN-only) or a per-language object.",
       ),
   ),
+  departures: zod.array(
+    zod.object({
+      id: zod.string(),
+      startDate: zod.string(),
+      endDate: zod.string(),
+      seats: zod.number(),
+      price: zod.number(),
+      status: zod.enum(["available", "limited", "soldout"]),
+    }),
+  ),
+  reviews: zod.array(
+    zod.object({
+      id: zod.string(),
+      author: zod.string(),
+      location: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .optional()
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      rating: zod.number().min(1).max(updateTourResponseReviewsItemRatingMax),
+      date: zod.string().optional(),
+      body: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
+  faq: zod.array(
+    zod.object({
+      id: zod.string(),
+      question: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+      answer: zod
+        .union([
+          zod.string(),
+          zod.object({
+            en: zod.string().optional(),
+            ru: zod.string().optional(),
+            tj: zod.string().optional(),
+            uz: zod.string().optional(),
+          }),
+        ])
+        .describe(
+          "Either a plain string (legacy \/ EN-only) or a per-language object.",
+        ),
+    }),
+  ),
   featured: zod.boolean(),
   hidden: zod.boolean(),
   sortOrder: zod.number(),
@@ -2421,6 +2871,16 @@ export const UpdateTourResponse = zod.object({
       "Optional translations keyed by language code (en uses the base column).",
     ),
   routeI18n: zod
+    .object({
+      ru: zod.string().optional(),
+      tj: zod.string().optional(),
+      uz: zod.string().optional(),
+    })
+    .optional()
+    .describe(
+      "Optional translations keyed by language code (en uses the base column).",
+    ),
+  groupSizeI18n: zod
     .object({
       ru: zod.string().optional(),
       tj: zod.string().optional(),
