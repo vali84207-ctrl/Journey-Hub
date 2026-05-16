@@ -84,6 +84,7 @@ export interface TourBookingInput {
   tourSlug: string;
   /** @minLength 1 */
   tourTitle: string;
+  departureId?: string;
 }
 
 /**
@@ -345,6 +346,7 @@ export interface Tour {
   shortDescription: string;
   description: string;
   duration: string;
+  durationDays?: number;
   groupSize: string;
   startingPrice: number;
   route: string;
@@ -377,6 +379,8 @@ export interface TourInput {
   shortDescription?: string;
   description?: string;
   duration?: string;
+  /** @minimum 0 */
+  durationDays?: number;
   /** @minimum 0 */
   startingPrice?: number;
   route?: string;

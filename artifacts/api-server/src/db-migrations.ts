@@ -18,6 +18,9 @@ const COLUMNS_TO_ADD: ReadonlyArray<{ table: string; column: string; type: strin
   { table: "tours", column: "departures", type: "jsonb", def: "'[]'::jsonb" },
   { table: "tours", column: "reviews", type: "jsonb", def: "'[]'::jsonb" },
   { table: "tours", column: "faq", type: "jsonb", def: "'[]'::jsonb" },
+  { table: "tours", column: "duration_days", type: "integer", def: "0" },
+
+  { table: "bookings", column: "departure_id", type: "text", def: "''" },
 
   { table: "blog_posts", column: "title_i18n", type: "jsonb", def: "'{}'::jsonb" },
   { table: "blog_posts", column: "excerpt_i18n", type: "jsonb", def: "'{}'::jsonb" },
@@ -56,11 +59,12 @@ export async function runMigrations(): Promise<void> {
   try {
     await db.execute(sql.raw(SITE_SETTINGS_DDL));
     for (const c of COLUMNS_TO_ADD) {
-      await db.execute(
-        sql.raw(
-          `ALTER TABLE ${c.table} ADD COLUMN IF NOT EXISTS ${c.column} ${c.type} NOT NULL DEFAULT ${c.def}`,
-        ),
-      );
+      // bookings.departure_id is nullable in the Drizzle schema, so add it without NOT NULL
+      const nullable = c.table === "bookings" && c.column === "departure_id";
+      const ddl = nullable
+        ? `ALTER TABLE ${c.table} ADD COLUMN IF NOT EXISTS ${c.column} ${c.type}`
+        : `ALTER TABLE ${c.table} ADD COLUMN IF NOT EXISTS ${c.column} ${c.type} NOT NULL DEFAULT ${c.def}`;
+      await db.execute(sql.raw(ddl));
     }
     logger.info("DB migrations applied (idempotent)");
   } catch (err) {

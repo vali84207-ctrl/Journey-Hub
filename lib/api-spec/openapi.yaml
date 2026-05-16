@@ -588,6 +588,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /tours/{id}/auto-generate-departures:
+    post:
+      operationId: autoGenerateTourDepartures
+      tags: [tours]
+      summary: Auto-generate upcoming departures for a tour (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated tour
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tour"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /admin/login:
     post:
       operationId: adminLogin
@@ -782,6 +807,8 @@ components:
         tourTitle:
           type: string
           minLength: 1
+        departureId:
+          type: string
 
     LangMap:
       type: object
@@ -1219,6 +1246,7 @@ components:
         shortDescription: { type: string }
         description: { type: string }
         duration: { type: string }
+        durationDays: { type: integer }
         groupSize: { type: string }
         startingPrice: { type: integer }
         route: { type: string }
@@ -1271,6 +1299,9 @@ components:
         shortDescription: { type: string }
         description: { type: string }
         duration: { type: string }
+        durationDays:
+          type: integer
+          minimum: 0
         startingPrice:
           type: integer
           minimum: 0

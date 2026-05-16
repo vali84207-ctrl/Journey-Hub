@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslation } from "react-i18next";
 import { useCreateTourBooking } from "@workspace/api-client-react";
-import { CheckCircle2, Loader2, Send } from "lucide-react";
+import { CheckCircle2, Loader2, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,12 +17,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+export type SelectedDeparture = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  price: number;
+  seats: number;
+};
+
 export function TourBookingForm({
   tourSlug,
   tourTitle,
+  selectedDeparture,
+  onClearDeparture,
 }: {
   tourSlug: string;
   tourTitle: string;
+  selectedDeparture?: SelectedDeparture | null;
+  onClearDeparture?: () => void;
 }) {
   const { t } = useTranslation();
   const createTourBooking = useCreateTourBooking();
@@ -50,9 +62,24 @@ export function TourBookingForm({
     },
   });
 
+  // When a departure is picked from the Dates & Prices table, auto-fill the date.
+  useEffect(() => {
+    if (selectedDeparture?.startDate) {
+      form.setValue("date", selectedDeparture.startDate, { shouldValidate: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeparture?.id]);
+
   function onSubmit(values: Values) {
     createTourBooking.mutate(
-      { data: { ...values, tourSlug, tourTitle } },
+      {
+        data: {
+          ...values,
+          tourSlug,
+          tourTitle,
+          ...(selectedDeparture?.id ? { departureId: selectedDeparture.id } : {}),
+        },
+      },
       {
         onSuccess: () => {
           setShowSuccess(true);
@@ -64,6 +91,7 @@ export function TourBookingForm({
             pickup: "",
             notes: "",
           });
+          onClearDeparture?.();
           setTimeout(() => setShowSuccess(false), 6000);
         },
       },
@@ -91,6 +119,35 @@ export function TourBookingForm({
           {t("tourBooking.subtitle", { tour: tourTitle })}
         </p>
       </div>
+
+      {selectedDeparture && (
+        <div className="mb-6 flex items-start justify-between gap-3 px-4 py-3 border border-primary/30 bg-primary/5">
+          <div className="text-sm">
+            <div className="text-[10px] uppercase tracking-widest text-primary mb-1">
+              {t("tourBooking.selectedDeparture")}
+            </div>
+            <div className="text-white font-light">
+              {selectedDeparture.startDate} → {selectedDeparture.endDate}
+              <span className="text-primary ml-3 font-serif">
+                ${selectedDeparture.price}
+              </span>
+              <span className="text-gray-500 ml-3 text-xs">
+                {t("tourBooking.seatsLeft", { count: selectedDeparture.seats })}
+              </span>
+            </div>
+          </div>
+          {onClearDeparture && (
+            <button
+              type="button"
+              onClick={onClearDeparture}
+              aria-label={t("tourBooking.clearDeparture")}
+              className="text-gray-400 hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
 
       {showSuccess && (
         <div className="mb-6 flex items-start gap-3 px-4 py-3 border border-green-500/30 bg-green-500/10 text-green-300">

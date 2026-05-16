@@ -15,6 +15,7 @@ export const bookingsTable = pgTable("bookings", {
   notes: text("notes"),
   tourSlug: text("tour_slug"),
   tourTitle: text("tour_title"),
+  departureId: text("departure_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

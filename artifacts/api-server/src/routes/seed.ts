@@ -214,6 +214,7 @@ type SeedTour = {
   shortDescription: string;
   description: string;
   duration: string;
+  durationDays: number;
   startingPrice: number;
   route: string;
   mainImage: string;
@@ -233,6 +234,7 @@ const TOURS: SeedTour[] = [
     description:
       "Trace the legendary Pamir Highway in a freshly detailed Land Cruiser 300, with a professional VIP chauffeur, curated stops, and unhurried mornings at altitude. We handle every logistic so you can focus on the landscape.",
     duration: "7 Days · 6 Nights",
+    durationDays: 7,
     startingPrice: 2400,
     route: "Dushanbe → Kalaikhum → Khorog → Wakhan → Murghab → Karakul → Sary-Tash",
     mainImage:
@@ -274,6 +276,7 @@ const TOURS: SeedTour[] = [
     description:
       "From the modern capital to one of Central Asia's oldest continuously inhabited cities. Stop at Iskanderkul on the way, walk Khujand's Panjshanbe bazaar, and return through the Fann Mountains in luxury comfort.",
     duration: "3 Days · 2 Nights",
+    durationDays: 3,
     startingPrice: 980,
     route: "Dushanbe → Iskanderkul → Khujand → Istaravshan → Dushanbe",
     mainImage:

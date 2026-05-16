@@ -131,6 +131,9 @@ export const ru: typeof en = {
       dateReq: "Укажите желаемую дату",
       pickupMin: "Укажите место подачи",
     },
+    selectedDeparture: "Выбранная дата выезда",
+    seatsLeft: "Осталось мест: {{count}}",
+    clearDeparture: "Сбросить выбранную дату",
   },
   fleet: {
     eyebrow: "Эксклюзивный автопарк",

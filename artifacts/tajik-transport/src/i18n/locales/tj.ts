@@ -131,6 +131,9 @@ export const tj: typeof en = {
       dateReq: "Санаи дилхоҳ лозим аст",
       pickupMin: "Ҷойи савор шудан лозим аст",
     },
+    selectedDeparture: "Санаи интихобшудаи рафт",
+    seatsLeft: "{{count}} ҷой боқӣ мондааст",
+    clearDeparture: "Интихобро тоза кардан",
   },
   fleet: {
     eyebrow: "Парки эксклюзивӣ",

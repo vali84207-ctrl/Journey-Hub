@@ -131,6 +131,9 @@ export const uz: typeof en = {
       dateReq: "Afzal sana kerak",
       pickupMin: "Olib ketish manzili kerak",
     },
+    selectedDeparture: "Tanlangan jo'nash sanasi",
+    seatsLeft: "{{count}} o'rin qoldi",
+    clearDeparture: "Tanlovni tozalash",
   },
   fleet: {
     eyebrow: "Eksklyuziv park",

@@ -50,6 +50,7 @@ export const toursTable = pgTable("tours", {
   descriptionI18n: jsonb("description_i18n").$type<LangMap>().notNull().default({}),
   duration: text("duration").notNull().default(""),
   durationI18n: jsonb("duration_i18n").$type<LangMap>().notNull().default({}),
+  durationDays: integer("duration_days").notNull().default(0),
   groupSize: text("group_size").notNull().default(""),
   groupSizeI18n: jsonb("group_size_i18n").$type<LangMap>().notNull().default({}),
   startingPrice: integer("starting_price").notNull().default(0),

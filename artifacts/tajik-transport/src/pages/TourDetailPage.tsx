@@ -21,7 +21,7 @@ import { useGetTourBySlug } from "@workspace/api-client-react";
 import { Navbar } from "@/components/home/Navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { TourBookingForm } from "@/components/TourBookingForm";
+import { TourBookingForm, type SelectedDeparture } from "@/components/TourBookingForm";
 import { pickI18n, pickLocale, pickLocaleArray, useActiveLang } from "@/lib/locale";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -62,6 +62,8 @@ export function TourDetailPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("about");
+  const [selectedDeparture, setSelectedDeparture] =
+    useState<SelectedDeparture | null>(null);
   const programmaticScrollUntil = useRef(0);
 
   useEffect(() => {
@@ -69,6 +71,7 @@ export function TourDetailPage() {
     setActiveImg(0);
     setOpenFaq(null);
     setActiveTab("about");
+    setSelectedDeparture(null);
   }, [slug]);
 
   const sortedDepartures = useMemo(() => {
@@ -390,12 +393,33 @@ export function TourDetailPage() {
                                 {isSold ? (
                                   <span className="text-[11px] text-gray-500">—</span>
                                 ) : (
-                                  <a
-                                    href="#tour-booking"
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedDeparture({
+                                        id: d.id,
+                                        startDate: d.startDate,
+                                        endDate: d.endDate,
+                                        price: d.price,
+                                        seats: d.seats,
+                                      });
+                                      programmaticScrollUntil.current =
+                                        Date.now() + 800;
+                                      const el =
+                                        document.getElementById("tour-booking");
+                                      if (el) {
+                                        const top =
+                                          el.getBoundingClientRect().top +
+                                          window.scrollY -
+                                          SCROLL_OFFSET +
+                                          1;
+                                        window.scrollTo({ top, behavior: "smooth" });
+                                      }
+                                    }}
                                     className="text-[10px] uppercase tracking-widest text-primary hover:underline"
                                   >
                                     {t("tourDetail.depart.book")}
-                                  </a>
+                                  </button>
                                 )}
                               </td>
                             </tr>
@@ -589,7 +613,12 @@ export function TourDetailPage() {
                 </section>
               )}
 
-              <TourBookingForm tourSlug={tour.slug} tourTitle={title} />
+              <TourBookingForm
+                tourSlug={tour.slug}
+                tourTitle={title}
+                selectedDeparture={selectedDeparture}
+                onClearDeparture={() => setSelectedDeparture(null)}
+              />
             </div>
 
             {/* Sticky booking sidebar */}

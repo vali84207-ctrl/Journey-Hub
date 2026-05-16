@@ -129,6 +129,9 @@ export const en = {
       dateReq: "Preferred date is required",
       pickupMin: "Pickup location is required",
     },
+    selectedDeparture: "Selected Departure",
+    seatsLeft: "{{count}} seats left",
+    clearDeparture: "Clear selected departure",
   },
   fleet: {
     eyebrow: "Exclusive Fleet",

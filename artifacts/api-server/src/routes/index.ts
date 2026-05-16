@@ -14,7 +14,7 @@ import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
-(async () => {
+export const bootDbSetup: Promise<void> = (async () => {
   try {
     await runMigrations();
     await seedAll();

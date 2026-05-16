@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { eq } from "drizzle-orm";
 import { db } from "@workspace/db";
-import { bookingsTable, toursTable } from "@workspace/db";
+import { bookingsTable, toursTable, type TourDeparture } from "@workspace/db";
 import { CreateTourBookingBody } from "@workspace/api-zod";
 
 const router = Router();
@@ -76,33 +76,95 @@ router.post("/tour-bookings", async (req, res) => {
   }
   const data = parsed.data;
 
-  const [tour] = await db
-    .select({ slug: toursTable.slug, title: toursTable.title, hidden: toursTable.hidden })
-    .from(toursTable)
-    .where(eq(toursTable.slug, data.tourSlug))
-    .limit(1);
+  // Lock the tour row, mutate its departures, and insert the booking inside a
+  // single transaction so concurrent bookings can't both decrement the same
+  // seat count.
+  type TxResult =
+    | { ok: true; tourTitle: string; tourSlug: string; booking: typeof bookingsTable.$inferSelect; bookedDeparture: TourDeparture | null }
+    | { ok: false; status: number; error: string };
 
-  if (!tour || tour.hidden) {
-    res.status(400).json({ error: "Unknown or unavailable tour" });
+  const result: TxResult = await db.transaction(async (tx) => {
+    const [tour] = await tx
+      .select()
+      .from(toursTable)
+      .where(eq(toursTable.slug, data.tourSlug))
+      .for("update")
+      .limit(1);
+
+    if (!tour || tour.hidden) {
+      return { ok: false, status: 400, error: "Unknown or unavailable tour" };
+    }
+
+    let bookedDeparture: TourDeparture | null = null;
+    if (data.departureId) {
+      const idx = tour.departures.findIndex((d) => d.id === data.departureId);
+      if (idx === -1) {
+        return { ok: false, status: 400, error: "Selected departure not found" };
+      }
+      const dep = tour.departures[idx]!;
+      if (dep.status === "soldout" || dep.seats <= 0) {
+        return { ok: false, status: 409, error: "Selected departure is sold out" };
+      }
+      if (dep.seats < data.passengers) {
+        return {
+          ok: false,
+          status: 409,
+          error: `Only ${dep.seats} seat(s) remaining on this departure`,
+        };
+      }
+      const remaining = dep.seats - data.passengers;
+      let nextStatus: TourDeparture["status"];
+      if (remaining <= 0) nextStatus = "soldout";
+      else if (remaining <= 2) nextStatus = "limited";
+      else nextStatus = dep.status;
+      const updatedDep: TourDeparture = {
+        ...dep,
+        seats: remaining,
+        status: nextStatus,
+      };
+      const updatedDepartures = [...tour.departures];
+      updatedDepartures[idx] = updatedDep;
+      await tx
+        .update(toursTable)
+        .set({ departures: updatedDepartures, updatedAt: new Date() })
+        .where(eq(toursTable.id, tour.id));
+      bookedDeparture = updatedDep;
+    }
+
+    const [booking] = await tx
+      .insert(bookingsTable)
+      .values({
+        fullName: data.fullName,
+        phone: data.phone,
+        pickup: data.pickup,
+        destination: tour.title,
+        date: bookedDeparture?.startDate ?? data.date,
+        time: "—",
+        carType: "TOUR",
+        passengers: data.passengers,
+        notes: data.notes ?? null,
+        tourSlug: tour.slug,
+        tourTitle: tour.title,
+        departureId: data.departureId ?? null,
+      })
+      .returning();
+
+    return {
+      ok: true,
+      tourTitle: tour.title,
+      tourSlug: tour.slug,
+      booking: booking!,
+      bookedDeparture,
+    };
+  });
+
+  if (!result.ok) {
+    res.status(result.status).json({ error: result.error });
     return;
   }
 
-  const [inserted] = await db
-    .insert(bookingsTable)
-    .values({
-      fullName: data.fullName,
-      phone: data.phone,
-      pickup: data.pickup,
-      destination: tour.title,
-      date: data.date,
-      time: "—",
-      carType: "TOUR",
-      passengers: data.passengers,
-      notes: data.notes ?? null,
-      tourSlug: tour.slug,
-      tourTitle: tour.title,
-    })
-    .returning();
+  const inserted = result.booking;
+  const tour = { title: result.tourTitle, slug: result.tourSlug };
 
   sendTourTelegramNotification({
     tourTitle: tour.title,

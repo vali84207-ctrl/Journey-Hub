@@ -4,6 +4,7 @@ import { toursTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
 import { CreateTourBody, UpdateTourBody } from "@workspace/api-zod";
 import { requireAdmin } from "../middlewares/requireAdmin";
+import { ensureUpcomingDeparturesForTour } from "../lib/auto-departures";
 
 const router = Router();
 
@@ -73,6 +74,24 @@ router.put("/tours/:id", requireAdmin, async (req, res) => {
   }
   res.json(serialize(row));
 });
+
+router.post(
+  "/tours/:id/auto-generate-departures",
+  requireAdmin,
+  async (req, res) => {
+    const id = parseInt(String(req.params.id), 10);
+    if (isNaN(id)) {
+      res.status(400).json({ error: "Invalid tour ID" });
+      return;
+    }
+    const updated = await ensureUpcomingDeparturesForTour(id);
+    if (!updated) {
+      res.status(404).json({ error: "Tour not found" });
+      return;
+    }
+    res.json(serialize(updated));
+  },
+);
 
 router.delete("/tours/:id", requireAdmin, async (req, res) => {
   const id = parseInt(String(req.params.id), 10);

@@ -2129,6 +2129,90 @@ export const useDeleteTour = <
 };
 
 /**
+ * @summary Auto-generate upcoming departures for a tour (admin)
+ */
+export const getAutoGenerateTourDeparturesUrl = (id: number) => {
+  return `/api/tours/${id}/auto-generate-departures`;
+};
+
+export const autoGenerateTourDepartures = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Tour> => {
+  return customFetch<Tour>(getAutoGenerateTourDeparturesUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getAutoGenerateTourDeparturesMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoGenerateTourDepartures>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof autoGenerateTourDepartures>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["autoGenerateTourDepartures"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof autoGenerateTourDepartures>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return autoGenerateTourDepartures(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AutoGenerateTourDeparturesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof autoGenerateTourDepartures>>
+>;
+
+export type AutoGenerateTourDeparturesMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Auto-generate upcoming departures for a tour (admin)
+ */
+export const useAutoGenerateTourDepartures = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoGenerateTourDepartures>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof autoGenerateTourDepartures>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getAutoGenerateTourDeparturesMutationOptions(options));
+};
+
+/**
  * @summary Admin login
  */
 export const getAdminLoginUrl = () => {
