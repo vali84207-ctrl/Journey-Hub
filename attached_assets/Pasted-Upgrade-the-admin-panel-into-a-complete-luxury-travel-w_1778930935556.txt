@@ -1,0 +1,170 @@
+Upgrade the admin panel into a complete luxury travel website management system with full editing capabilities and advanced tour itinerary management.
+
+IMPORTANT:
+- Preserve all current functionality
+- Do NOT break:
+  - booking system
+  - Telegram notifications
+  - admin authentication
+  - multilingual frontend
+  - backend routes
+  - vehicle booking logic
+
+========================
+FULL ADMIN CONTROL
+========================
+
+Admin must be able to fully manage and edit website content directly from the admin panel.
+
+========================
+VEHICLES MANAGEMENT
+========================
+
+Admin can:
+- Add vehicles
+- Edit vehicles
+- Delete vehicles
+- Change pricing
+- Change descriptions
+- Upload photos/files directly from device
+- Change availability status
+- Hide/show vehicles
+
+Vehicle statuses:
+- Available
+- Reserved
+- Busy
+- Hidden
+
+========================
+TOURS MANAGEMENT
+========================
+
+Admin can:
+- Add tours
+- Edit tours
+- Delete tours
+- Change prices
+- Upload images/files
+- Change availability
+- Hide/show tours
+- Mark featured tours
+
+Editable tour fields:
+- title
+- short description
+- full description
+- route
+- duration
+- included services
+- pricing
+- gallery
+- cover image
+
+========================
+TOUR ITINERARY SYSTEM
+========================
+
+Each tour must support a professional day-by-day itinerary system similar to premium travel websites.
+
+Admin can:
+- Add itinerary days
+- Edit itinerary days
+- Delete itinerary days
+- Reorder itinerary days
+
+Each itinerary day supports:
+- day number
+- title
+- description
+- locations
+- activities
+- overnight location
+- optional images
+
+Changes must instantly appear on public tour pages.
+
+========================
+BLOG MANAGEMENT
+========================
+
+Admin can:
+- Add blog posts
+- Edit blog posts
+- Delete blog posts
+- Upload images
+- Edit titles/descriptions
+- Manage galleries
+
+========================
+HOMEPAGE MANAGEMENT
+========================
+
+Admin can edit:
+- hero section text
+- homepage images
+- CTA buttons
+- featured tours
+- featured vehicles
+- contact information
+
+========================
+IMAGE MANAGEMENT
+========================
+
+Support direct file uploads from:
+- computer
+- phone
+- tablet
+
+Features:
+- drag & drop uploads
+- multiple image uploads
+- image preview
+- image replacement
+- image deletion
+
+Supported formats:
+- JPG
+- PNG
+- WEBP
+
+========================
+MULTILINGUAL SUPPORT
+========================
+
+All editable content must support:
+- English
+- Russian
+- Tajik
+- Uzbek
+
+========================
+PUBLIC WEBSITE
+========================
+
+All new vehicles, tours, itineraries, blog posts, and images added from admin panel must automatically appear on the public website.
+
+All tours must automatically include:
+- booking form
+- Telegram notification integration
+- multilingual support
+
+========================
+DESIGN
+========================
+
+- Preserve luxury black/gold aesthetic
+- Keep responsive layout
+- Keep elegant animations and spacing
+- Maintain premium cinematic travel style
+
+========================
+IMPORTANT
+========================
+
+- Do NOT redesign the entire website unnecessarily
+- Preserve all backend functionality
+- Preserve Telegram integrations permanently
+- Preserve admin security/login system
+- Preserve frontend responsiveness and performance
